@@ -1,0 +1,14 @@
+*
+!*/
+!.*
+!*.py
+!*.pyx
+!*.md
+!*.sh
+!*.ipynb
+!*.conf
+!*.yaml
+!Makefile
+notebooks/.ipynb_checkpoints/*
+data/*
+outputs/*
