@@ -39,7 +39,7 @@ def check_argv():
     parser.add_argument(
         "--algorithm",
         help="word segmentation algorithm (default: %(default)s)",
-        choices=["ag", "tp"], default="ag"
+        choices=["ag", "tp", "rasanen15"], default="ag"
         )
     parser.add_argument(
         "--output_tag", type=str, help="used to name the output directory; "
@@ -77,6 +77,10 @@ def main():
     assert input_dir.is_dir(), "missing directory: {}".format(input_dir)
     phoneseg_interval_dict = get_intervals_from_dir(input_dir)
     utterances = phoneseg_interval_dict.keys()
+
+    # # Temp
+    # print(list(utterances)[228], list(utterances)[5569])
+    # assert False
 
     # Segmentation
     print("Segmenting:")

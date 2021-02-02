@@ -71,6 +71,13 @@ def check_argv():
         help="sets the minimum number of segments for dp_penalized_n_seg "
         "(default: %(default)s)", default=0
         )
+    parser.add_argument(
+        "--dur_weight_func",
+        choices=["neg_log_geometric", "neg_log_poisson", "neg_log_hist",
+        "neg_log_gamma"], default="neg_log_geometric",
+        help="function to use for penalizing duration; "
+        "if probabilistic, the negative log of the prior is used"
+        )
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -86,6 +93,7 @@ def main():
 
     # Command-line arguments
     segment_func = getattr(algorithms, args.algorithm)
+    dur_weight_func = getattr(algorithms, args.dur_weight_func)
     if args.dur_weight is None:
         if args.model == "vqvae":
             args.dur_weight = 3
@@ -130,7 +138,8 @@ def main():
             boundaries, code_indices = segment_func(
                 embedding, z, dur_weight=args.dur_weight,
                 n_frames_per_segment=args.n_frames_per_segment,
-                n_min_segments=args.n_min_segments
+                n_min_segments=args.n_min_segments,
+                dur_weight_func=dur_weight_func
                 )
             # print(args.dur_weight,
             #     args.n_frames_per_segment,
@@ -139,7 +148,8 @@ def main():
             # assert False
         else:
             boundaries, code_indices = segment_func(
-                embedding, z, dur_weight=args.dur_weight
+                embedding, z, dur_weight=args.dur_weight,
+                dur_weight_func=dur_weight_func
                 )
 
         # Convert boundaries to same frequency as reference
@@ -170,7 +180,7 @@ def main():
     # Write code indices
     output_fn = output_base_dir/"indices.npz"
     print("Writing: {}".format(output_fn))
-    np.savez_compressed(output_fn, code_indices_dict)    
+    np.savez_compressed(output_fn, **code_indices_dict)
     # output_dir = output_base_dir/"indices"
     # output_dir.mkdir(exist_ok=True, parents=True)
     # # print("Writing to: {}".format(output_dir))
@@ -184,7 +194,7 @@ def main():
     # Write boundaries
     output_fn = output_base_dir/"boundaries.npz"
     print("Writing: {}".format(output_fn))
-    np.savez_compressed(output_fn, boundaries_dict)
+    np.savez_compressed(output_fn, **boundaries_dict)
     # output_dir = output_base_dir/"boundaries"
     # output_dir.mkdir(exist_ok=True, parents=True)
     # # print("Writing to: {}".format(output_dir))

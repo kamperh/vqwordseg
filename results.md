@@ -23,6 +23,25 @@ VQ-VAE DP penalized val:
     R-value: -194.47%
     ---------------------------------------------------------------------------
 
+VQ-VAE DP penalized val, dur_weight=4:
+
+    # ./eval_segmentation.py vqvae buckeye val phoneseg_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 70.54%
+    Recall: 71.14%
+    F-score: 70.84%
+    OS: 0.86%
+    R-value: 75.06%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 16.37%
+    Recall: 62.36%
+    F-score: 25.94%
+    OS: 280.91%
+    R-value: -154.34%
+    ---------------------------------------------------------------------------
+
 VQ-CPC DP penalized val:
 
     # ./eval_segmentation.py vqcpc buckeye val phoneseg_dp_penalized
@@ -66,6 +85,31 @@ TP word segmentation on VQ-VAE DP penalized val:
     F-score: 8.61%
     ---------------------------------------------------------------------------
 
+TP word segmentation on VQ-VAE DP penalized val, Gamma prior, dur_weight=15:
+
+    # ./eval_segmentation.py vqvae buckeye val wordseg_tp_dp_penalized_gamma
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.50%
+    Recall: 10.86%
+    F-score: 19.08%
+    OS: -86.17%
+    R-value: 36.96%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 19.15%
+    Recall: 10.00%
+    F-score: 13.14%
+    OS: -47.78%
+    R-value: 34.12%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 16.86%
+    Recall: 11.16%
+    F-score: 13.43%
+    OS: -33.76%
+    ---------------------------------------------------------------------------
+
 AG word segmentation on VQ-VAE DP penalized val:
 
     # ./eval_segmentation.py vqvae buckeye val wordseg_ag_dp_penalized
@@ -90,9 +134,92 @@ AG word segmentation on VQ-VAE DP penalized val:
     F-score: 5.31%
     ---------------------------------------------------------------------------
 
+AG word segmentation on VQ-VAE DP penalized val, Gamma prior, dur_weight=15:
+
+    # ./eval_segmentation.py vqvae buckeye val wordseg_ag_dp_penalized_gamma
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.03%
+    Recall: 27.07%
+    F-score: 40.19%
+    OS: -65.31%
+    R-value: 48.35%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 17.29%
+    Recall: 22.63%
+    F-score: 19.60%
+    OS: 30.93%
+    R-value: 20.05%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 9.34%
+    Recall: 11.39%
+    F-score: 10.27%
+    OS: 21.86%
+    ---------------------------------------------------------------------------
+
 
 Buckeye Felix split
 -------------------
+
+VQ-VAE DP penalized val, dur_weight=3:
+
+    # ./eval_segmentation.py vqvae buckeye_felix val phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 65.64%
+    Recall: 75.97%
+    F-score: 70.43%
+    OS: 15.73%
+    R-value: 71.58%
+    ---------------------------------------------------------------------------
+
+VQ-VAE DP penalized val, dur_weight=4:
+
+    # ./eval_segmentation.py vqvae buckeye_felix val phoneseg_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 69.40%
+    Recall: 71.23%
+    F-score: 70.31%
+    OS: 2.64%
+    R-value: 74.45%
+    ---------------------------------------------------------------------------
+
+VQ-VAE DP penalized val, Poisson prior, dur_weight=2:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 67.46%
+    Recall: 70.33%
+    F-score: 68.87%
+    OS: 4.27%
+    R-value: 73.02%
+    ---------------------------------------------------------------------------
+
+VQ-VAE DP penalized val, histogram prior, dur_weight=2:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 70.95%
+    Recall: 66.54%
+    F-score: 68.68%
+    OS: -6.22%
+    R-value: 73.35%
+    ---------------------------------------------------------------------------
+
+VQ-VAE DP penalized val, Gamma prior, dur_weight=2:
+
+    # ./eval_segmentation.py vqvae buckeye_felix val phoneseg_dp_penalized_gamma
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 71.70%
+    Recall: 65.85%
+    F-score: 68.65%
+    OS: -8.17%
+    R-value: 73.25%
+    ---------------------------------------------------------------------------
 
 VQ-VAE DP penalized test:
 

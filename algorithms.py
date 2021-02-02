@@ -7,7 +7,63 @@ Date: 2021
 """
 
 from scipy.spatial import distance
+from scipy.special import factorial
+from scipy.stats import gamma
+from tqdm import tqdm
 import numpy as np
+
+
+#-----------------------------------------------------------------------------#
+#         PHONE DURATION PRIORS: NEGATIVE LOG PROB (WANT TO MINIMIZE)         #
+#-----------------------------------------------------------------------------#
+
+def neg_log_geometric(dur):
+    return -(dur - 1)  # not sure if this is really "geometric"
+
+
+def neg_log_poisson(dur, poisson_param=5):
+    return -(
+        -poisson_param + dur*np.log(poisson_param) - np.log(factorial(dur))
+        )
+
+
+histogram = np.array([
+    4.94283846e-05, 7.72517818e-03, 3.58084730e-02, 1.00731859e-01,
+    1.14922589e-01, 1.16992203e-01, 1.11386068e-01, 9.68349889e-02,
+    8.19379115e-02, 6.76403527e-02, 5.46630100e-02, 4.30616898e-02,
+    3.39445445e-02, 2.62512556e-02, 2.02767989e-02, 1.58633226e-02,
+    1.24495750e-02, 9.71666374e-03, 7.93086404e-03, 6.36669484e-03,
+    5.32550983e-03, 4.42463766e-03, 3.77887973e-03, 3.22560071e-03,
+    2.67072723e-03, 2.32632301e-03, 2.10469251e-03, 1.72521007e-03,
+    1.49560725e-03, 1.21179265e-03, 9.85378764e-04, 8.83333067e-04,
+    7.92448618e-04, 6.61702568e-04, 5.58062407e-04, 4.75150278e-04,
+    3.84265829e-04, 3.49187620e-04, 2.67869955e-04, 2.42358531e-04,
+    1.81768898e-04, 2.07280322e-04, 1.56257474e-04, 1.37123905e-04,
+    1.16395874e-04, 1.16395874e-04, 7.01564169e-05, 7.33453449e-05,
+    5.74007047e-05, 7.81287370e-05, 7.81287370e-05, 3.18892804e-05,
+    3.18892804e-05, 1.91335682e-05, 3.50782084e-05, 2.23224963e-05,
+    2.07280322e-05, 1.43501762e-05, 2.23224963e-05, 6.37785608e-06,
+    1.27557122e-05, 1.43501762e-05, 6.37785608e-06, 7.97232011e-06,
+    3.18892804e-06, 7.97232011e-06, 1.11612481e-05, 4.78339206e-06,
+    3.18892804e-06, 3.18892804e-06, 3.18892804e-06, 3.18892804e-06
+    ])
+def neg_log_hist(dur):
+    return -np.log(0 if dur >= len(histogram) else histogram[dur])
+
+
+# Cache Gamma
+shape, loc, scale = (3, 0, 2.6)
+gamma_cache = []
+for dur in range(200):
+    gamma_cache.append(gamma.pdf(dur, shape, loc, scale))
+def neg_log_gamma(dur):
+        # (
+        # 2.967152765811849, -0.004979890790653328, 2.6549778308011014
+        # )
+    if dur < 200:
+        return -np.log(gamma_cache[dur])
+    else:
+        return -np.log(gamma.pdf(dur, shape, loc, scale))
 
 
 #-----------------------------------------------------------------------------#
@@ -87,7 +143,7 @@ def custom_viterbi(costs, n_frames):
 
 
 def dp_penalized(embedding, z, n_min_frames=0, n_max_frames=15,
-        dur_weight=20**2):
+        dur_weight=20**2, dur_weight_func=neg_log_geometric):
 
     # Hyperparameters
     count_weight = 0
@@ -106,9 +162,12 @@ def dp_penalized(embedding, z, n_min_frames=0, n_max_frames=15,
         dur = i_end - i_start
         if dur < n_min_frames:
             continue
+        # cost = np.min(
+        #     np.sum(embedding_distances[i_start:i_end, :], axis=0)
+        #     ) - dur_weight*(dur - 1) + count_weight
         cost = np.min(
             np.sum(embedding_distances[i_start:i_end, :], axis=0)
-            ) - dur_weight*(dur - 1) + count_weight
+            ) + dur_weight*dur_weight_func(dur) + count_weight
         costs[i_seg] = cost
     
     # Viterbi segmentation
@@ -195,7 +254,8 @@ def custom_viterbi_n_segments(costs, n_frames, n_segments):
     return summed_cost, boundaries
 
 def dp_penalized_n_seg(embedding, z, n_min_frames=0, n_max_frames=15,
-        dur_weight=0, n_frames_per_segment=7, n_min_segments=0):
+        dur_weight=0, n_frames_per_segment=7, n_min_segments=0,
+        dur_weight_func=neg_log_geometric):
 
     # Hyperparameters
     n_segments = max(1, int(round(z.shape[0]/n_frames_per_segment)))
@@ -216,9 +276,12 @@ def dp_penalized_n_seg(embedding, z, n_min_frames=0, n_max_frames=15,
         dur = i_end - i_start
         if dur < n_min_frames:
             continue
+        # cost = np.min(
+        #     np.sum(embedding_distances[i_start:i_end, :], axis=0)
+        #     ) - dur_weight*(dur - 1)
         cost = np.min(
             np.sum(embedding_distances[i_start:i_end, :], axis=0)
-            ) - dur_weight*(dur - 1)
+            ) + dur_weight*dur_weight_func(dur)
         costs[i_seg] = cost
     
     # Viterbi segmentation
@@ -250,7 +313,85 @@ def ag(utterance_list, nruns=4, njobs=3, args="-n 100"):
         ))
 
 
-def tp(utterance_list, threshold="relative"):
+# Other promising options:
+# - threshold="absolute", dependency="ftp"
+# - threshold="absolute", dependency="mi"
+def tp(utterance_list, threshold="relative", dependency="ftp"):
     from wordseg.algos import tp
     import wordseg.algos
-    return list(tp.segment(utterance_list, threshold=threshold))
+    return list(
+        tp.segment(utterance_list, threshold=threshold, dependency=dependency)
+        )
+
+
+def rasanen15(utterance_list, n_max=9, words_count_fn="words.tmp"):
+    """
+    The word decoding with n-grams approach of Räsänen et al. [Interspeech'15].
+
+    See Section 2.3 in:
+
+    - O, Räsänen, G. Doyle, M. C. Frank, "Unsupervised word discovery from
+      speech using automatic segmentation into syllable-like units," in Proc.
+      Interspeech, 2015.
+    """
+    from collections import Counter
+
+    # Add space to beginning and end for matching
+    tmp_list = []
+    for utt in utterance_list:
+        tmp_list.append(" " + utt + " ")
+    utterance_list = tmp_list
+
+    words = []
+    counts = []
+    for n in tqdm(range(n_max, 1, -1)):
+        # Count n-grams
+        n_gram_counter = Counter()
+        for utt in utterance_list:
+            utt = utt.split()
+            n_grams = [tuple(utt[i:i + n]) for i in range(len(utt) - n + 1)]
+            for n_gram in n_grams:
+                n_gram_counter[n_gram] += 1
+
+        # For all n-grams (of this order) occurring at least twice
+        for n_gram in n_gram_counter:
+            if n_gram_counter[n_gram] <= 1:
+                continue
+            # print(n_gram, n_gram_counter[n_gram])
+
+            word = " " + "".join(n_gram) + " "
+            word_unjoined = " " + " ".join(n_gram) + " "
+            words.append(word)
+            counts.append(n_gram_counter[n_gram])
+
+            # # Temp
+            # if word == " 445_83_102_456_ ":
+            #     print (n_gram_counter[n_gram])
+            #     for i_utt, utt in enumerate(utterance_list):
+            #         if word_unjoined in utt:
+            #             print(i_utt, utt)
+            #     assert False
+
+            # Replace occurrences
+            for i_utt, utt in enumerate(utterance_list):
+                if word_unjoined in utt:
+                    utterance_list[i_utt] = utt.replace(word_unjoined, word)
+                    # # Temp
+                    # if i_utt in [228, 5569]:
+                    #     print(word, word_unjoined)
+                    #     print("!", utt)
+                    #     print("!!", utterance_list[i_utt])
+
+
+    if words_count_fn is not None:
+        with open(words_count_fn, "w") as f:
+            for word, count in zip(words, counts):
+                f.write("{} {}\n".format(word, count))
+
+    # Remove space at beginnning and end to match output format
+    tmp_list = []
+    for utt in utterance_list:
+        tmp_list.append(utt.strip())
+    utterance_list = tmp_list
+
+    return utterance_list

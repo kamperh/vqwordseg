@@ -132,6 +132,12 @@ DP penalized segmentation:
     # Buckeye Felix split (VQ-VAE)
     ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized vqvae buckeye_felix test
 
+    # Buckeye Felix split (VQ-VAE) with Poisson duration prior
+    ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized_poisson --dur_weight_func neg_log_poisson --dur_weight 2 vqvae buckeye_felix val
+
+    # Buckeye (VQ-VAE) with Gamma duration prior
+    ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized_gamma --dur_weight_func neg_log_gamma --dur_weight 15 vqvae buckeye val
+
 DP penalized N-seg. segmentation:
 
     # Buckeye Felix split (VQ-VAE)
@@ -156,3 +162,20 @@ Evaluate the segmentation:
 
     ./eval_segmentation.py vqvae buckeye val wordseg_ag_dp_penalized
 
+
+Analysis
+--------
+Listen to segmented codes:
+
+    ./cluster_wav.py vqvae buckeye val phoneseg_dp_penalized 343
+    ./cluster_wav.py vqvae buckeye val wordseg_tp_dp_penalized 486_
+
+This requires `sox` and that you change the path at the beginning of
+`cluster_wav.py`.
+
+Synthesize an utterance:
+
+    ./indices_to_txt.py vqvae buckeye val phoneseg_dp_penalized s18_03a_025476-025541
+    cd ../VectorQuantizedVAE
+    ./synthesize_codes.py checkpoints/2019english/model.ckpt-500000.pt ../vqwordseg/s18_03a_025476-025541.txt
+    cd -

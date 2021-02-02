@@ -31,9 +31,7 @@ def check_argv():
     parser.add_argument(
         "split", type=str, help="input split", choices=["train", "val", "test"]
         )
-    parser.add_argument(
-        "seg_tag", type=str, help="unique segmentation identifier"
-        )
+    parser.add_argument("seg_tag", type=str, help="segmentation identifier")
     parser.add_argument(
         "--phone_tolerance", type=int,
         help="number of frames within which a phone boundary prediction is "
@@ -355,7 +353,7 @@ def main():
         print("Precision: {:.2f}%".format(p*100))
         print("Recall: {:.2f}%".format(r*100))
         print("F-score: {:.2f}%".format(f*100))
-        # print("OS: {:.2f}%".format(get_os(p, r)*100))
+        print("OS: {:.2f}%".format(get_os(p, r)*100))
         # print("R-value: {:.2f}%".format(get_rvalue(p, r)*100))
         print("-"*(79 - 4))
 
