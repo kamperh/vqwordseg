@@ -31,7 +31,7 @@ def check_argv():
         )
     parser.add_argument("dataset", type=str, help="input dataset")
     parser.add_argument(
-        "split", type=str, help="input split", choices=["train", "val", "test"]
+        "split", type=str, help="input split"
         )
     parser.add_argument(
         "--input_format",
