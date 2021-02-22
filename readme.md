@@ -154,7 +154,7 @@ DP penalized segmentation:
     ./vq_phoneseg.py vqvae buckeye val
 
     # Buckeye (Big CPC)
-    ./vq_phoneseg.py --downsample_factor 1 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 3 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
 
     # Buckeye Felix split (VQ-VAE)
     ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized vqvae buckeye_felix test
