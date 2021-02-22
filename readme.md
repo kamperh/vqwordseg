@@ -3,12 +3,14 @@ Phone and Word Segmentation using Vector-Quantised Neural Networks
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](license.md)
 
+**To-do.** Maybe GPL-v3?
+
 
 Disclaimer
 ----------
-The code provided here is not pretty. But I believe that research should be
-reproducible. I provide no guarantees with the code, but please let me know if
-you have any problems, find bugs or have general comments.
+The code provided here is not pretty. But research should be reproducible. I
+provide no guarantees with the code, but please let me know if you have any
+problems, find bugs or have general comments.
 
 
 Installation
@@ -20,12 +22,6 @@ You will require the following:
 - [tqdm](https://tqdm.github.io/)
 - [scikit-learn](https://scikit-learn.org/)
 - [wordseg](https://wordseg.readthedocs.io/)
-- [VectorQuantizedVAE fork (ZeroSpeech)](https://github.com/kamperh/ZeroSpeech)
-- [VectorQuantizedCPC fork](https://github.com/kamperh/VectorQuantizedCPC)
-
-Make sure all dependencies for `VectorQuantizedVAE` and `VectorQuantizedCPC`
-are also satisfied. To install these packages locally, run
-`./install_local.sh`.
 
 **To-do.** Add and describe a conda installation file.
 
@@ -37,10 +33,13 @@ codes are extracted for an input utterance. Synthesis can maybe even be
 performed.
 
 
-Data and directory structure
-----------------------------
-For evaluation you need the ground truth phone (and optionally) word
-boundaries. This should be stored in the directories
+Dataset format and directory structure
+--------------------------------------
+This code should be usable with any dataset given that alignments and VQ
+encodings are provided.
+
+For evaluation you need the ground truth phone and (optionally) word
+boundaries. These should be stored in the directories
 `data/<dataset>/phone_intervals/` and `data/<dataset>/word_intervals/` using
 the following filename format:
 
@@ -62,36 +61,61 @@ of:
     69 78 ay
     78 88 k
 
-**To-do.** Maybe include download link for Buckeye data files.
-
-The VQ-segmentation algorithms operate on the output of vector quantized neural
-networks. The quantized input representations as well as the segmented output
-are stored in the experiments directory `exp/`. In the section below I describe
-how to obtain the inputs and in the subsequent sections how to perform
-segmentation.
+The VQ-segmentation algorithms operate on the output of VQ models. The
+(pre-)quantized representations and code indices should be provided in the
+`exp/` directory. These are used as input to the VQ-segmentation algorithms;
+the segmented output is also produced in `exp/`.
 
 As an example, the directory `exp/vqcpc/buckeye/` should contain a file
-`embedding.npy`, which is the codebook matrix for the VQ-CPC trained on
-Buckeye. The directory `exp/vqcpc/buckeye/val/` needs to contain three
-subdirectories for the processed validation set:
+`embedding.npy`, which is the codebook matrix for a
+[VQ-CPC](https://github.com/kamperh/VectorQuantizedCPC) model trained on
+Buckeye. This matrix will have the shape `[n_codes, code_dim]`. The directory
+`exp/vqcpc/buckeye/val/` needs to contain at least subdirectories for the
+encoded validation set:
 
 - `auxiliary_embedding2/`
-- `codes/`
 - `indices/`
 
-The codes and auxiliary embeddings will have an embedding per line, e.g. the
-first two lines of `auxiliary_embedding2/s01_01a_003222-003256.txt`:
+The `auxiliary_embedding2/` directory contains the encodings from the VQ model
+before quantization. These encodings are given as text files with an embedding
+per line, e.g. the first three lines of
+`auxiliary_embedding2/s01_01a_003222-003256.txt` could be:
 
-    0.1601707935333252 -0.0403369292616844 0.4687763750553131 ...
-    0.4489639401435852  1.3353070020675659 1.0353083610534668 ...
+     0.1601707935333252 -0.0403369292616844  0.4687763750553131 ...
+     0.4489639401435852  1.3353070020675659  1.0353083610534668 ...
+    -1.0552909374237061  0.6382007002830505  4.5256714820861816 ...
 
-The indices should be the code indices, each index on a new line.
+
+The `indices/` directory contains the code indices to which the auxiliary
+embeddings are actually mapped, i.e. which of the codes in `embedding.npy` are
+closest (under some metric) to the pre-quantized embedding. The code indices
+are again given as text files, with each index on a new line, e.g. the first
+three lines of `indices/s01_01a_003222-003256.txt` could be:
+
+    423
+    381
+    119
+    ...
+
+Any VQ model can be used. In the section below I give an example of how VQ-VAE
+and VQ-CPC models can be used to obtain codes for the Buckeye dataset. In the
+subsequent section VQ-segmentation is described.
 
 
-VQ-VAE and VQ-CPC input representations
----------------------------------------
+Example encodings: VQ-VAE and VQ-CPC input representations
+----------------------------------------------------------
 You can obtain the VQ input representations using the file format indicated
-above. As an example, here I describe how I did it for the Buckeye data.
+above. As an example, here I describe how I did it for the Buckeye data. The
+data files for the Buckeye corpus can be downloaded as part of a release at
+[this link](**To-do.**)
+
+First the following repositories need to be installed with their dependencies:
+
+- [VectorQuantizedVAE fork (ZeroSpeech)](https://github.com/kamperh/ZeroSpeech)
+- [VectorQuantizedCPC fork](https://github.com/kamperh/VectorQuantizedCPC)
+
+If you made sure that the dependencies are satisfied, these packages can be
+installed locally by running `./install_local.sh`.
 
 Change directory to `../VectorQuantizedCPC` and then perform the following
 steps there. Pre-process audio and extract log-Mel spectrograms:
@@ -105,7 +129,7 @@ performed for all splits (`train`, `val` and `test`):
 
 Change directory to `../VectorQuantizedVAE` and then run the following there.
 The audio can be pre-processed again (as above), or alternatively you can
-simply link to the audio from `VectorQuantizedCPC`:
+simply link to the audio from `VectorQuantizedCPC/`:
 
     ln -s ../VectorQuantizedCPC/datasets/ .
 
