@@ -25,7 +25,7 @@ def check_argv():
         description=__doc__.strip().split("\n")[0], add_help=False
         )
     parser.add_argument(
-        "model", help="input VQ representations", choices=["vqvae", "vqcpc"]
+        "model", help="input VQ representations"
         )
     parser.add_argument("dataset", type=str, help="input dataset")
     parser.add_argument(

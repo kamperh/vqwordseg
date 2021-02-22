@@ -61,6 +61,79 @@ VQ-CPC DP penalized val:
     R-value: -266.58%
     ---------------------------------------------------------------------------
 
+Big CPC DP penalized val, dur_weight=3:
+
+    ./eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 54.59%
+    Recall: 85.91%
+    F-score: 66.76%
+    OS: 57.36%
+    R-value: 45.20%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 14.47%
+    Recall: 86.89%
+    F-score: 24.81%
+    OS: 500.32%
+    R-value: -331.77%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 1.87%
+    Recall: 8.48%
+    F-score: 3.06%
+    OS: 354.58%
+    ---------------------------------------------------------------------------
+
+Big CPC DP penalized val, dur_weight=5:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 60.18%
+    Recall: 79.95%
+    F-score: 68.67%
+    OS: 32.86%
+    R-value: 62.05%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 16.04%
+    Recall: 81.27%
+    F-score: 26.79%
+    OS: 406.79%
+    R-value: -254.06%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 2.34%
+    Recall: 9.08%
+    F-score: 3.72%
+    OS: 288.34%
+    ---------------------------------------------------------------------------
+
+Big CPC DP penalized val, dur_weight=10:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 67.80%
+    Recall: 66.58%
+    F-score: 67.19%
+    OS: -1.80%
+    R-value: 72.09%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 17.79%
+    Recall: 66.63%
+    F-score: 28.08%
+    OS: 274.59%
+    R-value: -147.18%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 3.38%
+    Recall: 9.95%
+    F-score: 5.04%
+    OS: 194.71%
+    ---------------------------------------------------------------------------
+
 TP word segmentation on VQ-VAE DP penalized val:
 
     # ./eval_segmentation.py vqvae buckeye val wordseg_tp_dp_penalized

@@ -27,7 +27,7 @@ def check_argv():
         description=__doc__.strip().split("\n")[0], add_help=False
         )
     parser.add_argument(
-        "model", help="input VQ representations", choices=["vqvae", "vqcpc"]
+        "model", help="input VQ representations"
         )
     parser.add_argument("dataset", type=str, help="input dataset")
     parser.add_argument(
@@ -99,6 +99,10 @@ def main():
             args.dur_weight = 3
         elif args.model == "vqcpc":
             args.dur_weight = 20**2
+        elif args.model == "cpc_big":
+            args.dur_weight = 3
+        else:
+            assert False, "cannot set dur_weight automatically for model type"
         if args.algorithm == "dp_penalized_n_seg":
             args.dur_weight = 0
     if args.output_tag is None:
@@ -170,7 +174,7 @@ def main():
                     ))
             code_indices = code_indices_upsampled
 
-        boundaries_dict[utt_key] = boundaries_upsampled
+        boundaries_dict[utt_key] = boundaries
         code_indices_dict[utt_key] = code_indices
 
     output_base_dir = input_dir/args.output_tag

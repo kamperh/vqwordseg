@@ -3,7 +3,7 @@ Phone and Word Segmentation using Vector-Quantised Neural Networks
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](license.md)
 
-**To-do.** Maybe GPL-v3?
+**To-do.** Maybe GPL-v3? Then need to update start of notebooks as well.
 
 
 Disclaimer
@@ -152,6 +152,9 @@ DP penalized segmentation:
 
     # Buckeye (VQ-VAE)
     ./vq_phoneseg.py vqvae buckeye val
+
+    # Buckeye (Big CPC)
+    ./vq_phoneseg.py --downsample_factor 1 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
 
     # Buckeye Felix split (VQ-VAE)
     ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized vqvae buckeye_felix test
