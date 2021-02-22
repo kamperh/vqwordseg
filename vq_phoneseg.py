@@ -78,6 +78,11 @@ def check_argv():
         help="function to use for penalizing duration; "
         "if probabilistic, the negative log of the prior is used"
         )
+    parser.add_argument(
+        "--only_save_intervals", dest="only_save_intervals",
+        action="store_true", help="if set, boundaries and indices are not "
+        "saved as Numpy archives, only the interval text files are saved"
+        )
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -108,18 +113,15 @@ def main():
     if args.output_tag is None:
         args.output_tag = "phoneseg_{}".format(args.algorithm)
 
-    # Read pre-quantisation representations
+    # Directories and files
     input_dir = Path("exp")/args.model/args.dataset/args.split
     z_dir = input_dir/"auxiliary_embedding2"
     print("Reading: {}".format(z_dir))
     assert z_dir.is_dir(), "missing directory: {}".format(z_dir)
-    z_dict = {}
     if args.input_format == "npy":
-        for input_fn in tqdm(z_dir.glob("*.npy")):
-            z_dict[input_fn.stem] = np.load(input_fn)
+        z_fn_list = sorted(list(z_dir.glob("*.npy")))
     elif args.input_format == "txt":
-        for input_fn in tqdm(z_dir.glob("*.txt")):
-            z_dict[input_fn.stem] = np.loadtxt(input_fn)
+        z_fn_list = sorted(list(z_dir.glob("*.txt")))
     else:
         assert False, "invalid input format"
 
@@ -128,14 +130,24 @@ def main():
     print("Reading: {}".format(embedding_fn))
     embedding = np.load(embedding_fn)
 
-    # Segmentation
-    boundaries_dict = {}
-    code_indices_dict = {}
-    print("Running {}:".format(args.algorithm))
-    for utt_key in tqdm(z_dict):
+    # Segment files one-by-one
+    if not args.only_save_intervals:
+        boundaries_dict[utt_key] = {}
+        code_indices_dict[utt_key] = {}
+    output_base_dir = input_dir/args.output_tag
+    output_base_dir.mkdir(exist_ok=True, parents=True)
+    print("Writing to: {}".format(output_base_dir))
+    output_dir = output_base_dir/"intervals"
+    output_dir.mkdir(exist_ok=True, parents=True)
+    for input_fn in tqdm(z_fn_list):
+
+        # Read pre-quantisation representations
+        if args.input_format == "npy":
+            z = np.load(input_fn)
+        elif args.input_format == "txt":
+            z = np.loadtxt(input_fn)
 
         # Segment
-        z = z_dict[utt_key]
         if z.ndim == 1:
             continue
         if args.algorithm == "dp_penalized_n_seg":
@@ -145,11 +157,6 @@ def main():
                 n_min_segments=args.n_min_segments,
                 dur_weight_func=dur_weight_func
                 )
-            # print(args.dur_weight,
-            #     args.n_frames_per_segment,
-            #     args.n_min_segments
-            #     )
-            # assert False
         else:
             boundaries, code_indices = segment_func(
                 embedding, z, dur_weight=args.dur_weight,
@@ -174,48 +181,27 @@ def main():
                     ))
             code_indices = code_indices_upsampled
 
-        boundaries_dict[utt_key] = boundaries
-        code_indices_dict[utt_key] = code_indices
+        if not args.only_save_intervals:
+            boundaries_dict[utt_key] = boundaries
+            code_indices_dict[utt_key] = code_indices
 
-    output_base_dir = input_dir/args.output_tag
-    output_base_dir.mkdir(exist_ok=True, parents=True)
-    print("Writing to: {}".format(output_base_dir))
-
-    # Write code indices
-    output_fn = output_base_dir/"indices.npz"
-    print("Writing: {}".format(output_fn))
-    np.savez_compressed(output_fn, **code_indices_dict)
-    # output_dir = output_base_dir/"indices"
-    # output_dir.mkdir(exist_ok=True, parents=True)
-    # # print("Writing to: {}".format(output_dir))
-    # for utt_key in tqdm(code_indices_dict):
-    #     np.save(
-    #         (output_dir/utt_key).with_suffix(".npy"),
-    #         np.array([i[-1] for i in code_indices_dict[utt_key]],
-    #         dtype=np.int)
-    #         )
-
-    # Write boundaries
-    output_fn = output_base_dir/"boundaries.npz"
-    print("Writing: {}".format(output_fn))
-    np.savez_compressed(output_fn, **boundaries_dict)
-    # output_dir = output_base_dir/"boundaries"
-    # output_dir.mkdir(exist_ok=True, parents=True)
-    # # print("Writing to: {}".format(output_dir))
-    # for utt_key in tqdm(code_indices_dict):
-    #     np.save(
-    #         (output_dir/utt_key).with_suffix(".npy"),
-    #         np.array(boundaries_dict[utt_key], dtype=np.bool)
-    #         )
-
-    # Write intervals
-    output_dir = output_base_dir/"intervals"
-    output_dir.mkdir(exist_ok=True, parents=True)
-    # print("Writing to: {}".format(output_dir))
-    for utt_key in tqdm(code_indices_dict):
+        # Write intervals
+        utt_key = input_fn.stem
         with open((output_dir/utt_key).with_suffix(".txt"), "w") as f:
-            for start, end, index in code_indices_dict[utt_key]:
+            for start, end, index in code_indices:
                 f.write("{:d} {:d} {:d}\n".format(start, end, index))
+
+    if not args.only_save_intervals:
+
+        # Write code indices
+        output_fn = output_base_dir/"indices.npz"
+        print("Writing: {}".format(output_fn))
+        np.savez_compressed(output_fn, **code_indices_dict)
+
+        # Write boundaries
+        output_fn = output_base_dir/"boundaries.npz"
+        print("Writing: {}".format(output_fn))
+        np.savez_compressed(output_fn, **boundaries_dict)
 
 
 if __name__ == "__main__":
