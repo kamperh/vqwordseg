@@ -132,8 +132,8 @@ def main():
 
     # Segment files one-by-one
     if not args.only_save_intervals:
-        boundaries_dict[utt_key] = {}
-        code_indices_dict[utt_key] = {}
+        boundaries_dict = {}
+        code_indices_dict = {}
     output_base_dir = input_dir/args.output_tag
     output_base_dir.mkdir(exist_ok=True, parents=True)
     print("Writing to: {}".format(output_base_dir))
@@ -181,15 +181,15 @@ def main():
                     ))
             code_indices = code_indices_upsampled
 
-        if not args.only_save_intervals:
-            boundaries_dict[utt_key] = boundaries
-            code_indices_dict[utt_key] = code_indices
-
         # Write intervals
         utt_key = input_fn.stem
         with open((output_dir/utt_key).with_suffix(".txt"), "w") as f:
             for start, end, index in code_indices:
                 f.write("{:d} {:d} {:d}\n".format(start, end, index))
+
+        if not args.only_save_intervals:
+            boundaries_dict[utt_key] = boundaries
+            code_indices_dict[utt_key] = code_indices
 
     if not args.only_save_intervals:
 
