@@ -14,6 +14,8 @@ import argparse
 import numpy as np
 import sys
 
+import cluster_analysis
+
 
 #-----------------------------------------------------------------------------#
 #                              UTILITY FUNCTIONS                              #
@@ -80,6 +82,35 @@ def get_intervals_from_dir(directory, filenames=None):
             end = int(end)
             interval_dict[fn.stem].append((start, end, label))
     return interval_dict
+
+
+def intervals_to_max_overlap(ref_intervals, pred_intervals, ref_labels=None):
+    """
+    Each interval is mapped to the reference label with maximum overlap.
+
+    If `ref_labels` is not given, it is assumed that the labels are given as
+    the third element of each of the elements in the `ref_intervals` list.
+    """
+    if ref_labels is None:
+        ref_labels = [i[2] for i in ref_intervals]
+    mapped_seq = []
+    for pred_interval in pred_intervals:
+        overlaps = []
+        for ref_interval in ref_intervals:
+            if ref_interval[1] <= pred_interval[0]:
+                overlaps.append(0)
+            elif ref_interval[0] >= pred_interval[1]:
+                overlaps.append(0)
+            else:
+                overlap = pred_interval[1] - pred_interval[0]
+                if ref_interval[0] > pred_interval[0]:
+                    overlap -= (ref_interval[0] - pred_interval[0])
+                if ref_interval[1] < pred_interval[1]:
+                    overlap -= (pred_interval[1] - ref_interval[1])
+                overlaps.append(overlap)
+        mapped_seq.append(ref_labels[np.argmax(overlaps)]) 
+    return mapped_seq
+
 
 
 #-----------------------------------------------------------------------------#
@@ -251,6 +282,20 @@ def get_rvalue(precision, recall):
     return rvalue
 
 
+def score_clusters(ref_interval_dict, pred_interval_dict):
+    ref_labels = []
+    pred_labels = []
+    for utt in tqdm(ref_interval_dict):
+        ref = ref_interval_dict[utt]
+        pred = pred_interval_dict[utt]
+        ref_labels.extend(intervals_to_max_overlap(ref, pred))
+        pred_labels.extend([int(i[2]) for i in pred])
+    
+    purity = cluster_analysis.purity(ref_labels, pred_labels)
+    
+    return purity
+
+
 #-----------------------------------------------------------------------------#
 #                                MAIN FUNCTION                                #
 #-----------------------------------------------------------------------------#
@@ -301,12 +346,16 @@ def main():
                 word_ref_interval_dict[utt_key]
                 )
 
-    # # Temp
+    # Temp
     # print(utt_key)
     # print(segmentation_interval_dict[utt_key])
     # print(phone_ref_interval_dict[utt_key])
-    # print(len(segmentation_boundaries_dict[utt_key]))
-    # print(len(phone_ref_boundaries_dict[utt_key]))
+    # print(intervals_to_max_overlap(
+    #     phone_ref_interval_dict[utt_key],
+    #     segmentation_interval_dict[utt_key],
+    #     ))
+    # # print(len(segmentation_boundaries_dict[utt_key]))
+    # # print(len(phone_ref_boundaries_dict[utt_key]))
     # assert False
 
     # Evaluate phone boundaries
@@ -318,6 +367,13 @@ def main():
     p, r, f = score_boundaries(
         reference_list, segmentation_list, tolerance=args.phone_tolerance
         )
+
+    # Evaluate clustering
+    print("Scoring clusters (phone):")
+    purity = score_clusters(
+        phone_ref_interval_dict, segmentation_interval_dict
+        )
+
     print("-"*(79 - 4))
     print("Phone boundaries:")
     print("Precision: {:.2f}%".format(p*100))
@@ -327,8 +383,14 @@ def main():
     print("R-value: {:.2f}%".format(get_rvalue(p, r)*100))
     print("-"*(79 - 4))
 
-    # Evaluate word boundaries
+    print("Clusters:")
+    print("Phone purity: {:.2f}%".format(purity*100))
+    print("-"*(79 - 4))
+
+    # Word-level evaluation
     if word_ref_dir.is_dir():
+
+        # Evaluate word boundaries
         reference_list = []
         segmentation_list = []
         for utterance in word_ref_boundaries_dict:
@@ -337,6 +399,13 @@ def main():
         p, r, f = score_boundaries(
             reference_list, segmentation_list, tolerance=args.word_tolerance
             )
+
+        # # Evaluate clustering
+        # print("Scoring clusters (word):")
+        # purity = score_clusters(
+        #     word_ref_interval_dict, segmentation_interval_dict
+        #     )
+
         print("Word boundaries:")
         print("Precision: {:.2f}%".format(p*100))
         print("Recall: {:.2f}%".format(r*100))
@@ -356,6 +425,10 @@ def main():
         print("OS: {:.2f}%".format(get_os(p, r)*100))
         # print("R-value: {:.2f}%".format(get_rvalue(p, r)*100))
         print("-"*(79 - 4))
+
+        # print("Clusters:")
+        # print("Word purity: {:.2f}%".format(purity*100))
+        # print("-"*(79 - 4))
 
 
 if __name__ == "__main__":
