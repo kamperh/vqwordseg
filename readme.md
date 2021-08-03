@@ -3,7 +3,8 @@ Phone and Word Segmentation using Vector-Quantised Neural Networks
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](license.md)
 
-**To-do.** Maybe GPL-v3? Then need to update start of notebooks as well.
+**To-do.** Maybe GPL-v3? Then need to update start of notebooks as well. Need
+to figure out one license and try to stick to it.
 
 
 Disclaimer
@@ -153,8 +154,11 @@ DP penalized segmentation:
     # Buckeye (VQ-VAE)
     ./vq_phoneseg.py vqvae buckeye val
 
-    # Buckeye (Big CPC)
+    # Buckeye (CPC-big)
     ./vq_phoneseg.py --downsample_factor 1 --dur_weight 3 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
+
+    # Buckeye (ResDAVEnet-VQ)
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=txt --algorithm=dp_penalized resdavenet_vq buckeye val
 
     # Buckeye Felix split (VQ-VAE)
     ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized vqvae buckeye_felix test
@@ -174,6 +178,23 @@ Evaluate segmentation:
 
     # Buckeye (VQ-VAE)
     ./eval_segmentation.py vqvae buckeye val phoneseg_dp_penalized_n_seg
+
+
+Reducing a codebook using clustering
+------------------------------------
+If a codebook is very large, the codes could be reduced by clustering.
+The reduced codebook should be saved in a new model directory, and links to
+the original pre-quantized features should be created.
+
+As an example, in [cluster_codebook.ipynb](notebooks/cluster_codebook.ipynb),
+the ResDAVEnet-VQ codebook is loaded and reduced to 50 codes. The original
+codebook had 1024 codes, but only 498 of these were actually used; these are
+reduced to 50. The resulting codebook is saved to
+`exp/resdavenet_vq_clust50/buckeye/embedding.npy`. The pre-quantized features
+are linked to the original version in `exp/resdavenet_vq/`. The indices from
+the original model shouldn't be linked, since these doesn't match the new
+codebook (but an indices file isn't necessary for running many of the phone
+segmentation algorithms).
 
 
 Word segmentation

@@ -369,10 +369,11 @@ def main():
         )
 
     # Evaluate clustering
-    print("Scoring clusters (phone):")
-    purity = score_clusters(
-        phone_ref_interval_dict, segmentation_interval_dict
-        )
+    if not "word" in args.seg_tag:
+        print("Scoring clusters (phone):")
+        purity = score_clusters(
+            phone_ref_interval_dict, segmentation_interval_dict
+            )
 
     print("-"*(79 - 4))
     print("Phone boundaries:")
@@ -383,9 +384,10 @@ def main():
     print("R-value: {:.2f}%".format(get_rvalue(p, r)*100))
     print("-"*(79 - 4))
 
-    print("Clusters:")
-    print("Phone purity: {:.2f}%".format(purity*100))
-    print("-"*(79 - 4))
+    if not "word" in args.seg_tag:
+        print("Clusters:")
+        print("Phone purity: {:.2f}%".format(purity*100))
+        print("-"*(79 - 4))
 
     # Word-level evaluation
     if word_ref_dir.is_dir():

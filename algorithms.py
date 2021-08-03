@@ -88,7 +88,7 @@ def custom_viterbi(costs, n_frames):
 
     Parameters
     ----------
-    costs : n_frames(n_frames + 1)/2 vector
+    costs : n_frames*(n_frames + 1)/2 vector
         For t = 1, 2, ..., N the entries costs[i:i + t] contains the costs of
         seq[0:t] up to seq[t - 1:t], with i = t(t - 1)/2. Written out: costs =
         [cost(seq[0:1]), cost(seq[0:2]), cost(seq[1:2]), cost(seq[0:3]), ...,

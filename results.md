@@ -61,7 +61,7 @@ VQ-CPC DP penalized val:
     R-value: -266.58%
     ---------------------------------------------------------------------------
 
-Big CPC DP penalized val, dur_weight=3:
+CPC-big DP penalized val, dur_weight=3:
 
     ./eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized
     ---------------------------------------------------------------------------
@@ -86,7 +86,7 @@ Big CPC DP penalized val, dur_weight=3:
     OS: 354.58%
     ---------------------------------------------------------------------------
 
-Big CPC DP penalized val, dur_weight=5:
+CPC-big DP penalized val, dur_weight=5:
 
     ---------------------------------------------------------------------------
     Phone boundaries:
@@ -110,8 +110,9 @@ Big CPC DP penalized val, dur_weight=5:
     OS: 288.34%
     ---------------------------------------------------------------------------
 
-Big CPC DP penalized val, dur_weight=10:
+CPC-big DP penalized val, dur_weight=10:
 
+    ./eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized_tune
     ---------------------------------------------------------------------------
     Phone boundaries:
     Precision: 67.80%
@@ -132,6 +133,118 @@ Big CPC DP penalized val, dur_weight=10:
     Recall: 9.95%
     F-score: 5.04%
     OS: 194.71%
+    ---------------------------------------------------------------------------
+
+ResDAVENet-VQ merged val:
+
+    ./eval_segmentation.py resdavenet_vq buckeye val phoneseg_merge
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 30.99%
+    Recall: 98.06%
+    F-score: 47.10%
+    OS: 216.40%
+    R-value: -85.40%
+    ---------------------------------------------------------------------------
+    Clusters:
+    Phone purity: 34.65%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 9.79%
+    Recall: 95.72%
+    F-score: 17.77%
+    OS: 877.57%
+    R-value: -650.57%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 0.64%
+    Recall: 5.95%
+    F-score: 1.16%
+    OS: 829.73%
+    ---------------------------------------------------------------------------
+
+ResDAVENet-VQ DP penalized val, dur_weight=50:
+
+    ./eval_segmentation.py resdavenet_vq buckeye val phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 45.52%
+    Recall: 86.07%
+    F-score: 59.55%
+    OS: 89.07%
+    R-value: 18.51%
+    ---------------------------------------------------------------------------
+    Clusters:
+    Phone purity: 35.50%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 13.67%
+    Recall: 79.84%
+    F-score: 23.35%
+    OS: 483.95%
+    R-value: -320.41%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 1.55%
+    Recall: 8.77%
+    F-score: 2.63%
+    OS: 467.21%
+    ---------------------------------------------------------------------------
+
+ResDAVENet-VQ DP penalized val, dur_weight=200:
+
+    ./eval_segmentation.py resdavenet_vq buckeye val phoneseg_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 59.44%
+    Recall: 58.29%
+    F-score: 58.86%
+    OS: -1.94%
+    R-value: 65.06%
+    ---------------------------------------------------------------------------
+    Clusters:
+    Phone purity: 39.61%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 18.53%
+    Recall: 56.11%
+    F-score: 27.86%
+    OS: 202.78%
+    R-value: -90.95%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 3.44%
+    Recall: 10.61%
+    F-score: 5.20%
+    OS: 208.26%
+    ---------------------------------------------------------------------------
+
+ResDAVENet-VQ clustered codebook DP penalized val, dur_weight=50:
+
+    ./eval_segmentation.py resdavenet_vq_clust50 buckeye val phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 51.07%
+    Recall: 76.11%
+    F-score: 61.13%
+    OS: 49.02%
+    R-value: 46.95%
+    ---------------------------------------------------------------------------
+    Clusters:
+    Phone purity: 27.63%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 15.64%
+    Recall: 71.97%
+    F-score: 25.69%
+    OS: 360.22%
+    R-value: -217.92%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 2.09%
+    Recall: 9.48%
+    F-score: 3.43%
+    OS: 353.26%
     ---------------------------------------------------------------------------
 
 TP word segmentation on VQ-VAE DP penalized val:
