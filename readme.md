@@ -36,6 +36,8 @@ performed.
 
 Dataset format and directory structure
 --------------------------------------
+**To-do.** Maybe change `auxiliary_embedding2/` to `prequant/` throughout.
+
 This code should be usable with any dataset given that alignments and VQ
 encodings are provided.
 
@@ -159,6 +161,9 @@ DP penalized segmentation:
 
     # Buckeye (ResDAVEnet-VQ)
     ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=txt --algorithm=dp_penalized resdavenet_vq buckeye val
+
+    # Buckeye (ResDAVEnet-VQ3)
+    ./vq_phoneseg.py --downsample_factor 4 --dur_weight 0.001 --input_format=txt --algorithm=dp_penalized resdavenet_vq_quant3 buckeye val --output_tag=phoneseg_merge
 
     # Buckeye Felix split (VQ-VAE)
     ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized vqvae buckeye_felix test

@@ -61,6 +61,34 @@ VQ-CPC DP penalized val:
     R-value: -266.58%
     ---------------------------------------------------------------------------
 
+CPC-big normalized DP penalized val, dur_weight=200:
+
+    ./eval_segmentation.py cpc_big_normalized buckeye val phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 55.42%
+    Recall: 85.47%
+    F-score: 67.24%
+    OS: 54.23%
+    R-value: 47.62%
+    ---------------------------------------------------------------------------
+    Clusters:
+    Phone purity: 36.86%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 14.91%
+    Recall: 87.52%
+    F-score: 25.48%
+    OS: 486.97%
+    R-value: -320.15%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 1.90%
+    Recall: 8.47%
+    F-score: 3.11%
+    OS: 345.42%
+    ---------------------------------------------------------------------------
+
 CPC-big DP penalized val, dur_weight=3:
 
     ./eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized
@@ -72,18 +100,21 @@ CPC-big DP penalized val, dur_weight=3:
     OS: 57.36%
     R-value: 45.20%
     ---------------------------------------------------------------------------
+    Clusters:
+    Phone purity: 38.10%
+    ---------------------------------------------------------------------------
     Word boundaries:
-    Precision: 14.47%
-    Recall: 86.89%
-    F-score: 24.81%
-    OS: 500.32%
-    R-value: -331.77%
+    Precision: 14.62%
+    Recall: 87.73%
+    F-score: 25.06%
+    OS: 500.14%
+    R-value: -331.31%
     ---------------------------------------------------------------------------
     Word token boundaries:
-    Precision: 1.87%
-    Recall: 8.48%
-    F-score: 3.06%
-    OS: 354.58%
+    Precision: 1.94%
+    Recall: 8.82%
+    F-score: 3.18%
+    OS: 354.59%
     ---------------------------------------------------------------------------
 
 CPC-big DP penalized val, dur_weight=5:
