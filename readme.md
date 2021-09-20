@@ -3,9 +3,6 @@ Phone and Word Segmentation using Vector-Quantised Neural Networks
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](license.md)
 
-**To-do.** Maybe GPL-v3? Then need to update start of notebooks as well. Need
-to figure out one license and try to stick to it.
-
 
 Disclaimer
 ----------
