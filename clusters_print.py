@@ -18,7 +18,7 @@ import sys
 from eval_segmentation import (
     get_intervals_from_dir, str_to_id_labels, intervals_to_max_overlap
     )
-import cluster_analysis
+from utils import cluster_analysis
 
 
 #-----------------------------------------------------------------------------#

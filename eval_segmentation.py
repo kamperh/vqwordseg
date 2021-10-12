@@ -16,8 +16,8 @@ import numpy as np
 import sys
 
 # from . import cluster_analysis
-from cluster_analysis import purity
-
+# from cluster_analysis import purity
+from utils import cluster_analysis
 
 #-----------------------------------------------------------------------------#
 #                              UTILITY FUNCTIONS                              #
@@ -326,7 +326,7 @@ def score_clusters(ref_interval_dict, pred_interval_dict):
         ref_labels.extend(intervals_to_max_overlap(ref, pred))
         pred_labels.extend([int(i[2]) for i in pred])
     
-    pur = purity(ref_labels, pred_labels)
+    pur = cluster_analysis.purity(ref_labels, pred_labels)
 
     h, c, V = metrics.homogeneity_completeness_v_measure(
         ref_labels, pred_labels)
