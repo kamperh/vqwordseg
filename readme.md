@@ -4,15 +4,15 @@ Phone and Word Segmentation using Vector-Quantised Neural Networks
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](license.md)
 
 
-Disclaimer
-----------
+## Disclaimer
+
 The code provided here is not pretty. But research should be reproducible. I
 provide no guarantees with the code, but please let me know if you have any
 problems, find bugs or have general comments.
 
 
-Installation
-------------
+## Installation
+
 You will require the following:
 
 - [Python 3](https://www.python.org/downloads/)
@@ -24,16 +24,14 @@ You will require the following:
 **To-do.** Add and describe a conda installation file.
 
 
-Minimal example
----------------
+## Minimal example
+
 **To-do.** Maybe a Colab notebook in which everything is installed and VQ-VAE
-codes are extracted for an input utterance. Synthesis can maybe even be
-performed.
+codes or CPC-big codes are extracted for an input utterance. Synthesis can
+maybe even be performed.
 
 
-Dataset format and directory structure
---------------------------------------
-**To-do.** Maybe change `auxiliary_embedding2/` to `prequant/` throughout.
+## Dataset format and directory structure
 
 This code should be usable with any dataset given that alignments and VQ
 encodings are provided.
@@ -102,8 +100,8 @@ and VQ-CPC models can be used to obtain codes for the Buckeye dataset. In the
 subsequent section VQ-segmentation is described.
 
 
-Example encodings: VQ-VAE and VQ-CPC input representations
-----------------------------------------------------------
+## Example encodings: VQ-VAE and VQ-CPC input representations
+
 You can obtain the VQ input representations using the file format indicated
 above. As an example, here I describe how I did it for the Buckeye data. The
 data files for the Buckeye corpus can be downloaded as part of a release at
@@ -143,8 +141,8 @@ You can delete all the created `auxiliary_embedding1/` and `codes/` directories
 since these are not used for segmentation.
 
 
-Phone segmentation
-------------------
+## Phone segmentation
+
 DP penalized segmentation:
 
     # Buckeye (VQ-CPC)
@@ -179,11 +177,57 @@ DP penalized N-seg. segmentation:
 Evaluate segmentation:
 
     # Buckeye (VQ-VAE)
-    ./eval_segmentation.py vqvae buckeye val phoneseg_dp_penalized_n_seg
+    ./utils/eval_segmentation.py vqvae buckeye val phoneseg_dp_penalized_n_seg
+
+    # Buckeye (CPC-big)
+    ./utils/eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized
 
 
-Reducing a codebook using clustering
-------------------------------------
+## Word segmentation
+
+Word segmentation are performed on the segmented phone sequences.
+
+Adaptor grammar word segmentation:
+
+    conda activate wordseg
+    # Buckeye (VQ-VAE)
+    ./vq_wordseg.py --algorithm=ag vqvae buckeye val phoneseg_dp_penalized
+
+    # Buckeye (CPC-big)
+    ./vq_wordseg.py --algorithm=ag cpc_big buckeye val phoneseg_dp_penalized
+
+Evaluate the segmentation:
+
+    # Buckeye (VQ-VAE)
+    ./utils/eval_segmentation.py vqvae buckeye val wordseg_ag_dp_penalized
+    ./utils/eval_segmentation.py cpc_big buckeye val wordseg_ag_dp_penalized
+
+
+## Analysis
+
+Print the word clusters:
+
+    ./utils/clusters_print.py cpc_big buckeye val wordseg_ag_dp_penalized
+
+Listen to segmented codes:
+
+    ./utils/cluster_wav.py vqvae buckeye val phoneseg_dp_penalized 343
+    ./utils/cluster_wav.py vqvae buckeye val wordseg_tp_dp_penalized 486_
+    ./utils/cluster_wav.py cpc_big buckeye val phoneseg_dp_penalized 50
+
+This requires `sox` and that you change the path at the beginning of
+`cluster_wav.py`.
+
+Synthesize an utterance:
+
+    ./utils/indices_to_txt.py vqvae buckeye val phoneseg_dp_penalized s18_03a_025476-025541
+    cd ../VectorQuantizedVAE
+    ./synthesize_codes.py checkpoints/2019english/model.ckpt-500000.pt ../vqwordseg/s18_03a_025476-025541.txt
+    cd -
+
+
+## Reducing a codebook using clustering
+
 If a codebook is very large, the codes could be reduced by clustering.
 The reduced codebook should be saved in a new model directory, and links to
 the original pre-quantized features should be created.
@@ -197,35 +241,3 @@ are linked to the original version in `exp/resdavenet_vq/`. The indices from
 the original model shouldn't be linked, since these doesn't match the new
 codebook (but an indices file isn't necessary for running many of the phone
 segmentation algorithms).
-
-
-Word segmentation
------------------
-Word segmentation are performed on the segmented phone sequences.
-
-Adaptor grammar word segmentation:
-
-    conda activate wordseg
-    ./vq_wordseg.py --algorithm=ag vqvae buckeye val phoneseg_dp_penalized
-
-Evaluate the segmentation:
-
-    ./eval_segmentation.py vqvae buckeye val wordseg_ag_dp_penalized
-
-
-Analysis
---------
-Listen to segmented codes:
-
-    ./cluster_wav.py vqvae buckeye val phoneseg_dp_penalized 343
-    ./cluster_wav.py vqvae buckeye val wordseg_tp_dp_penalized 486_
-
-This requires `sox` and that you change the path at the beginning of
-`cluster_wav.py`.
-
-Synthesize an utterance:
-
-    ./indices_to_txt.py vqvae buckeye val phoneseg_dp_penalized s18_03a_025476-025541
-    cd ../VectorQuantizedVAE
-    ./synthesize_codes.py checkpoints/2019english/model.ckpt-500000.pt ../vqwordseg/s18_03a_025476-025541.txt
-    cd -

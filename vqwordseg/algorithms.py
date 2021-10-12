@@ -17,11 +17,15 @@ import numpy as np
 #         PHONE DURATION PRIORS: NEGATIVE LOG PROB (WANT TO MINIMIZE)         #
 #-----------------------------------------------------------------------------#
 
-def neg_log_geometric(dur):
-    return -(dur - 1)  # not sure if this is really "geometric"
+def neg_chorowski(dur, weight=None):
+    score = -(dur - 1)
+    if weight is None:
+        return score
+    else:
+        return -weight*score
 
 
-def neg_log_poisson(dur, poisson_param=5):
+def neg_log_poisson(dur, poisson_param=5, weight=None):
     return -(
         -poisson_param + dur*np.log(poisson_param) - np.log(factorial(dur))
         )
@@ -47,23 +51,33 @@ histogram = np.array([
     3.18892804e-06, 7.97232011e-06, 1.11612481e-05, 4.78339206e-06,
     3.18892804e-06, 3.18892804e-06, 3.18892804e-06, 3.18892804e-06
     ])
-def neg_log_hist(dur):
-    return -np.log(0 if dur >= len(histogram) else histogram[dur])
+histogram = histogram/np.sum(histogram)
+def neg_log_hist(dur, weight=None):
+    score = -np.log(0 if dur >= len(histogram) else histogram[dur])
+    if weight is None:
+        return score
+    else:
+        return weight*(score) + np.log(np.sum(histogram**weight))
 
 
 # Cache Gamma
-shape, loc, scale = (3, 0, 2.6)
+# shape, loc, scale = (3, 0, 2.6)
+shape, loc, scale = (3, 0, 2.5)
 gamma_cache = []
 for dur in range(200):
     gamma_cache.append(gamma.pdf(dur, shape, loc, scale))
-def neg_log_gamma(dur):
+def neg_log_gamma(dur, weight=None):
         # (
         # 2.967152765811849, -0.004979890790653328, 2.6549778308011014
         # )
     if dur < 200:
-        return -np.log(gamma_cache[dur])
+        score = -np.log(gamma_cache[dur])
     else:
-        return -np.log(gamma.pdf(dur, shape, loc, scale))
+        score = -np.log(gamma.pdf(dur, shape, loc, scale))
+    if weight is None:
+        return score
+    else:
+        return weight*score + np.log(np.sum(gamma_cache**weight))
 
 
 #-----------------------------------------------------------------------------#
@@ -143,10 +157,10 @@ def custom_viterbi(costs, n_frames):
 
 
 def dp_penalized(embedding, z, n_min_frames=0, n_max_frames=15,
-        dur_weight=20**2, dur_weight_func=neg_log_geometric):
+        dur_weight=20**2, dur_weight_func=neg_chorowski, model_eos=False):
 
     # Hyperparameters
-    count_weight = 0
+    # count_weight = 0
        
     # Distances between each z and each embedding (squared Euclidean)
     embedding_distances = distance.cdist(z, embedding, metric="sqeuclidean")
@@ -155,6 +169,7 @@ def dp_penalized(embedding, z, n_min_frames=0, n_max_frames=15,
     # Costs for segment intervals
     segment_intervals = get_segment_intervals(z.shape[0], n_max_frames)
     costs = np.inf*np.ones(len(segment_intervals))
+    i_eos = segment_intervals[-1][-1]
     for i_seg, interval in enumerate(segment_intervals):
         if interval is None:
             continue
@@ -162,12 +177,20 @@ def dp_penalized(embedding, z, n_min_frames=0, n_max_frames=15,
         dur = i_end - i_start
         if dur < n_min_frames:
             continue
-        # cost = np.min(
-        #     np.sum(embedding_distances[i_start:i_end, :], axis=0)
-        #     ) - dur_weight*(dur - 1) + count_weight
+
         cost = np.min(
             np.sum(embedding_distances[i_start:i_end, :], axis=0)
-            ) + dur_weight*dur_weight_func(dur) + count_weight
+            ) + dur_weight*dur_weight_func(dur)  # + count_weight
+
+        # End-of-sequence
+        if model_eos:
+            alpha = 0.1
+            K = 50
+            if i_end == i_eos:
+                cost += -np.log(alpha)
+            else:
+                cost += -np.log((1 - alpha)/K)
+
         costs[i_seg] = cost
     
     # Viterbi segmentation
@@ -255,7 +278,7 @@ def custom_viterbi_n_segments(costs, n_frames, n_segments):
 
 def dp_penalized_n_seg(embedding, z, n_min_frames=0, n_max_frames=15,
         dur_weight=0, n_frames_per_segment=7, n_min_segments=0,
-        dur_weight_func=neg_log_geometric):
+        dur_weight_func=neg_chorowski):
 
     # Hyperparameters
     n_segments = max(1, int(round(z.shape[0]/n_frames_per_segment)))

@@ -9,12 +9,14 @@ Date: 2020
 """
 
 from pathlib import Path
+from sklearn import metrics
 from tqdm import tqdm
 import argparse
 import numpy as np
 import sys
 
-import cluster_analysis
+# from . import cluster_analysis
+from cluster_analysis import purity
 
 
 #-----------------------------------------------------------------------------#
@@ -111,6 +113,38 @@ def intervals_to_max_overlap(ref_intervals, pred_intervals, ref_labels=None):
         mapped_seq.append(ref_labels[np.argmax(overlaps)]) 
     return mapped_seq
 
+
+def str_to_id_labels(d):
+    """
+    Converts labels given in underscore format to integer IDs.
+
+    For instance, the label "37_18_22_" could be mapped to ID 17. The new
+    dictionary as well as the key mappings are returned.
+
+    Return
+    ------
+    new_dict, str_to_id, id_to_str : (dict, dict, dict)
+    """
+    label_types = set()
+    for key in d:
+        for _, _, label in d[key]:
+            label_types.add(label)
+
+    key_sorter = lambda x: [int(i) for i in x.split("_") if i != ""]
+    str_to_id = {
+        s: i for i, s in enumerate(sorted(label_types, key=key_sorter))
+        }
+    id_to_str = {
+        i: s for i, s in enumerate(sorted(label_types, key=key_sorter))
+        }
+
+    new_dict = {}
+    for key in d:
+        new_dict[key] = []
+        for start, end, label in d[key]:
+            new_dict[key].append((start, end, str_to_id[label]))
+
+    return new_dict, str_to_id, id_to_str
 
 
 #-----------------------------------------------------------------------------#
@@ -285,15 +319,19 @@ def get_rvalue(precision, recall):
 def score_clusters(ref_interval_dict, pred_interval_dict):
     ref_labels = []
     pred_labels = []
-    for utt in tqdm(ref_interval_dict):
+    for utt in ref_interval_dict:
+    # for utt in tqdm(ref_interval_dict):
         ref = ref_interval_dict[utt]
         pred = pred_interval_dict[utt]
         ref_labels.extend(intervals_to_max_overlap(ref, pred))
         pred_labels.extend([int(i[2]) for i in pred])
     
-    purity = cluster_analysis.purity(ref_labels, pred_labels)
+    pur = purity(ref_labels, pred_labels)
+
+    h, c, V = metrics.homogeneity_completeness_v_measure(
+        ref_labels, pred_labels)
     
-    return purity
+    return pur, h, c, V
 
 
 #-----------------------------------------------------------------------------#
@@ -319,13 +357,17 @@ def main():
 
     # Read phone reference
     print("Reading: {}".format(phone_ref_dir))
-    assert phone_ref_dir.is_dir(), "missing directory: {}".format(phone_ref_dir)
+    assert phone_ref_dir.is_dir(), "missing directory: {}".format(
+        phone_ref_dir
+        )
     phone_ref_interval_dict = get_intervals_from_dir(phone_ref_dir, utterances)
 
     # Read word reference
     if word_ref_dir.is_dir():
         print("Reading: {}".format(word_ref_dir))
-        word_ref_interval_dict = get_intervals_from_dir(word_ref_dir, utterances)
+        word_ref_interval_dict = get_intervals_from_dir(
+            word_ref_dir, utterances
+            )
 
     # Convert intervals to boundaries
     print("Converting intervals to boundaries:")
@@ -346,17 +388,12 @@ def main():
                 word_ref_interval_dict[utt_key]
                 )
 
-    # Temp
-    # print(utt_key)
-    # print(segmentation_interval_dict[utt_key])
-    # print(phone_ref_interval_dict[utt_key])
-    # print(intervals_to_max_overlap(
-    #     phone_ref_interval_dict[utt_key],
-    #     segmentation_interval_dict[utt_key],
-    #     ))
-    # # print(len(segmentation_boundaries_dict[utt_key]))
-    # # print(len(phone_ref_boundaries_dict[utt_key]))
-    # assert False
+    # Map e.g. "23_12_" to a unique integer ID e.g. 10
+    if ("word" in args.seg_tag and "_" in
+            list(segmentation_interval_dict.values())[0][0][-1]):
+        segmentation_interval_dict, str_to_id, id_to_str = str_to_id_labels(
+            segmentation_interval_dict
+            )
 
     # Evaluate phone boundaries
     reference_list = []
@@ -369,11 +406,11 @@ def main():
         )
 
     # Evaluate clustering
-    if not "word" in args.seg_tag:
-        print("Scoring clusters (phone):")
-        purity = score_clusters(
-            phone_ref_interval_dict, segmentation_interval_dict
-            )
+    # if not "word" in args.seg_tag:
+    # print("Scoring clusters (phone):")
+    purity, h, c, V = score_clusters(
+        phone_ref_interval_dict, segmentation_interval_dict
+        )
 
     print("-"*(79 - 4))
     print("Phone boundaries:")
@@ -384,10 +421,13 @@ def main():
     print("R-value: {:.2f}%".format(get_rvalue(p, r)*100))
     print("-"*(79 - 4))
 
-    if not "word" in args.seg_tag:
-        print("Clusters:")
-        print("Phone purity: {:.2f}%".format(purity*100))
-        print("-"*(79 - 4))
+    # if not "word" in args.seg_tag:
+    print("Phone clusters:")
+    print("Purity: {:.2f}%".format(purity*100))
+    print("Homogeneity: {:.2f}%".format(h*100))
+    print("Completeness: {:.2f}%".format(c*100))
+    print("V-measure: {:.2f}%".format(V*100))
+    print("-"*(79 - 4))
 
     # Word-level evaluation
     if word_ref_dir.is_dir():
@@ -402,11 +442,11 @@ def main():
             reference_list, segmentation_list, tolerance=args.word_tolerance
             )
 
-        # # Evaluate clustering
+        # Evaluate clustering
         # print("Scoring clusters (word):")
-        # purity = score_clusters(
-        #     word_ref_interval_dict, segmentation_interval_dict
-        #     )
+        purity, h, c, V = score_clusters(
+            word_ref_interval_dict, segmentation_interval_dict
+            )
 
         print("Word boundaries:")
         print("Precision: {:.2f}%".format(p*100))
@@ -428,9 +468,13 @@ def main():
         # print("R-value: {:.2f}%".format(get_rvalue(p, r)*100))
         print("-"*(79 - 4))
 
-        # print("Clusters:")
-        # print("Word purity: {:.2f}%".format(purity*100))
-        # print("-"*(79 - 4))
+        # if not "word" in args.seg_tag:
+        print("Word clusters:")
+        print("Purity: {:.2f}%".format(purity*100))
+        print("Homogeneity: {:.2f}%".format(h*100))
+        print("Completeness: {:.2f}%".format(c*100))
+        print("V-measure: {:.2f}%".format(V*100))
+        print("-"*(79 - 4))
 
 
 if __name__ == "__main__":

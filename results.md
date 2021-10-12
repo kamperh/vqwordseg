@@ -89,6 +89,37 @@ CPC-big normalized DP penalized val, dur_weight=200:
     OS: 345.42%
     ---------------------------------------------------------------------------
 
+CPC-big DP penalized val, Gamma:
+
+    # ./utils/eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized_gamma
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 62.81%
+    Recall: 76.87%
+    F-score: 69.13%
+    OS: 22.39%
+    R-value: 67.81%
+    ---------------------------------------------------------------------------
+    Clusters:
+    Phone purity: 40.07%
+    Phone homogeneity: 40.95%
+    Phone completeness: 38.84%
+    Phone V-measure: 39.87%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 17.09%
+    Recall: 79.75%
+    F-score: 28.14%
+    OS: 366.72%
+    R-value: -220.46%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 2.73%
+    Recall: 9.83%
+    F-score: 4.27%
+    OS: 260.07%
+    ---------------------------------------------------------------------------    
+
 CPC-big DP penalized val, dur_weight=3:
 
     ./eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized
@@ -102,6 +133,9 @@ CPC-big DP penalized val, dur_weight=3:
     ---------------------------------------------------------------------------
     Clusters:
     Phone purity: 38.10%
+    Phone homogeneity: 38.65%
+    Phone completeness: 36.77%
+    Phone V-measure: 37.69%
     ---------------------------------------------------------------------------
     Word boundaries:
     Precision: 14.62%
@@ -152,18 +186,55 @@ CPC-big DP penalized val, dur_weight=10:
     OS: -1.80%
     R-value: 72.09%
     ---------------------------------------------------------------------------
+    Clusters:
+    Phone purity: 41.74%
+    Phone homogeneity: 42.57%
+    Phone completeness: 40.42%
+    Phone V-measure: 41.47%
+    ---------------------------------------------------------------------------
     Word boundaries:
-    Precision: 17.79%
-    Recall: 66.63%
-    F-score: 28.08%
-    OS: 274.59%
-    R-value: -147.18%
+    Precision: 18.04%
+    Recall: 67.56%
+    F-score: 28.48%
+    OS: 274.48%
+    R-value: -146.70%
     ---------------------------------------------------------------------------
     Word token boundaries:
-    Precision: 3.38%
-    Recall: 9.95%
-    F-score: 5.04%
+    Precision: 3.57%
+    Recall: 10.51%
+    F-score: 5.33%
     OS: 194.71%
+    ---------------------------------------------------------------------------
+
+CPC-big DP penalized val, dur_weight=50:
+
+    ./utils/eval_segmentation.py cpc_big buckeye val dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 69.48%
+    Recall: 36.79%
+    F-score: 48.11%
+    OS: -47.04%
+    R-value: 54.89%
+    ---------------------------------------------------------------------------
+    Clusters:
+    Phone purity: 40.20%
+    Phone homogeneity: 38.64%
+    Phone completeness: 37.47%
+    Phone V-measure: 38.05%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 18.75%
+    Recall: 37.88%
+    F-score: 25.08%
+    OS: 102.04%
+    R-value: -17.77%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 6.88%
+    Recall: 11.86%
+    F-score: 8.71%
+    OS: 72.54%
     ---------------------------------------------------------------------------
 
 ResDAVENet-VQ merged val:
@@ -374,6 +445,31 @@ AG word segmentation on VQ-VAE DP penalized val, Gamma prior, dur_weight=15:
     Recall: 11.39%
     F-score: 10.27%
     OS: 21.86%
+    ---------------------------------------------------------------------------
+
+AG word segmentation on CPC-big DP penalized val, dur_weight=3:
+    
+    # ./utils/eval_segmentation.py cpc_big buckeye val wordseg_ag_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.76%
+    Recall: 51.77%
+    F-score: 62.48%
+    OS: -34.27%
+    R-value: 65.48%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 22.07%
+    Recall: 55.32%
+    F-score: 31.55%
+    OS: 150.63%
+    R-value: -47.61%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 6.85%
+    Recall: 14.17%
+    F-score: 9.23%
+    OS: 106.97%
     ---------------------------------------------------------------------------
 
 

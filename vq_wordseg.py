@@ -13,8 +13,8 @@ from tqdm import tqdm
 import argparse
 import sys
 
-from eval_segmentation import get_intervals_from_dir
-import algorithms
+from utils import eval_segmentation
+from vqwordseg import algorithms
 
 
 #-----------------------------------------------------------------------------#
@@ -27,7 +27,8 @@ def check_argv():
         description=__doc__.strip().split("\n")[0], add_help=False
         )
     parser.add_argument(
-        "model", help="input VQ representations", choices=["vqvae", "vqcpc"]
+        "model", help="input VQ representations",
+        choices=["vqvae", "vqcpc", "cpc_big"]
         )
     parser.add_argument("dataset", type=str, help="input dataset")
     parser.add_argument(
@@ -75,7 +76,9 @@ def main():
     phoneseg_interval_dict = {}
     print("Reading: {}".format(input_dir))
     assert input_dir.is_dir(), "missing directory: {}".format(input_dir)
-    phoneseg_interval_dict = get_intervals_from_dir(input_dir)
+    phoneseg_interval_dict = eval_segmentation.get_intervals_from_dir(
+        input_dir
+        )
     utterances = phoneseg_interval_dict.keys()
 
     # # Temp

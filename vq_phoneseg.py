@@ -14,7 +14,7 @@ import argparse
 import numpy as np
 import sys
 
-import algorithms
+from vqwordseg import algorithms
 
 
 #-----------------------------------------------------------------------------#
@@ -73,10 +73,14 @@ def check_argv():
         )
     parser.add_argument(
         "--dur_weight_func",
-        choices=["neg_log_geometric", "neg_log_poisson", "neg_log_hist",
-        "neg_log_gamma"], default="neg_log_geometric",
+        choices=["neg_chorowski", "neg_log_poisson", "neg_log_hist",
+        "neg_log_gamma"], default="neg_chorowski",
         help="function to use for penalizing duration; "
         "if probabilistic, the negative log of the prior is used"
+        )
+    parser.add_argument(
+        "--model_eos", dest="model_eos", action="store_true",
+        help="model end-of-sentence"
         )
     parser.add_argument(
         "--only_save_intervals", dest="only_save_intervals",
@@ -115,7 +119,7 @@ def main():
 
     # Directories and files
     input_dir = Path("exp")/args.model/args.dataset/args.split
-    z_dir = input_dir/"auxiliary_embedding2"
+    z_dir = input_dir/"prequant"
     print("Reading: {}".format(z_dir))
     assert z_dir.is_dir(), "missing directory: {}".format(z_dir)
     if args.input_format == "npy":
@@ -160,7 +164,7 @@ def main():
         else:
             boundaries, code_indices = segment_func(
                 embedding, z, dur_weight=args.dur_weight,
-                dur_weight_func=dur_weight_func
+                dur_weight_func=dur_weight_func, model_eos=args.model_eos
                 )
 
         # Convert boundaries to same frequency as reference
