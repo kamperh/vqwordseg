@@ -199,28 +199,28 @@ Adaptor grammar word segmentation:
 Evaluate the segmentation:
 
     # Buckeye (VQ-VAE)
-    ./utils/eval_segmentation.py vqvae buckeye val wordseg_ag_dp_penalized
-    ./utils/eval_segmentation.py cpc_big buckeye val wordseg_ag_dp_penalized
+    ./eval_segmentation.py vqvae buckeye val wordseg_ag_dp_penalized
+    ./eval_segmentation.py cpc_big buckeye val wordseg_ag_dp_penalized
 
 
 ## Analysis
 
 Print the word clusters:
 
-    ./utils/clusters_print.py cpc_big buckeye val wordseg_ag_dp_penalized
+    ./clusters_print.py cpc_big buckeye val wordseg_ag_dp_penalized
 
 Listen to segmented codes:
 
-    ./utils/cluster_wav.py vqvae buckeye val phoneseg_dp_penalized 343
-    ./utils/cluster_wav.py vqvae buckeye val wordseg_tp_dp_penalized 486_
-    ./utils/cluster_wav.py cpc_big buckeye val phoneseg_dp_penalized 50
+    ./cluster_wav.py vqvae buckeye val phoneseg_dp_penalized 343
+    ./cluster_wav.py vqvae buckeye val wordseg_tp_dp_penalized 486_
+    ./cluster_wav.py cpc_big buckeye val phoneseg_dp_penalized 50
 
 This requires `sox` and that you change the path at the beginning of
 `cluster_wav.py`.
 
 Synthesize an utterance:
 
-    ./utils/indices_to_txt.py vqvae buckeye val phoneseg_dp_penalized s18_03a_025476-025541
+    ./indices_to_txt.py vqvae buckeye val phoneseg_dp_penalized s18_03a_025476-025541
     cd ../VectorQuantizedVAE
     ./synthesize_codes.py checkpoints/2019english/model.ckpt-500000.pt ../vqwordseg/s18_03a_025476-025541.txt
     cd -

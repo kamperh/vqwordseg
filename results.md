@@ -472,6 +472,80 @@ AG word segmentation on CPC-big DP penalized val, dur_weight=3:
     OS: 106.97%
     ---------------------------------------------------------------------------
 
+SegAE-RNN Gamma word segmentation on CPC-big DP penalized val, dur_weight=3:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 76.82%
+    Recall: 23.03%
+    F-score: 35.44%
+    OS: -70.02%
+    R-value: 45.52%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 69.88%
+    Homogeneity: 78.74%
+    Completeness: 28.07%
+    V-measure: 41.39%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 33.75%
+    Recall: 38.55%
+    F-score: 35.99%
+    OS: 14.22%
+    R-value: 41.71%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 22.14%
+    Recall: 24.43%
+    F-score: 23.23%
+    OS: 10.33%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    Purity: 59.36%
+    Homogeneity: 83.10%
+    Completeness: 57.88%
+    V-measure: 68.24%
+    ---------------------------------------------------------------------------
+
+SegAE-RNN Chorowski (dur_weight = 5) word segmentation on CPC-big DP penalized
+val (dur_weight=3):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.83%
+    Recall: 16.53%
+    F-score: 27.32%
+    OS: -79.03%
+    R-value: 40.95%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 85.20%
+    Homogeneity: 90.98%
+    Completeness: 30.12%
+    V-measure: 45.25%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 36.81%
+    Recall: 29.40%
+    F-score: 32.69%
+    OS: -20.13%
+    R-value: 45.45%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 23.96%
+    Recall: 20.60%
+    F-score: 22.16%
+    OS: -14.01%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    Purity: 81.49%
+    Homogeneity: 93.94%
+    Completeness: 61.29%
+    V-measure: 74.18%
+    ---------------------------------------------------------------------------
+
+
 
 Buckeye Felix split
 -------------------
