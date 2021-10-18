@@ -71,13 +71,13 @@ Buckeye. This matrix will have the shape `[n_codes, code_dim]`. The directory
 `exp/vqcpc/buckeye/val/` needs to contain at least subdirectories for the
 encoded validation set:
 
-- `auxiliary_embedding2/`
+- `prequant/`
 - `indices/`
 
-The `auxiliary_embedding2/` directory contains the encodings from the VQ model
-before quantization. These encodings are given as text files with an embedding
-per line, e.g. the first three lines of
-`auxiliary_embedding2/s01_01a_003222-003256.txt` could be:
+The `prequant/` directory contains the encodings from the VQ model before
+quantization. These encodings are given as text files with an embedding per
+line, e.g. the first three lines of `prequant/s01_01a_003222-003256.txt` could
+be:
 
      0.1601707935333252 -0.0403369292616844  0.4687763750553131 ...
      0.4489639401435852  1.3353070020675659  1.0353083610534668 ...
@@ -169,6 +169,10 @@ DP penalized segmentation:
     # Buckeye (VQ-VAE) with Gamma duration prior
     ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized_gamma --dur_weight_func neg_log_gamma --dur_weight 15 vqvae buckeye val
 
+    # ZeroSpeech'17 French (CPC-big)
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big zs2017_fr train
+
+
 DP penalized N-seg. segmentation:
 
     # Buckeye Felix split (VQ-VAE)
@@ -196,11 +200,25 @@ Adaptor grammar word segmentation:
     # Buckeye (CPC-big)
     ./vq_wordseg.py --algorithm=ag cpc_big buckeye val phoneseg_dp_penalized
 
+    # Buckeye (CPC-big)
+    ./vq_wordseg.py --algorithm=seg_aernn cpc_big buckeye val phoneseg_dp_penalized_tune
+
 Evaluate the segmentation:
 
     # Buckeye (VQ-VAE)
     ./eval_segmentation.py vqvae buckeye val wordseg_ag_dp_penalized
+
+    # Buckeye (CPC-big)
     ./eval_segmentation.py cpc_big buckeye val wordseg_ag_dp_penalized
+    ./eval_segmentation.py cpc_big buckeye val wordseg_seg_aernn_dp_penalized_tune
+
+Evaluate the segmentation with the ZeroSpeech tools:
+
+    ./intervals_to_zs.py cpc_big zs2017_zh train wordseg_segaernn_dp_penalized
+    cd ~/temp/zs2017
+    ln -s /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_zh/train/wordseg_segaernn_dp_penalized/clusters.txt 2017/track2/mandarin.txt
+    conda activate zerospeech2020
+    zerospeech2020-evaluate 2017-track2 . -l mandarin -o mandarin.json
 
 
 ## Analysis

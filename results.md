@@ -625,42 +625,83 @@ val (dur_weight=3):
     ---------------------------------------------------------------------------
 
 SegAE-RNN Chorowski (dur_weight=4) word segmentation on CPC-big DP penalized
-val (dur_weight=2) *best*:
+val (dur_weight=2), training on first 10k for 5 epochs *best*:
 
+     ./eval_segmentation.py cpc_big buckeye val wordseg_segaernn_dp_penalized_tune
     ---------------------------------------------------------------------------
     Phone boundaries:
-    Precision: 78.92%
-    Recall: 18.11%
-    F-score: 29.46%
-    OS: -77.05%
-    R-value: 42.07%
+    Precision: 78.80%
+    Recall: 18.62%
+    F-score: 30.12%
+    OS: -76.37%
+    R-value: 42.43%
     ---------------------------------------------------------------------------
     Phone clusters:
-    Purity: 83.84%
-    Homogeneity: 89.84%
-    Completeness: 29.82%
-    V-measure: 44.78%
+    Purity: 83.07%
+    Homogeneity: 89.31%
+    Completeness: 29.67%
+    V-measure: 44.54%
     ---------------------------------------------------------------------------
     Word boundaries:
-    Precision: 36.36%
-    Recall: 31.80%
-    F-score: 33.93%
-    OS: -12.54%
-    R-value: 45.65%
+    Precision: 36.78%
+    Recall: 33.12%
+    F-score: 34.85%
+    OS: -9.96%
+    R-value: 46.07%
     ---------------------------------------------------------------------------
     Word token boundaries:
-    Precision: 24.21%
-    Recall: 22.12%
-    F-score: 23.12%
-    OS: -8.63%
+    Precision: 24.64%
+    Recall: 22.96%
+    F-score: 23.77%
+    OS: -6.80%
     ---------------------------------------------------------------------------
     Word clusters:
-    No. clusters: 36293
-    uWER many: 45.35%
-    Purity: 79.43%
-    Homogeneity: 92.82%
-    Completeness: 60.40%
-    V-measure: 73.18%
+    No. clusters: 36308
+    uWER many: 45.40%
+    Purity: 78.45%
+    Homogeneity: 92.44%
+    Completeness: 60.16%
+    V-measure: 72.89%
+    ---------------------------------------------------------------------------
+
+SegAE-RNN Chorowski (dur_weight=3) word segmentation on CPC-big DP penalized
+val (dur_weight=2), training on all for 5 epochs:
+
+    ./eval_segmentation.py cpc_big buckeye val wordseg_seg_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.59%
+    Recall: 18.09%
+    F-score: 29.34%
+    OS: -76.68%
+    R-value: 42.05%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 84.42%
+    Homogeneity: 90.47%
+    Completeness: 29.84%
+    V-measure: 44.87%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 36.54%
+    Recall: 32.47%
+    F-score: 34.38%
+    OS: -11.15%
+    R-value: 45.84%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 23.99%
+    Recall: 22.15%
+    F-score: 23.03%
+    OS: -7.65%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 37377
+    uWER many: 44.83%
+    Purity: 80.30%
+    Homogeneity: 93.41%
+    Completeness: 60.37%
+    V-measure: 73.34%
     ---------------------------------------------------------------------------
 
 SegAE-RNN Chorowski (dur_weight=3) word segmentation on CPC-big DP penalized

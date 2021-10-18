@@ -123,6 +123,7 @@ def main():
     tokens = []  # (utt_path, start, end),
                  # e.g. ("datasets/buckeye/s38/s3803a.wav", 413.97, 414.50)
     for utt_key in tqdm(segmentation_interval_dict):
+        print(utt_key)
         speaker, utt, utt_start_end = utt_key.split("_")
         utt_start, utt_end = utt_start_end.split("-")
         utt_start = int(utt_start)

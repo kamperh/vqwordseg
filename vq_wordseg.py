@@ -13,8 +13,8 @@ from tqdm import tqdm
 import argparse
 import sys
 
-from utils import eval_segmentation
 from vqwordseg import algorithms
+import eval_segmentation
 
 
 #-----------------------------------------------------------------------------#
@@ -40,7 +40,7 @@ def check_argv():
     parser.add_argument(
         "--algorithm",
         help="word segmentation algorithm (default: %(default)s)",
-        choices=["ag", "tp", "rasanen15"], default="ag"
+        choices=["ag", "tp", "rasanen15", "seg_aernn"], default="ag"
         )
     parser.add_argument(
         "--output_tag", type=str, help="used to name the output directory; "
@@ -94,6 +94,8 @@ def main():
             )
     word_segmentation = segment_func(prepared_text)
     # print(prepared_text[:10])
+    # print(word_segmentation[:10])
+    # assert False
     wordseg_interval_dict = {}
     for i_utt, utt_key in tqdm(enumerate(utterances)):
         words_segmented = word_segmentation[i_utt].split(" ")
