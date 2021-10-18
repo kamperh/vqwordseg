@@ -276,6 +276,7 @@ def custom_viterbi_n_segments(costs, n_frames, n_segments):
     # print("Utterance loss: {:.4f}".format(summed_cost))
     return summed_cost, boundaries
 
+
 def dp_penalized_n_seg(embedding, z, n_min_frames=0, n_max_frames=15,
         dur_weight=0, n_frames_per_segment=7, n_min_segments=0,
         dur_weight_func=neg_chorowski):

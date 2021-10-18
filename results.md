@@ -508,41 +508,237 @@ SegAE-RNN Gamma word segmentation on CPC-big DP penalized val, dur_weight=3:
     V-measure: 68.24%
     ---------------------------------------------------------------------------
 
-SegAE-RNN Chorowski (dur_weight = 5) word segmentation on CPC-big DP penalized
+SegAE-RNN Chorowski (dur_weight=4) word segmentation on CPC-big DP penalized
+val (dur_weight=5):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.63%
+    Recall: 16.80%
+    F-score: 27.69%
+    OS: -78.63%
+    R-value: 41.15%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 79.61%
+    Homogeneity: 86.95%
+    Completeness: 29.56%
+    V-measure: 44.13%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 35.36%
+    Recall: 28.79%
+    F-score: 31.74%
+    OS: -18.59%
+    R-value: 44.60%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 22.99%
+    Recall: 20.02%
+    F-score: 21.40%
+    OS: -12.92%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 30835
+    uWER many: 49.58%
+    Purity: 74.44%
+    Homogeneity: 90.97%
+    Completeness: 60.98%
+    V-measure: 73.02%
+    ---------------------------------------------------------------------------
+
+SegAE-RNN Chorowski (dur_weight=5) word segmentation on CPC-big DP penalized
 val (dur_weight=3):
 
     ---------------------------------------------------------------------------
     Phone boundaries:
-    Precision: 78.83%
-    Recall: 16.53%
-    F-score: 27.32%
-    OS: -79.03%
-    R-value: 40.95%
+    Precision: 76.40%
+    Recall: 15.87%
+    F-score: 26.28%
+    OS: -79.23%
+    R-value: 40.48%
     ---------------------------------------------------------------------------
     Phone clusters:
     Purity: 85.20%
-    Homogeneity: 90.98%
-    Completeness: 30.12%
-    V-measure: 45.25%
+    Homogeneity: 90.90%
+    Completeness: 29.98%
+    V-measure: 45.09%
     ---------------------------------------------------------------------------
     Word boundaries:
-    Precision: 36.81%
-    Recall: 29.40%
-    F-score: 32.69%
-    OS: -20.13%
-    R-value: 45.45%
+    Precision: 36.57%
+    Recall: 28.94%
+    F-score: 32.31%
+    OS: -20.87%
+    R-value: 45.22%
     ---------------------------------------------------------------------------
     Word token boundaries:
-    Precision: 23.96%
-    Recall: 20.60%
-    F-score: 22.16%
-    OS: -14.01%
+    Precision: 24.15%
+    Recall: 20.64%
+    F-score: 22.26%
+    OS: -14.54%
     ---------------------------------------------------------------------------
     Word clusters:
-    Purity: 81.49%
-    Homogeneity: 93.94%
-    Completeness: 61.29%
+    uWER many: 44.77%
+    Purity: 81.74%
+    Homogeneity: 93.95%
+    Completeness: 61.28%
     V-measure: 74.18%
+    ---------------------------------------------------------------------------
+
+SegAE-RNN Chorowski (dur_weight=4) word segmentation on CPC-big DP penalized
+val (dur_weight=3):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.17%
+    Recall: 16.63%
+    F-score: 27.36%
+    OS: -78.45%
+    R-value: 41.02%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 83.65%
+    Homogeneity: 89.62%
+    Completeness: 29.87%
+    V-measure: 44.81%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 36.65%
+    Recall: 30.09%
+    F-score: 33.05%
+    OS: -17.90%
+    R-value: 45.53%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 24.06%
+    Recall: 21.07%
+    F-score: 22.47%
+    OS: -12.43%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 34671
+    uWER many: 45.71%
+    Purity: 79.65%
+    Homogeneity: 92.85%
+    Completeness: 60.79%
+    V-measure: 73.48%
+    ---------------------------------------------------------------------------
+
+SegAE-RNN Chorowski (dur_weight=4) word segmentation on CPC-big DP penalized
+val (dur_weight=2) *best*:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.92%
+    Recall: 18.11%
+    F-score: 29.46%
+    OS: -77.05%
+    R-value: 42.07%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 83.84%
+    Homogeneity: 89.84%
+    Completeness: 29.82%
+    V-measure: 44.78%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 36.36%
+    Recall: 31.80%
+    F-score: 33.93%
+    OS: -12.54%
+    R-value: 45.65%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 24.21%
+    Recall: 22.12%
+    F-score: 23.12%
+    OS: -8.63%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 36293
+    uWER many: 45.35%
+    Purity: 79.43%
+    Homogeneity: 92.82%
+    Completeness: 60.40%
+    V-measure: 73.18%
+    ---------------------------------------------------------------------------
+
+SegAE-RNN Chorowski (dur_weight=3) word segmentation on CPC-big DP penalized
+val (dur_weight=1):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 75.73%
+    Recall: 20.71%
+    F-score: 32.52%
+    OS: -72.65%
+    R-value: 43.88%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 80.85%
+    Homogeneity: 87.22%
+    Completeness: 29.12%
+    V-measure: 43.66%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 34.94%
+    Recall: 36.41%
+    F-score: 35.66%
+    OS: 4.22%
+    R-value: 44.16%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 23.21%
+    Recall: 23.96%
+    F-score: 23.58%
+    OS: 3.25%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 38268
+    uWER many: 48.26%
+    Purity: 75.26%
+    Homogeneity: 90.70%
+    Completeness: 58.93%
+    V-measure: 71.44%
+    ---------------------------------------------------------------------------
+
+SegAE-RNN Chorowski (dur_weight=4) word segmentation on CPC-big DP penalized
+val (dur_weight=0.1):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 75.17%
+    Recall: 18.91%
+    F-score: 30.21%
+    OS: -74.85%
+    R-value: 42.61%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 91.13%
+    Homogeneity: 94.76%
+    Completeness: 30.32%
+    V-measure: 45.94%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 34.42%
+    Recall: 33.00%
+    F-score: 33.70%
+    OS: -4.14%
+    R-value: 44.21%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 22.46%
+    Recall: 21.86%
+    F-score: 22.15%
+    OS: -2.68%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 46416
+    uWER many: 40.52%
+    Purity: 88.69%
+    Homogeneity: 96.36%
+    Completeness: 59.84%
+    V-measure: 73.83%
     ---------------------------------------------------------------------------
 
 

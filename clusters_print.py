@@ -16,7 +16,8 @@ import numpy as np
 import sys
 
 from eval_segmentation import (
-    get_intervals_from_dir, str_to_id_labels, intervals_to_max_overlap
+    get_intervals_from_dir, str_to_id_labels, intervals_to_max_overlap,
+    score_clusters
     )
 from utils import cluster_analysis
 
@@ -101,6 +102,9 @@ def main():
         ref_labels.extend(intervals_to_max_overlap(ref, pred))
         pred_labels.extend([int(i[2]) for i in pred])
     clusters = cluster_analysis.analyse_clusters(ref_labels, pred_labels)
+    purity, h, c, V, cluster_to_label_map_many = score_clusters(
+        word_ref_interval_dict, segmentation_interval_dict
+        )
 
     # Additional cluster analysis
     gender_purity = 0
@@ -136,6 +140,8 @@ def main():
             f"Cluster {i_cluster} = '{id_to_str[i_cluster]}' "
             f"(rank: {i_cluster_count})"
             )
+        if i_cluster in cluster_to_label_map_many:
+            print(f"Mapped to: '{cluster_to_label_map_many[i_cluster]}'")
 
         print(f"Size: {cluster['size']}")
         print(f"Purity: {cluster['purity']*100:.2f}%")

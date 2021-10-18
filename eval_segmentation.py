@@ -17,7 +17,8 @@ import sys
 
 # from . import cluster_analysis
 # from cluster_analysis import purity
-from utils import cluster_analysis
+from utils import cluster_analysis, dp_align
+
 
 #-----------------------------------------------------------------------------#
 #                              UTILITY FUNCTIONS                              #
@@ -327,11 +328,14 @@ def score_clusters(ref_interval_dict, pred_interval_dict):
         pred_labels.extend([int(i[2]) for i in pred])
     
     pur = cluster_analysis.purity(ref_labels, pred_labels)
+    cluster_to_label_map_many = cluster_analysis.many_to_one_mapping(
+        ref_labels, pred_labels
+        )
 
     h, c, V = metrics.homogeneity_completeness_v_measure(
         ref_labels, pred_labels)
     
-    return pur, h, c, V
+    return pur, h, c, V, cluster_to_label_map_many
 
 
 #-----------------------------------------------------------------------------#
@@ -408,7 +412,7 @@ def main():
     # Evaluate clustering
     # if not "word" in args.seg_tag:
     # print("Scoring clusters (phone):")
-    purity, h, c, V = score_clusters(
+    purity, h, c, V, cluster_to_label_map_many = score_clusters(
         phone_ref_interval_dict, segmentation_interval_dict
         )
 
@@ -444,9 +448,27 @@ def main():
 
         # Evaluate clustering
         # print("Scoring clusters (word):")
-        purity, h, c, V = score_clusters(
+        purity, h, c, V, cluster_to_label_map_many = score_clusters(
             word_ref_interval_dict, segmentation_interval_dict
             )
+
+        dp_error_many = dp_align.DPError()
+        for utt_key in word_ref_boundaries_dict:
+            ref = [i[2] for i in word_ref_interval_dict[utt_key]]
+            many_mapped = [
+                cluster_to_label_map_many[i[2]] for i in
+                segmentation_interval_dict[utt_key]
+                ]
+            # print(utt_key)
+            # print(ref)
+            # print([i[2] for i in segmentation_interval_dict[utt_key]])
+            # print(
+            #     [id_to_str[i[2]] for i in segmentation_interval_dict[utt_key]]
+            #     )
+            # print(many_mapped)
+            cur_dp_error_many = dp_align.dp_align(ref, many_mapped)
+            dp_error_many = dp_error_many + cur_dp_error_many
+        wer = dp_error_many.get_wer()
 
         print("Word boundaries:")
         print("Precision: {:.2f}%".format(p*100))
@@ -470,6 +492,8 @@ def main():
 
         # if not "word" in args.seg_tag:
         print("Word clusters:")
+        print("No. clusters: {}".format(len(cluster_to_label_map_many)))
+        print("uWER many: {:.2f}%".format(wer*100))
         print("Purity: {:.2f}%".format(purity*100))
         print("Homogeneity: {:.2f}%".format(h*100))
         print("Completeness: {:.2f}%".format(c*100))
