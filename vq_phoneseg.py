@@ -82,11 +82,11 @@ def check_argv():
         "--model_eos", dest="model_eos", action="store_true",
         help="model end-of-sentence"
         )
-    parser.add_argument(
-        "--only_save_intervals", dest="only_save_intervals",
-        action="store_true", help="if set, boundaries and indices are not "
-        "saved as Numpy archives, only the interval text files are saved"
-        )
+    # parser.add_argument(
+    #     "--only_save_intervals", dest="only_save_intervals",
+    #     action="store_true", help="if set, boundaries and indices are not "
+    #     "saved as Numpy archives, only the interval text files are saved"
+    #     )
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -135,9 +135,9 @@ def main():
     embedding = np.load(embedding_fn)
 
     # Segment files one-by-one
-    if not args.only_save_intervals:
-        boundaries_dict = {}
-        code_indices_dict = {}
+    # if not args.only_save_intervals:
+    #     boundaries_dict = {}
+    #     code_indices_dict = {}
     output_base_dir = input_dir/args.output_tag
     output_base_dir.mkdir(exist_ok=True, parents=True)
     print("Writing to: {}".format(output_base_dir))
@@ -187,27 +187,46 @@ def main():
                     ))
             code_indices = code_indices_upsampled
 
+            # Merge repeated codes (only possible for intervals > 15 frames)
+            i_token = 0
+            while i_token < len(code_indices) - 1:
+                cur_start, cur_end, cur_label = code_indices[i_token]
+                print(cur_start, cur_end, cur_label)
+                next_start, next_end, next_label = code_indices[i_token + 1]
+                print(next_start, next_end, next_label)
+                print()
+                if cur_label == next_label:
+                    phoneseg_interval_dict[utt_key].pop(i_token)
+                    phoneseg_interval_dict[utt_key].pop(i_token)
+                    phoneseg_interval_dict[utt_key].insert(
+                        i_token,
+                        (cur_start, next_end, cur_label)
+                        )
+                else:
+                    i_token += 1
+            assert False
+
         # Write intervals
         utt_key = input_fn.stem
         with open((output_dir/utt_key).with_suffix(".txt"), "w") as f:
             for start, end, index in code_indices:
                 f.write("{:d} {:d} {:d}\n".format(start, end, index))
 
-        if not args.only_save_intervals:
-            boundaries_dict[utt_key] = boundaries
-            code_indices_dict[utt_key] = code_indices
+        # if not args.only_save_intervals:
+        #     boundaries_dict[utt_key] = boundaries
+        #     code_indices_dict[utt_key] = code_indices
 
-    if not args.only_save_intervals:
+    # if not args.only_save_intervals:
 
-        # Write code indices
-        output_fn = output_base_dir/"indices.npz"
-        print("Writing: {}".format(output_fn))
-        np.savez_compressed(output_fn, **code_indices_dict)
+    #     # Write code indices
+    #     output_fn = output_base_dir/"indices.npz"
+    #     print("Writing: {}".format(output_fn))
+    #     np.savez_compressed(output_fn, **code_indices_dict)
 
-        # Write boundaries
-        output_fn = output_base_dir/"boundaries.npz"
-        print("Writing: {}".format(output_fn))
-        np.savez_compressed(output_fn, **boundaries_dict)
+    #     # Write boundaries
+    #     output_fn = output_base_dir/"boundaries.npz"
+    #     print("Writing: {}".format(output_fn))
+    #     np.savez_compressed(output_fn, **boundaries_dict)
 
 
 if __name__ == "__main__":
