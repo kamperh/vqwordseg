@@ -172,6 +172,8 @@ DP penalized segmentation:
     # ZeroSpeech'17 French (CPC-big)
     ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big zs2017_fr train
 
+    # ZeroSpeech'17 Mandarin (CPC-big)
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big zs2017_zh train
 
 DP penalized N-seg. segmentation:
 

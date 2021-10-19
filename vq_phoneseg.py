@@ -153,6 +153,8 @@ def main():
 
         # Segment
         if z.ndim == 1:
+            # print(input_fn)
+            # assert False
             continue
         if args.algorithm == "dp_penalized_n_seg":
             boundaries, code_indices = segment_func(
