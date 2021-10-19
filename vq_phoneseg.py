@@ -187,24 +187,21 @@ def main():
                     ))
             code_indices = code_indices_upsampled
 
-            # Merge repeated codes (only possible for intervals > 15 frames)
-            i_token = 0
-            while i_token < len(code_indices) - 1:
-                cur_start, cur_end, cur_label = code_indices[i_token]
-                print(cur_start, cur_end, cur_label)
-                next_start, next_end, next_label = code_indices[i_token + 1]
-                print(next_start, next_end, next_label)
-                print()
-                if cur_label == next_label:
-                    phoneseg_interval_dict[utt_key].pop(i_token)
-                    phoneseg_interval_dict[utt_key].pop(i_token)
-                    phoneseg_interval_dict[utt_key].insert(
-                        i_token,
-                        (cur_start, next_end, cur_label)
-                        )
-                else:
-                    i_token += 1
-            assert False
+        # Merge repeated codes (only possible for intervals > 15 frames)
+        i_token = 0
+        while i_token < len(code_indices) - 1:
+            cur_start, cur_end, cur_label = code_indices[i_token]
+            next_start, next_end, next_label = code_indices[i_token + 1]
+            if cur_label == next_label:
+                code_indices.pop(i_token)
+                code_indices.pop(i_token)
+                code_indices.insert(
+                    i_token,
+                    (cur_start, next_end, cur_label)
+                    )
+                # print(input_fn.stem, cur_start, next_end, cur_label)
+            else:
+                i_token += 1
 
         # Write intervals
         utt_key = input_fn.stem

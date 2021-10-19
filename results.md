@@ -120,6 +120,45 @@ CPC-big DP penalized val, Gamma:
     OS: 260.07%
     ---------------------------------------------------------------------------    
 
+CPC-big DP penalized val, dur_weight=2:
+    
+    ./eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 51.04%
+    Recall: 88.75%
+    F-score: 64.81%
+    OS: 73.87%
+    R-value: 32.54%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 36.85%
+    Homogeneity: 37.25%
+    Completeness: 35.53%
+    V-measure: 36.37%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 13.60%
+    Recall: 90.20%
+    F-score: 23.64%
+    OS: 563.17%
+    R-value: -384.20%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 1.70%
+    Recall: 8.47%
+    F-score: 2.83%
+    OS: 399.25%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 50
+    uWER many: 473.16%
+    Purity: 7.44%
+    Homogeneity: 15.91%
+    Completeness: 28.84%
+    V-measure: 20.51%
+    ---------------------------------------------------------------------------
+
 CPC-big DP penalized val, dur_weight=3:
 
     ./eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized
@@ -152,7 +191,6 @@ CPC-big DP penalized val, dur_weight=3:
     ---------------------------------------------------------------------------
 
 CPC-big DP penalized val, dur_weight=5:
-
     ---------------------------------------------------------------------------
     Phone boundaries:
     Precision: 60.18%
@@ -664,6 +702,45 @@ val (dur_weight=2), training on first 10k for 5 epochs *best*:
     V-measure: 72.89%
     ---------------------------------------------------------------------------
 
+SegAE-RNN Chorowski (dur_weight=2) word segmentation on CPC-big DP penalized
+val (dur_weight=2), training on all for 5 epochs:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 75.99%
+    Recall: 19.96%
+    F-score: 31.61%
+    OS: -73.74%
+    R-value: 43.36%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 78.17%
+    Homogeneity: 85.46%
+    Completeness: 29.05%
+    V-measure: 43.36%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 33.80%
+    Recall: 33.83%
+    F-score: 33.81%
+    OS: 0.09%
+    R-value: 43.49%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 22.05%
+    Recall: 22.12%
+    F-score: 22.08%
+    OS: 0.31%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 34608
+    uWER many: 51.43%
+    Purity: 71.65%
+    Homogeneity: 89.23%
+    Completeness: 59.25%
+    V-measure: 71.22%
+    ---------------------------------------------------------------------------
+
 SegAE-RNN Chorowski (dur_weight=3) word segmentation on CPC-big DP penalized
 val (dur_weight=2), training on all for 5 epochs:
 
@@ -868,3 +945,26 @@ VQ-VAE DP penalized N-seg. test:
     OS: 47.24%
     R-value: 56.03%
     ---------------------------------------------------------------------------
+
+
+ZeroSpeech'17 Mandarin
+----------------------
+
+DP penalized CPC-big (dur_weight=2) with DP penalized AE-RNN (dur_weight=3):
+
+    boundary_precision: 0.6196292475122308
+    boundary_recall: 0.7493660696317166
+    boundary_fscore: 0.6783502149675726
+    grouping_precision: 0.3388909704009006
+    grouping_recall: 0.1602870813397132
+    grouping_fscore: 0.21763715110683404
+    token_precision: 0.2407484215862482
+    type_precision: 0.2354954367666232
+    token_recall: 0.2638916952919782
+    type_recall: 0.325780633524969
+    token_fscore: 0.2517893722135197
+    type_fscore: 0.2733765312396538
+    words: 12272
+    coverage: 0.9999846722153247
+    ned: 0.9163464425248795
+    pairs: 47266

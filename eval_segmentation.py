@@ -393,11 +393,11 @@ def main():
                 )
 
     # Map e.g. "23_12_" to a unique integer ID e.g. 10
-    if ("word" in args.seg_tag and "_" in
-            list(segmentation_interval_dict.values())[0][0][-1]):
-        segmentation_interval_dict, str_to_id, id_to_str = str_to_id_labels(
-            segmentation_interval_dict
-            )
+    # if ("word" in args.seg_tag and "_" in
+    #         list(segmentation_interval_dict.values())[0][0][-1]):
+    segmentation_interval_dict, str_to_id, id_to_str = str_to_id_labels(
+        segmentation_interval_dict
+        )
 
     # Evaluate phone boundaries
     reference_list = []
