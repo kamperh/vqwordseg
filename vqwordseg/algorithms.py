@@ -492,7 +492,7 @@ def seg_aernn(utterance_list, dur_weight=3.0):
     learning_rate = 0.001
     input_dropout = 0.0  # 0.0 # 0.5
     dropout = 0.0
-    n_symbols_max = 25
+    n_symbols_max = 25  # 50
     n_epochs_max = 5
     bidirectional_encoder = False  # False
 
@@ -670,7 +670,7 @@ def seg_aernn(utterance_list, dur_weight=3.0):
                     decoder_output[i_item].size(-1)),
                     data[i_item].contiguous().view(-1)
                     )
-                rnn_losses.append(item_loss)
+                rnn_losses.append(item_loss.cpu().numpy())
                 lengths.append(data_lengths[i_item])
 
     # Segment

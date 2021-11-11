@@ -20,9 +20,13 @@ from cluster_wav import cat_wavs, check_argv
 from eval_segmentation import get_intervals_from_dir
 
 audio_dir = Path(
-    "/media/kamperh/endgame/datasets/zerospeech2020/2020/2017/mandarin/"
+    "/media/kamperh/endgame/datasets/zerospeech2020/2020/2017/"
     )
-
+code_to_language = {
+    "en": "english",
+    "fr": "french",
+    "zh": "mandarin"
+    }
 
 #-----------------------------------------------------------------------------#
 #                                MAIN FUNCTION                                #
@@ -32,6 +36,10 @@ def main():
     args = check_argv()
     
     assert audio_dir.is_dir(), f"missing directory: {f}"
+
+    # Language
+    language_code = args.dataset[-2:]
+    language = code_to_language[language_code]
 
     # Read segmentation
     seg_dir = (
@@ -46,12 +54,15 @@ def main():
     tokens = []  # (utt_path, start, end),
                  # e.g. ("datasets/buckeye/s38/s3803a.wav", 413.97, 414.50)
     for utt_key in tqdm(segmentation_interval_dict):
-        speaker, utt_start_end = utt_key.split("_")
+        utt_key_split = utt_key.split("_")
+        utt_start_end = utt_key_split[-1]
         utt_start, utt_end = utt_start_end.split("-")
         utt_start = int(utt_start)
         utt_end = int(utt_end)
-        utt_label = speaker
-        utt_path = (audio_dir/args.split/utt_label).with_suffix(".wav")
+        utt_label = "_".join(utt_key_split[:-1])
+        utt_path = (
+            audio_dir/language/args.split/utt_label
+            ).with_suffix(".wav")
         for token_start, token_end, token_label in segmentation_interval_dict[
                 utt_key]:
             if token_label == args.cluster_id:

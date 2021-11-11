@@ -360,11 +360,11 @@ def main():
     utterances = segmentation_interval_dict.keys()
 
     # Read phone reference
-    print("Reading: {}".format(phone_ref_dir))
-    assert phone_ref_dir.is_dir(), "missing directory: {}".format(
-        phone_ref_dir
-        )
-    phone_ref_interval_dict = get_intervals_from_dir(phone_ref_dir, utterances)
+    if phone_ref_dir.is_dir():
+        print("Reading: {}".format(phone_ref_dir))
+        phone_ref_interval_dict = get_intervals_from_dir(
+            phone_ref_dir, utterances
+            )
 
     # Read word reference
     if word_ref_dir.is_dir():
@@ -380,11 +380,12 @@ def main():
         segmentation_boundaries_dict[utt_key] = intervals_to_boundaries(
             segmentation_interval_dict[utt_key]
             )
-    phone_ref_boundaries_dict = {}
-    for utt_key in tqdm(phone_ref_interval_dict):
-        phone_ref_boundaries_dict[utt_key] = intervals_to_boundaries(
-            phone_ref_interval_dict[utt_key]
-            )
+    if phone_ref_dir.is_dir():
+        phone_ref_boundaries_dict = {}
+        for utt_key in tqdm(phone_ref_interval_dict):
+            phone_ref_boundaries_dict[utt_key] = intervals_to_boundaries(
+                phone_ref_interval_dict[utt_key]
+                )
     if word_ref_dir.is_dir():
         word_ref_boundaries_dict = {}
         for utt_key in tqdm(word_ref_interval_dict):
@@ -399,39 +400,43 @@ def main():
         segmentation_interval_dict
         )
 
-    # Evaluate phone boundaries
-    reference_list = []
-    segmentation_list = []
-    for utt_key in phone_ref_boundaries_dict:
-        reference_list.append(phone_ref_boundaries_dict[utt_key])
-        segmentation_list.append(segmentation_boundaries_dict[utt_key])
-    p, r, f = score_boundaries(
-        reference_list, segmentation_list, tolerance=args.phone_tolerance
-        )
-
-    # Evaluate clustering
-    # if not "word" in args.seg_tag:
-    # print("Scoring clusters (phone):")
-    purity, h, c, V, cluster_to_label_map_many = score_clusters(
-        phone_ref_interval_dict, segmentation_interval_dict
-        )
-
-    print("-"*(79 - 4))
-    print("Phone boundaries:")
-    print("Precision: {:.2f}%".format(p*100))
-    print("Recall: {:.2f}%".format(r*100))
-    print("F-score: {:.2f}%".format(f*100))
-    print("OS: {:.2f}%".format(get_os(p, r)*100))
-    print("R-value: {:.2f}%".format(get_rvalue(p, r)*100))
     print("-"*(79 - 4))
 
-    # if not "word" in args.seg_tag:
-    print("Phone clusters:")
-    print("Purity: {:.2f}%".format(purity*100))
-    print("Homogeneity: {:.2f}%".format(h*100))
-    print("Completeness: {:.2f}%".format(c*100))
-    print("V-measure: {:.2f}%".format(V*100))
-    print("-"*(79 - 4))
+    # Phone-level evaluation
+    if phone_ref_dir.is_dir():
+
+        # Evaluate phone boundaries
+        reference_list = []
+        segmentation_list = []
+        for utt_key in phone_ref_boundaries_dict:
+            reference_list.append(phone_ref_boundaries_dict[utt_key])
+            segmentation_list.append(segmentation_boundaries_dict[utt_key])
+        p, r, f = score_boundaries(
+            reference_list, segmentation_list, tolerance=args.phone_tolerance
+            )
+
+        # Evaluate clustering
+        # if not "word" in args.seg_tag:
+        # print("Scoring clusters (phone):")
+        purity, h, c, V, cluster_to_label_map_many = score_clusters(
+            phone_ref_interval_dict, segmentation_interval_dict
+            )
+
+        print("Phone boundaries:")
+        print("Precision: {:.2f}%".format(p*100))
+        print("Recall: {:.2f}%".format(r*100))
+        print("F-score: {:.2f}%".format(f*100))
+        print("OS: {:.2f}%".format(get_os(p, r)*100))
+        print("R-value: {:.2f}%".format(get_rvalue(p, r)*100))
+        print("-"*(79 - 4))
+
+        # if not "word" in args.seg_tag:
+        print("Phone clusters:")
+        print("Purity: {:.2f}%".format(purity*100))
+        print("Homogeneity: {:.2f}%".format(h*100))
+        print("Completeness: {:.2f}%".format(c*100))
+        print("V-measure: {:.2f}%".format(V*100))
+        print("-"*(79 - 4))
 
     # Word-level evaluation
     if word_ref_dir.is_dir():

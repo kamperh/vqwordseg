@@ -27,7 +27,7 @@ def check_argv():
         )
     parser.add_argument(
         "model", help="input VQ representations",
-        choices=["vqvae", "vqcpc", "cpc_big"]
+        choices=["vqvae", "vqcpc", "cpc_big", "xlsr"]
         )
     parser.add_argument(
         "dataset", type=str, help="input dataset"
@@ -72,10 +72,14 @@ def main():
     for i_cluster in range(len(id_to_str)):
         clusters[i_cluster] = []
     for utt_key in tqdm(segmentation_interval_dict):
-        utt_label, interval = utt_key.split("_")
-        utt_start, utt_end = interval.split("-")
+        utt_key_split = utt_key.split("_")
+        utt_start_end = utt_key_split[-1]
+        utt_start, utt_end = utt_start_end.split("-")
+        # utt_label, interval = utt_key.split("_")
+        # utt_start, utt_end = interval.split("-")
         utt_start = int(utt_start)
         utt_end = int(utt_end)
+        utt_label = "_".join(utt_key_split[:-1])
         for token_start, token_end, cluster in (
                 segmentation_interval_dict[utt_key]):
             clusters[cluster].append((

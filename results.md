@@ -275,6 +275,44 @@ CPC-big DP penalized val, dur_weight=50:
     OS: 72.54%
     ---------------------------------------------------------------------------
 
+XLSR DP penalized val, dur_weight=2500, *select*:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 49.32%
+    Recall: 84.54%
+    F-score: 62.30%
+    OS: 71.40%
+    R-value: 32.76%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 30.37%
+    Homogeneity: 31.30%
+    Completeness: 28.32%
+    V-measure: 29.74%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 13.18%
+    Recall: 85.72%
+    F-score: 22.85%
+    OS: 550.30%
+    R-value: -374.85%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 2.33%
+    Recall: 11.38%
+    F-score: 3.87%
+    OS: 388.49%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 50
+    uWER many: 463.96%
+    Purity: 6.40%
+    Homogeneity: 14.15%
+    Completeness: 24.51%
+    V-measure: 17.94%
+    ---------------------------------------------------------------------------
+
 ResDAVENet-VQ merged val:
 
     ./eval_segmentation.py resdavenet_vq buckeye val phoneseg_merge
@@ -859,6 +897,74 @@ val (dur_weight=0.1):
     V-measure: 73.83%
     ---------------------------------------------------------------------------
 
+SegAE-RNN Chorowski (dur_weight=3) word segmentation on XLSR DPDP val
+(dur_weight=2500):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 72.49%
+    Recall: 16.27%
+    F-score: 26.57%
+    OS: -77.56%
+    R-value: 40.75%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 85.83%
+    Homogeneity: 90.63%
+    Completeness: 30.04%
+    V-measure: 45.12%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 26.81%
+    Recall: 22.80%
+    F-score: 24.64%
+    OS: -14.94%
+    R-value: 38.67%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 17.59%
+    Recall: 15.74%
+    F-score: 16.61%
+    OS: -10.55%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 38852
+    uWER many: 49.85%
+    Purity: 81.68%
+    Homogeneity: 93.28%
+    Completeness: 60.98%
+    V-measure: 73.75%
+    ---------------------------------------------------------------------------
+
+
+Xitsonga
+--------
+
+SegAE-RNN Chorowski (dur_weight=3) word segmentation on CPC-big DP penalized
+val (dur_weight=2):
+
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 20.59%
+    Recall: 19.75%
+    F-score: 20.16%
+    OS: -4.06%
+    R-value: 32.89%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 6.34%
+    Recall: 6.14%
+    F-score: 6.24%
+    OS: -3.20%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 15718
+    uWER many: 51.12%
+    Purity: 84.67%
+    Homogeneity: 93.22%
+    Completeness: 65.88%
+    V-measure: 77.20%
+    ---------------------------------------------------------------------------
 
 
 Buckeye Felix split
@@ -950,21 +1056,220 @@ VQ-VAE DP penalized N-seg. test:
 ZeroSpeech'17 Mandarin
 ----------------------
 
-DP penalized CPC-big (dur_weight=2) with DP penalized AE-RNN (dur_weight=3):
+DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3):
 
-    boundary_precision: 0.6196292475122308
-    boundary_recall: 0.7493660696317166
-    boundary_fscore: 0.6783502149675726
-    grouping_precision: 0.3388909704009006
-    grouping_recall: 0.1602870813397132
-    grouping_fscore: 0.21763715110683404
-    token_precision: 0.2407484215862482
-    type_precision: 0.2354954367666232
-    token_recall: 0.2638916952919782
-    type_recall: 0.325780633524969
-    token_fscore: 0.2517893722135197
-    type_fscore: 0.2733765312396538
-    words: 12272
-    coverage: 0.9999846722153247
-    ned: 0.9163464425248795
-    pairs: 47266
+    boundary_precision: 0.6707869481765835
+    boundary_recall: 0.703320587643389
+    boundary_fscore: 0.6866686314962177
+    token_precision: 0.2742476697736351
+    type_precision: 0.2591799508287731
+    token_recall: 0.26010305112143867
+    type_recall: 0.3683913876676812
+    token_fscore: 0.26698815172020435
+    type_fscore: 0.3042830540037244
+    words: 12609
+    coverage: 0.9999386888612989
+    ned: 0.9204646655141704
+    pairs: 25452
+
+DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=1):
+
+    boundary_precision: 0.5922140060896042
+    boundary_recall: 0.7671966190380358
+    boundary_fscore: 0.6684434781083972
+    token_precision: 0.23382054243498346
+    type_precision: 0.26392887383573244
+    token_recall: 0.29657506566983227
+    type_recall: 0.35136963138315863
+    token_fscore: 0.2614853579779534
+    type_fscore: 0.3014361007688216
+    words: 11810
+    coverage: 0.9998313943685719
+    ned: 0.958675171906796
+    pairs: 564190
+
+DP penalized CPC-big (dur_weight=1), DP penalized AE-RNN (dur_weight=3):
+
+    boundary_precision: 0.6525670837485698
+    boundary_recall: 0.7116119943650634
+    boundary_fscore: 0.6808117370711232
+    token_precision: 0.2663520576444918
+    type_precision: 0.25612908279157204
+    token_recall: 0.265154576682158
+    type_recall: 0.36861684139330403
+    token_fscore: 0.26575196820494645
+    type_fscore: 0.3022460486181717
+    words: 12767
+    coverage: 0.9999693444306494
+    ned: 0.9174382816394651
+    pairs: 15379
+
+DP penalized CPC-big (dur_weight=1), DP penalized AE-RNN (dur_weight=1):
+
+    boundary_precision: 0.573416549705856
+    boundary_recall: 0.7728718051921916
+    boundary_fscore: 0.6583693341562092
+    token_precision: 0.21634615384615385
+    type_precision: 0.25046713096653644
+    token_recall: 0.28869468579511015
+    type_recall: 0.33243151843084207
+    token_fscore: 0.24733835367437032
+    type_fscore: 0.2856866069266166
+    words: 11774
+    coverage: 0.9997700832298708
+    ned: 0.9616700675645037
+    pairs: 477815
+
+DP penalized XLSR (dur_weight=2500), DP penalized AE-RNN (dur_weight=3):
+
+    boundary_precision: 0.5780879175374588
+    boundary_recall: 0.6568726101831355
+    boundary_fscore: 0.6149672168211621
+    token_precision: 0.1839140413102441
+    type_precision: 0.17905038057267125
+    token_recall: 0.17811679127096383
+    type_recall: 0.27843535114417767
+    token_fscore: 0.18096900020529666
+    type_fscore: 0.21794758669372627
+    words: 13795
+    coverage: 0.9997394276605203
+    ned: 0.8476354658834546
+    pairs: 7831
+
+DP penalized XLSR (dur_weight=1500), DP penalized AE-RNN (dur_weight=3):
+
+    boundary_precision: 0.5632707950669116
+    boundary_recall: 0.6912054739384182
+    boundary_fscore: 0.6207145826179676
+    token_precision: 0.19804022692109335
+    type_precision: 0.1994954954954955
+    token_recall: 0.2133764396847848
+    type_recall: 0.3120279562619772
+    token_fscore: 0.2054224924012158
+    type_fscore: 0.24338345203552275
+    words: 13875
+    coverage: 0.9997394276605203
+    ned: 0.8672395157803717
+    pairs: 15420
+
+DP penalized XLSR (dur_weight=500), DP penalized AE-RNN (dur_weight=3):
+
+    boundary_precision: 0.5272764681676563
+    boundary_recall: 0.7220366270879452
+    boundary_fscore: 0.6094755975334228
+    token_precision: 0.18828590337524817
+    type_precision: 0.1983859649122807
+    token_recall: 0.22994544352394422
+    type_recall: 0.3186788411678503
+    token_fscore: 0.20704084417356497
+    type_fscore: 0.24453959603823366
+    words: 14250
+    coverage: 0.999724099875845
+    ned: 0.8283892604551045
+    pairs: 17344
+
+
+ZeroSpeech'17 French
+----------------------
+
+DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3),
+segment length<=50:
+
+    boundary_precision: 0.4638637792059966
+    boundary_recall: 0.5817915641948714
+    boundary_fscore: 0.5161777929616368
+    token_precision: 0.10097769204095705
+    type_precision: 0.04817722938867078
+    token_recall: 0.11336990763943582
+    type_recall: 0.15810058436479088
+    token_fscore: 0.10681558027611417
+    type_fscore: 0.07385038633896811
+    words: 71320
+    coverage: 0.9994668206384628
+    ned: 0.7985821903307203
+    pairs: 5642231
+
+DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3),
+*select*:
+
+    boundary_precision: 0.49658091629014234
+    boundary_recall: 0.594080914272429
+    boundary_fscore: 0.5409728964434748
+    token_precision: 0.1223925985318372
+    type_precision: 0.053735164391757455
+    token_recall: 0.1318330708097659
+    type_recall: 0.17770211199558275
+    token_fscore: 0.12693755237719773
+    type_fscore: 0.08251784111790095
+    words: 71871
+    coverage: 0.9994759237007329
+    ned: 0.8423111391051952
+    pairs: 5141819
+
+DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=1):
+
+    boundary_precision: 0.44045020257251954
+    boundary_recall: 0.6867723291642297
+    boundary_fscore: 0.5366979509104225
+    token_precision: 0.11128960259377166
+    type_precision: 0.05380097401918776
+    token_recall: 0.16957381685401304
+    type_recall: 0.11843739934661575
+    token_fscore: 0.1343841980212064
+    type_fscore: 0.07399103139013453
+    words: 47843
+    coverage: 0.9992093340199644
+    ned: 0.7407467270862337
+    pairs: 34973886
+
+DP penalized CPC-big (dur_weight=1), DP penalized AE-RNN (dur_weight=1):
+
+    boundary_precision: 0.43373805566862395
+    boundary_recall: 0.7006309961893207
+    boundary_fscore: 0.5357874062776931
+    token_precision: 0.10650271854604094
+    type_precision: 0.05249721804019114
+    token_recall: 0.17495704159805256
+    type_recall: 0.11070721943588092
+    token_fscore: 0.13240543194825424
+    type_fscore: 0.07122136048783377
+    words: 45831
+    coverage: 0.998635841096945
+    ned: 0.7472744666179789
+    pairs: 46830800
+
+DP penalized XLSR (dur_weight=1500), DP penalized AE-RNN (dur_weight=1):
+
+    boundary_precision: 0.434751257850677
+    boundary_recall: 0.5891731661332684
+    boundary_fscore: 0.5003177364823178
+    token_precision: 0.08654744268318969
+    type_precision: 0.04939499419857451
+    token_recall: 0.11319538913152431
+    type_recall: 0.1508305342106474
+    token_fscore: 0.09809384761251069
+    type_fscore: 0.07441881583726843
+    words: 66363
+    coverage: 0.9979388066145451
+    ned: 0.5986752611793141
+    pairs: 10054784
+
+
+ZeroSpeech'17 English
+---------------------
+
+DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3):
+
+    boundary_precision: 0.48222699075599473
+    boundary_recall: 0.6511690933851877
+    boundary_fscore: 0.5541069300841758
+    token_precision: 0.1615031865732558
+    type_precision: 0.053528347406513875
+    token_recall: 0.20218670034229505
+    type_recall: 0.21942753898820844
+    token_fscore: 0.17956944948317954
+    type_fscore: 0.08606221095032077
+    words: 86216
+    coverage: 0.9987312813078212
+    ned: 0.6117867028276969
+    pairs: 15516526

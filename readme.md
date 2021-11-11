@@ -154,6 +154,12 @@ DP penalized segmentation:
     # Buckeye (CPC-big)
     ./vq_phoneseg.py --downsample_factor 1 --dur_weight 3 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
 
+    # Xitsonga (CPC-big)
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big xitsonga train
+
+    # Buckeye (XLSR)
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2500 --input_format=npy --algorithm=dp_penalized xlsr buckeye val
+
     # Buckeye (ResDAVEnet-VQ)
     ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=txt --algorithm=dp_penalized resdavenet_vq buckeye val
 
@@ -169,11 +175,20 @@ DP penalized segmentation:
     # Buckeye (VQ-VAE) with Gamma duration prior
     ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized_gamma --dur_weight_func neg_log_gamma --dur_weight 15 vqvae buckeye val
 
+    # ZeroSpeech'17 English (CPC-big)
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big zs2017_en train
+
     # ZeroSpeech'17 French (CPC-big)
     ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big zs2017_fr train
 
     # ZeroSpeech'17 Mandarin (CPC-big)
     ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big zs2017_zh train
+
+    # ZeroSpeech'17 French (XLSR)
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 1500 --input_format=npy --algorithm=dp_penalized xlsr zs2017_fr train
+
+    # ZeroSpeech'17 Mandarin (XLSR)
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2500 --input_format=npy --algorithm=dp_penalized xlsr zs2017_zh train
 
 DP penalized N-seg. segmentation:
 
@@ -183,10 +198,10 @@ DP penalized N-seg. segmentation:
 Evaluate segmentation:
 
     # Buckeye (VQ-VAE)
-    ./utils/eval_segmentation.py vqvae buckeye val phoneseg_dp_penalized_n_seg
+    ./eval_segmentation.py vqvae buckeye val phoneseg_dp_penalized_n_seg
 
     # Buckeye (CPC-big)
-    ./utils/eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized
+    ./eval_segmentation.py cpc_big buckeye val phoneseg_dp_penalized
 
 
 ## Word segmentation
@@ -217,9 +232,9 @@ Evaluate the segmentation:
 Evaluate the segmentation with the ZeroSpeech tools:
 
     ./intervals_to_zs.py cpc_big zs2017_zh train wordseg_segaernn_dp_penalized
-    cd ~/temp/zs2017
+    cd ../zerospeech2017_eval/
     ln -s /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_zh/train/wordseg_segaernn_dp_penalized/clusters.txt 2017/track2/mandarin.txt
-    conda activate zerospeech2020
+    conda activate zerospeech2020_updated
     zerospeech2020-evaluate 2017-track2 . -l mandarin -o mandarin.json
 
 
@@ -236,7 +251,7 @@ Listen to segmented codes:
     ./cluster_wav.py cpc_big buckeye val phoneseg_dp_penalized 50
 
 This requires `sox` and that you change the path at the beginning of
-`cluster_wav.py`.
+`cluster_wav.py`. For ZeroSpeech'17 data, use `cluster_wav_zs2017.py` instead.
 
 Synthesize an utterance:
 
