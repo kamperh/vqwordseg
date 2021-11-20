@@ -145,6 +145,9 @@ since these are not used for segmentation.
 
 DP penalized segmentation:
 
+    # Buckeye (GMM)
+    ./vq_phoneseg.py --downsample_factor 1 --input_format=npy --algorithm=dp_penalized --dur_weight 0.001 gmm buckeye val
+
     # Buckeye (VQ-CPC)
     ./vq_phoneseg.py --input_format=txt --algorithm=dp_penalized vqcpc buckeye val
 
@@ -152,7 +155,7 @@ DP penalized segmentation:
     ./vq_phoneseg.py vqvae buckeye val
 
     # Buckeye (CPC-big)
-    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 3 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
 
     # Xitsonga (CPC-big)
     ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big xitsonga train
@@ -217,8 +220,13 @@ Adaptor grammar word segmentation:
     # Buckeye (CPC-big)
     ./vq_wordseg.py --algorithm=ag cpc_big buckeye val phoneseg_dp_penalized
 
+DPDP AE-RNN word segmentation:
+
+    # Buckeye (GMM)
+    ./vq_wordseg.py --algorithm=dpdp_aernn gmm buckeye val phoneseg_dp_penalized
+
     # Buckeye (CPC-big)
-    ./vq_wordseg.py --algorithm=seg_aernn cpc_big buckeye val phoneseg_dp_penalized_tune
+    ./vq_wordseg.py --algorithm=dpdp_aernn cpc_big buckeye val phoneseg_dp_penalized
 
 Evaluate the segmentation:
 
@@ -227,7 +235,6 @@ Evaluate the segmentation:
 
     # Buckeye (CPC-big)
     ./eval_segmentation.py cpc_big buckeye val wordseg_ag_dp_penalized
-    ./eval_segmentation.py cpc_big buckeye val wordseg_seg_aernn_dp_penalized_tune
 
 Evaluate the segmentation with the ZeroSpeech tools:
 
@@ -276,3 +283,12 @@ are linked to the original version in `exp/resdavenet_vq/`. The indices from
 the original model shouldn't be linked, since these doesn't match the new
 codebook (but an indices file isn't necessary for running many of the phone
 segmentation algorithms).
+
+
+## Old work-flow
+
+1. Extract CPC+K-means features in `../zerospeech2021_baseline/`.
+2. Perform phone segmentation here using `vq_phoneseg.py`.
+3. Move to `../seg_aernn/notebooks/` and perform word segmentation.
+4. Move back here and evaluate the segmentation using `eval_segmentation.py`.
+5. For ZeroSpeech systems, the evaluation is done in `../zerospeech2017_eval/`.

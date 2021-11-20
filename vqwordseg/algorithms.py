@@ -414,7 +414,7 @@ def rasanen15(utterance_list, n_max=9, words_count_fn="words.tmp"):
     if words_count_fn is not None:
         with open(words_count_fn, "w") as f:
             for word, count in zip(words, counts):
-                f.write("{} {}\n".format(word, count))
+                f.write(f"{word} {count}\n")
 
     # Remove space at beginnning and end to match output format
     tmp_list = []
@@ -425,17 +425,23 @@ def rasanen15(utterance_list, n_max=9, words_count_fn="words.tmp"):
     return utterance_list
 
 
-def seg_aernn(utterance_list, dur_weight=3.0):
+def dpdp_aernn(utterance_list, dur_weight=3.0):
 
     from seg_aernn import datasets, models, viterbi
     from torch.utils.data import DataLoader
     import torch
     import torch.nn as nn
 
+    # Random seed
+    seed = 42
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+
 
     # DATA
 
-    # Convert to format for Seg-AE-RNN
+    # Convert to format for DPDP AE-RNN
     prepared_text = []
     for sentence in utterance_list:
         prepared_text.append(sentence.replace(" ", "").strip("_"))
@@ -492,9 +498,12 @@ def seg_aernn(utterance_list, dur_weight=3.0):
     learning_rate = 0.001
     input_dropout = 0.0  # 0.0 # 0.5
     dropout = 0.0
-    n_symbols_max = 25  # 50
-    n_epochs_max = 5
-    bidirectional_encoder = False  # False
+    n_symbols_max = 50  # 25  # 50
+    # n_epochs_max = 5
+    n_epochs_max = None     # determined from n_max_steps and batch size
+    n_steps_max = 1500      # 2500  # 1500  # 1000  # None
+    # n_steps_max = None    # only use n_epochs_max
+    bidirectional_encoder = False
 
     encoder = models.Encoder(
         n_symbols=n_symbols,
@@ -532,12 +541,6 @@ def seg_aernn(utterance_list, dur_weight=3.0):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
 
-    # Random seed
-    seed = 42
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-
     # Training data
     train_dataset = datasets.WordDataset(
         cur_train_sentences, text_to_id, n_symbols_max=n_symbols_max
@@ -560,7 +563,12 @@ def seg_aernn(utterance_list, dur_weight=3.0):
         )
     optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
+    if n_epochs_max is None:
+        steps_per_epoch = np.ceil(len(cur_train_sentences)/batch_size)
+        n_epochs_max = int(np.ceil(n_steps_max/steps_per_epoch))
+
     print("Training AE-RNN:")
+    i_step = 0
     for i_epoch in range(n_epochs_max):
 
         # Training
@@ -581,6 +589,9 @@ def seg_aernn(utterance_list, dur_weight=3.0):
             loss.backward()
             optimiser.step()
             train_losses.append(loss.item())
+            i_step += 1
+            if i_step == n_steps_max and n_steps_max is not None:
+                break
         
         # # Validation
         # model.eval()
@@ -606,10 +617,12 @@ def seg_aernn(utterance_list, dur_weight=3.0):
         #     np.mean(val_losses))
         #     )
         print(
-            "Epoch {}, train loss: {:.3f}".format(
-            i_epoch, np.mean(train_losses))
+            f"Epoch {i_epoch}, train loss: {np.mean(train_losses):.3f}"
             )
         sys.stdout.flush()
+
+        if i_step == n_steps_max and n_steps_max is not None:
+            break
 
 
     # SEGMENTATION
@@ -748,7 +761,7 @@ def seg_aernn(utterance_list, dur_weight=3.0):
     #         print(segmented_sentence)
     #         print()
         
-    print("NLL: {:.4f}".format(np.sum(losses)))
+    print(f"NLL: {np.sum(losses):.4f}")
 
     return cur_segmented_sentences
 

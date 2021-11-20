@@ -45,7 +45,7 @@ def check_argv():
         )
     parser.add_argument(
         "--dur_weight", type=float,
-        help="the duration penalty weight for the algorithm; if "
+        help="the duration penalty weight; if "
         "not specified, a sensible value is chosen based on the input model",
         default=None
         )
@@ -114,6 +114,7 @@ def main():
             assert False, "cannot set dur_weight automatically for model type"
         if args.algorithm == "dp_penalized_n_seg":
             args.dur_weight = 0
+    print(f"Duration weight: {args.dur_weight:.4f}")
     if args.output_tag is None:
         args.output_tag = "phoneseg_{}".format(args.algorithm)
 

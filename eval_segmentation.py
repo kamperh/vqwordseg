@@ -359,6 +359,17 @@ def main():
     segmentation_interval_dict = get_intervals_from_dir(seg_dir)
     utterances = segmentation_interval_dict.keys()
 
+    # # Temp
+    # tmp = get_intervals_from_dir(
+    #     Path("exp/cpc_big/buckeye/val/wordseg_dpdp_aernn_dp_penalized/intervals")
+    #     )
+    # utterances = tmp.keys()
+    # for utt in utterances:
+    #     if utt not in segmentation_interval_dict:
+    #         start = tmp[utt][0][0]
+    #         end = tmp[utt][-1][1]
+    #         segmentation_interval_dict[utt] = [(start, end, "_")]
+
     # Read phone reference
     if phone_ref_dir.is_dir():
         print("Reading: {}".format(phone_ref_dir))

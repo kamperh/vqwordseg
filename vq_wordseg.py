@@ -28,7 +28,7 @@ def check_argv():
         )
     parser.add_argument(
         "model", help="input VQ representations",
-        choices=["vqvae", "vqcpc", "cpc_big"]
+        choices=["vqvae", "vqcpc", "cpc_big", "gmm"]
         )
     parser.add_argument("dataset", type=str, help="input dataset")
     parser.add_argument(
@@ -40,11 +40,16 @@ def check_argv():
     parser.add_argument(
         "--algorithm",
         help="word segmentation algorithm (default: %(default)s)",
-        choices=["ag", "tp", "rasanen15", "seg_aernn"], default="ag"
+        choices=["ag", "tp", "rasanen15", "dpdp_aernn"], default="ag"
         )
     parser.add_argument(
         "--output_tag", type=str, help="used to name the output directory; "
         "if not specified, the algorithm is used",
+        default=None
+        )
+    parser.add_argument(
+        "--dur_weight", type=float,
+        help="the duration penalty weight",
         default=None
         )
     if len(sys.argv) == 1:
@@ -67,6 +72,8 @@ def main():
             args.algorithm,
             args.phoneseg_tag.replace("phoneseg_", "")
             )
+    if args.dur_weight is not None:
+        print(f"Duration weight: {args.dur_weight:.4f}")
 
     # Phone intervals
     input_dir = (
@@ -92,7 +99,14 @@ def main():
         prepared_text.append(
             " ".join([i[2] + "_" for i in phoneseg_interval_dict[utt_key]])
             )
-    word_segmentation = segment_func(prepared_text)
+    if args.dur_weight is not None:
+        word_segmentation = segment_func(
+            prepared_text, dur_weight=args.dur_weight
+            )
+    else:
+        word_segmentation = segment_func(
+            prepared_text
+            )
     # print(prepared_text[:10])
     # print(word_segmentation[:10])
     # assert False

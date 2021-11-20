@@ -23,6 +23,24 @@ VQ-VAE DP penalized val:
     R-value: -194.47%
     ---------------------------------------------------------------------------
 
+DPDP GMM val, MFCCs, 50 components:
+
+    # ./eval_segmentation.py gmm buckeye val phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 29.21%
+    Recall: 95.00%
+    F-score: 44.69%
+    OS: 225.22%
+    R-value: -94.03%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 21.61%
+    Homogeneity: 19.66%
+    Completeness: 17.87%
+    V-measure: 18.72%
+    ---------------------------------------------------------------------------
+
 VQ-VAE DP penalized val, dur_weight=4:
 
     # ./eval_segmentation.py vqvae buckeye val phoneseg_dp_penalized_tune
@@ -780,43 +798,82 @@ val (dur_weight=2), training on all for 5 epochs:
     ---------------------------------------------------------------------------
 
 SegAE-RNN Chorowski (dur_weight=3) word segmentation on CPC-big DP penalized
-val (dur_weight=2), training on all for 5 epochs:
+val (dur_weight=2), *final*:
 
-    ./eval_segmentation.py cpc_big buckeye val wordseg_seg_aernn_dp_penalized_tune
+    ./eval_segmentation.py cpc_big buckeye val wordseg_dpdp_aernn_dp_penalized
     ---------------------------------------------------------------------------
     Phone boundaries:
-    Precision: 77.59%
-    Recall: 18.09%
-    F-score: 29.34%
-    OS: -76.68%
-    R-value: 42.05%
+    Precision: 78.32%
+    Recall: 20.84%
+    F-score: 32.92%
+    OS: -73.39%
+    R-value: 43.99%
     ---------------------------------------------------------------------------
     Phone clusters:
-    Purity: 84.42%
-    Homogeneity: 90.47%
-    Completeness: 29.84%
-    V-measure: 44.87%
+    Purity: 77.42%
+    Homogeneity: 84.85%
+    Completeness: 29.00%
+    V-measure: 43.23%
     ---------------------------------------------------------------------------
     Word boundaries:
-    Precision: 36.54%
-    Recall: 32.47%
-    F-score: 34.38%
-    OS: -11.15%
-    R-value: 45.84%
+    Precision: 35.80%
+    Recall: 36.30%
+    F-score: 36.05%
+    OS: 1.40%
+    R-value: 45.13%
     ---------------------------------------------------------------------------
     Word token boundaries:
-    Precision: 23.99%
-    Recall: 22.15%
-    F-score: 23.03%
-    OS: -7.65%
+    Precision: 23.93%
+    Recall: 24.23%
+    F-score: 24.08%
+    OS: 1.24%
     ---------------------------------------------------------------------------
     Word clusters:
-    No. clusters: 37377
-    uWER many: 44.83%
-    Purity: 80.30%
-    Homogeneity: 93.41%
-    Completeness: 60.37%
-    V-measure: 73.34%
+    No. clusters: 33336
+    uWER many: 51.15%
+    Purity: 70.36%
+    Homogeneity: 88.59%
+    Completeness: 59.09%
+    V-measure: 70.90%
+    ---------------------------------------------------------------------------
+
+SegAE-RNN Chorowski (dur_weight=3) word segmentation on CPC-big DP penalized
+test (dur_weight=2), *final*:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.86%
+    Recall: 21.16%
+    F-score: 33.27%
+    OS: -72.82%
+    R-value: 44.21%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 75.15%
+    Homogeneity: 82.81%
+    Completeness: 28.25%
+    V-measure: 42.13%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 35.30%
+    Recall: 37.66%
+    F-score: 36.44%
+    OS: 6.68%
+    R-value: 44.25%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 24.40%
+    Recall: 25.59%
+    F-score: 24.98%
+    OS: 4.88%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 38981
+    uWER many: 54.13%
+    Purity: 67.10%
+    Homogeneity: 86.92%
+    Completeness: 58.14%
+    V-measure: 69.68%
     ---------------------------------------------------------------------------
 
 SegAE-RNN Chorowski (dur_weight=3) word segmentation on CPC-big DP penalized
@@ -934,6 +991,198 @@ SegAE-RNN Chorowski (dur_weight=3) word segmentation on XLSR DPDP val
     Homogeneity: 93.28%
     Completeness: 60.98%
     V-measure: 73.75%
+    ---------------------------------------------------------------------------
+
+TP, DPDP GMM val, MFCCs, 50 components:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 59.17%
+    Recall: 60.21%
+    F-score: 59.69%
+    OS: 1.76%
+    R-value: 65.40%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 42.35%
+    Homogeneity: 50.11%
+    Completeness: 20.96%
+    V-measure: 29.56%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 17.94%
+    Recall: 60.73%
+    F-score: 27.69%
+    OS: 238.59%
+    R-value: -119.14%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 3.80%
+    Recall: 11.96%
+    F-score: 5.77%
+    OS: 214.65%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 35842
+    uWER many: 256.14%
+    Purity: 26.65%
+    Homogeneity: 54.32%
+    Completeness: 42.78%
+    V-measure: 47.86%
+    ---------------------------------------------------------------------------
+
+DPDP AE-RNN (dur_weight=3), DPDP GMM val, MFCCs, 50 components:
+
+    ./eval_segmentation.py gmm buckeye val wordseg_dpdp_aernn_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 65.03%
+    Recall: 29.10%
+    F-score: 40.21%
+    OS: -55.25%
+    R-value: 49.52%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 86.63%
+    Homogeneity: 91.64%
+    Completeness: 28.96%
+    V-measure: 44.02%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 23.63%
+    Recall: 35.15%
+    F-score: 28.26%
+    OS: 48.78%
+    R-value: 19.25%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 11.76%
+    Recall: 18.18%
+    F-score: 14.28%
+    OS: 54.59%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 70916
+    uWER many: 74.95%
+    Purity: 83.19%
+    Homogeneity: 94.21%
+    Completeness: 57.22%
+    V-measure: 71.20%
+    ---------------------------------------------------------------------------
+
+DPDP AE-RNN (dur_weight=6), DPDP GMM val, MFCCs, 50 components, *select*:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 67.39%
+    Recall: 21.46%
+    F-score: 32.55%
+    OS: -68.15%
+    R-value: 44.34%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 96.51%
+    Homogeneity: 98.20%
+    Completeness: 30.78%
+    V-measure: 46.87%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 24.39%
+    Recall: 25.81%
+    F-score: 25.08%
+    OS: 5.85%
+    R-value: 34.50%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 14.09%
+    Recall: 16.68%
+    F-score: 15.27%
+    OS: 18.38%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 63111
+    uWER many: 47.93%
+    Purity: 95.55%
+    Homogeneity: 98.78%
+    Completeness: 59.84%
+    V-measure: 74.53%
+    ---------------------------------------------------------------------------
+
+DPDP AE-RNN (dur_weight=3), DPDP GMM val, MFCCs, 25 components:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 65.83%
+    Recall: 25.94%
+    F-score: 37.22%
+    OS: -60.60%
+    R-value: 47.39%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 77.07%
+    Homogeneity: 84.62%
+    Completeness: 27.75%
+    V-measure: 41.79%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 23.89%
+    Recall: 31.29%
+    F-score: 27.09%
+    OS: 30.99%
+    R-value: 27.06%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 12.45%
+    Recall: 17.38%
+    F-score: 14.51%
+    OS: 39.58%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 54535
+    uWER many: 71.47%
+    Purity: 72.20%
+    Homogeneity: 89.50%
+    Completeness: 56.52%
+    V-measure: 69.28%
+    ---------------------------------------------------------------------------
+
+DPDP AE-RNN (dur_weight=6), DPDP GMM val, MFCCs, 25 components:
+
+    ./eval_segmentation.py gmm buckeye val wordseg_segaernn_dp_penalized_25
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 69.00%
+    Recall: 17.68%
+    F-score: 28.15%
+    OS: -74.38%
+    R-value: 41.72%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 94.27%
+    Homogeneity: 96.84%
+    Completeness: 30.45%
+    V-measure: 46.33%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 26.85%
+    Recall: 22.86%
+    F-score: 24.69%
+    OS: -14.86%
+    R-value: 38.70%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 16.70%
+    Recall: 16.85%
+    F-score: 16.77%
+    OS: 0.92%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 52243
+    uWER many: 42.06%
+    Purity: 93.20%
+    Homogeneity: 98.05%
+    Completeness: 60.43%
+    V-measure: 74.77%
     ---------------------------------------------------------------------------
 
 
@@ -1056,21 +1305,22 @@ VQ-VAE DP penalized N-seg. test:
 ZeroSpeech'17 Mandarin
 ----------------------
 
-DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3):
+DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3),
+*final*:
 
-    boundary_precision: 0.6707869481765835
-    boundary_recall: 0.703320587643389
-    boundary_fscore: 0.6866686314962177
-    token_precision: 0.2742476697736351
-    type_precision: 0.2591799508287731
-    token_recall: 0.26010305112143867
-    type_recall: 0.3683913876676812
-    token_fscore: 0.26698815172020435
-    type_fscore: 0.3042830540037244
-    words: 12609
-    coverage: 0.9999386888612989
-    ned: 0.9204646655141704
-    pairs: 25452
+    boundary_precision: 0.6616161616161617
+    boundary_recall: 0.7065405514187966
+    boundary_fscore: 0.6833407945189482
+    token_precision: 0.2688495201940314
+    type_precision: 0.25486822554156563
+    token_recall: 0.257577288341079
+    type_recall: 0.3673768459023785
+    token_fscore: 0.2630927196739074
+    type_fscore: 0.30095114969064546
+    words: 12787
+    coverage: 0.9999693444306494
+    ned: 0.8897823993837859
+    pairs: 17310
 
 DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=1):
 
@@ -1190,21 +1440,21 @@ segment length<=50:
     pairs: 5642231
 
 DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3),
-*select*:
+*final*:
 
-    boundary_precision: 0.49658091629014234
-    boundary_recall: 0.594080914272429
-    boundary_fscore: 0.5409728964434748
-    token_precision: 0.1223925985318372
-    type_precision: 0.053735164391757455
-    token_recall: 0.1318330708097659
-    type_recall: 0.17770211199558275
-    token_fscore: 0.12693755237719773
-    type_fscore: 0.08251784111790095
-    words: 71871
-    coverage: 0.9994759237007329
-    ned: 0.8423111391051952
-    pairs: 5141819
+    boundary_precision: 0.4981988292390054
+    boundary_recall: 0.5787582779652644
+    boundary_fscore: 0.5354655158796178
+    token_precision: 0.11984520550303907
+    type_precision: 0.0522429243423646
+    token_recall: 0.1245838404811341
+    type_recall: 0.18294759122072424
+    token_fscore: 0.12216859010926324
+    type_fscore: 0.08127638262860414
+    words: 76106
+    coverage: 0.9994785245756672
+    ned: 0.8678625502797006
+    pairs: 4482962
 
 DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=1):
 
@@ -1258,18 +1508,19 @@ DP penalized XLSR (dur_weight=1500), DP penalized AE-RNN (dur_weight=1):
 ZeroSpeech'17 English
 ---------------------
 
-DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3):
+DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3),
+*final*:
 
-    boundary_precision: 0.48222699075599473
-    boundary_recall: 0.6511690933851877
-    boundary_fscore: 0.5541069300841758
-    token_precision: 0.1615031865732558
-    type_precision: 0.053528347406513875
-    token_recall: 0.20218670034229505
-    type_recall: 0.21942753898820844
-    token_fscore: 0.17956944948317954
-    type_fscore: 0.08606221095032077
-    words: 86216
-    coverage: 0.9987312813078212
-    ned: 0.6117867028276969
-    pairs: 15516526
+    boundary_precision: 0.5272349929534665
+    boundary_recall: 0.6328394074696406
+    boundary_fscore: 0.5752304859347639
+    token_precision: 0.18578293430444576
+    type_precision: 0.06063438714420754
+    token_recall: 0.20514162595681987
+    type_recall: 0.2744864967668315
+    token_fscore: 0.19498295626538212
+    type_fscore: 0.09932726553225167
+    words: 95210
+    coverage: 0.9988127448148101
+    ned: 0.5709890053444755
+    pairs: 10327401
