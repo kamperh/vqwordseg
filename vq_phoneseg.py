@@ -41,7 +41,8 @@ def check_argv():
     parser.add_argument(
         "--algorithm",
         help="VQ segmentation algorithm (default: %(default)s)",
-        choices=["dp_penalized", "dp_penalized_n_seg"], default="dp_penalized"
+        choices=["dp_penalized", "dp_penalized_n_seg", "dp_penalized_hsmm"],
+        default="dp_penalized"
         )
     parser.add_argument(
         "--dur_weight", type=float,
@@ -114,6 +115,7 @@ def main():
             assert False, "cannot set dur_weight automatically for model type"
         if args.algorithm == "dp_penalized_n_seg":
             args.dur_weight = 0
+    print(f"Algorithm: {args.algorithm}")
     print(f"Duration weight: {args.dur_weight:.4f}")
     if args.output_tag is None:
         args.output_tag = "phoneseg_{}".format(args.algorithm)

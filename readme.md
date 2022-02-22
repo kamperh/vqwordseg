@@ -1,40 +1,67 @@
-Phone and Word Segmentation using Vector-Quantised Neural Networks
-==================================================================
+Unsupervised Phone and Word Segmentation using Vector-Quantized Neural Networks
+===============================================================================
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](license.md)
 
 
-## Disclaimer
-
-The code provided here is not pretty. But research should be reproducible. I
-provide no guarantees with the code, but please let me know if you have any
-problems, find bugs or have general comments.
+**GO THROUGH ALL to-do'S!!!**
 
 
-## Installation
+## Overview
 
-You will require the following:
+Unsupervised phone and word segmentation on speech data is performed. The
+experiments are described in:
 
-- [Python 3](https://www.python.org/downloads/)
-- [PyTorch](https://pytorch.org/)
-- [tqdm](https://tqdm.github.io/)
-- [scikit-learn](https://scikit-learn.org/)
-- [wordseg](https://wordseg.readthedocs.io/)
+- H. Kamper, "Dynamic programming on self-supervised features for word
+  segmentation on discovered phone units," *arXiv preprint arXiv:2202.???*,
+  2022. [[arXiv](https://arxiv.org/????)]
+- H. Kamper and B. van Niekerk, "Towards unsupervised phone and word
+  segmentation using self-supervised vector-quantized neural networks," in
+  *Proc. Interspeech*, 2021. [[arXiv](http://arxiv.org/abs/2012.07551)]
 
-**To-do.** Add and describe a conda installation file.
+Please cite these papers if you use the code.
 
 
-## Minimal example
+## Dependencies
 
-**To-do.** Maybe a Colab notebook in which everything is installed and VQ-VAE
-codes or CPC-big codes are extracted for an input utterance. Synthesis can
-maybe even be performed.
+Dependencies can be installed in a conda environment:
+
+    conda env create -f environment.yml
+    conda activate dpdp
+
+This does not include [wordseg](https://wordseg.readthedocs.io/), which should
+be installed in its own environment according to the documentation.
+
+Install the [DPDP AE-RNN](https://github.com/kamperh/dpdp_aernn/) package:
+
+    git clone https://github.com/kamperh/dpdp_aernn.git ../
+
+
+## Minimal usage example: DPDP AE-RNN with DPDP CPC+K-means on Buckeye
+
+In the sections that follow I give more complete details. In this section I
+briefly outline the sequence of steps that should reproduce the DPDP system
+results on Buckeye given in [the paper](*to-do*). To apply the approach on
+other datasets you will need to carefully work through the subsequent sections,
+but I hope that this current section helps you get going.
+
+1. Obtain the ground truth alignments for Buckeye provided as part of [this
+   release](*to-do*). These should be extracted so that you have a
+   `data/buckeye/` directory in which the alignments are given.
+
+2. Extract CPC+K-means features for Buckeye. Do this by following the steps in
+   [this subsection](*to-do*).
+
+3. 
 
 
 ## Dataset format and directory structure
 
 This code should be usable with any dataset given that alignments and VQ
 encodings are provided.
+
+The data files for the Buckeye corpus described below can be downloaded as part
+of a release at [this link](**To-do.**)
 
 For evaluation you need the ground truth phone and (optionally) word
 boundaries. These should be stored in the directories
@@ -59,10 +86,11 @@ of:
     69 78 ay
     78 88 k
 
-The VQ-segmentation algorithms operate on the output of VQ models. The
-(pre-)quantized representations and code indices should be provided in the
-`exp/` directory. These are used as input to the VQ-segmentation algorithms;
-the segmented output is also produced in `exp/`.
+The duration-penalized dynamic programming (DPDP) algorithms operate on the
+output vector quantized (VQ) models. The (pre-)quantized representations and
+code indices should be provided in the `exp/` directory. These are used as
+input to the VQ-segmentation algorithms; the segmented output is also produced
+in `exp/`.
 
 As an example, the directory `exp/vqcpc/buckeye/` should contain a file
 `embedding.npy`, which is the codebook matrix for a
@@ -95,17 +123,44 @@ three lines of `indices/s01_01a_003222-003256.txt` could be:
     119
     ...
 
-Any VQ model can be used. In the section below I give an example of how VQ-VAE
-and VQ-CPC models can be used to obtain codes for the Buckeye dataset. In the
-subsequent section VQ-segmentation is described.
+Any VQ model can be used. In the section below I give an example of how VQ-VAE,
+VQ-CPC and CPC+K-means models can be used to obtain codes for the Buckeye
+dataset. In the subsequent section DPDP segmentation is described.
 
 
-## Example encodings: VQ-VAE and VQ-CPC input representations
+## Example encodings: CPC+K-means features on Buckeye
+
+Install the ZeroSpeech 2021 baseline system from [my
+fork](https://github.com/kamperh/zerospeech2021_baseline) by following the
+steps in the [installation section of the readme](to-do). Make sure that
+`vqwordseg/` (this repository) and `zerospeech2021_baseline/` are in the same
+directory, i.e. after cloning you should have a `../zerospeech2021_baseline/`
+directory relative to the root that you are currently in.
+
+Move to the ZeroSpeech 2021 directory:
+
+    cd ../zerospeech2021_baseline/
+
+Extract individual Buckeye wav files:
+
+    ./get_buckeye_wavs.py ~/endgame/datasets/buckeye/
+
+Encode the Buckeye dataset:
+
+    conda activate zerospeech2021_baseline
+    ./encode.py wav/buckeye/val/ exp/buckeye/val/
+    ./encode.py wav/buckeye/test/ exp/buckeye/test/
+
+Move back and deactivate the environment:
+
+    cd ../vqwordseg/
+    conda deactivate
+
+
+## Example encodings: VQ-VAE and VQ-CPC on Buckeye
 
 You can obtain the VQ input representations using the file format indicated
-above. As an example, here I describe how I did it for the Buckeye data. The
-data files for the Buckeye corpus can be downloaded as part of a release at
-[this link](**To-do.**)
+above. As an example, here I describe how I did it for the Buckeye data.
 
 First the following repositories need to be installed with their dependencies:
 
@@ -146,7 +201,7 @@ since these are not used for segmentation.
 DP penalized segmentation:
 
     # Buckeye (GMM)
-    ./vq_phoneseg.py --downsample_factor 1 --input_format=npy --algorithm=dp_penalized --dur_weight 0.001 gmm buckeye val
+    ./vq_phoneseg.py --downsample_factor 1 --input_format=npy --algorithm=dp_penalized --dur_weight 0.001 gmm buckeye val --output_tag phoneseg_merge
 
     # Buckeye (VQ-CPC)
     ./vq_phoneseg.py --input_format=txt --algorithm=dp_penalized vqcpc buckeye val
@@ -156,6 +211,12 @@ DP penalized segmentation:
 
     # Buckeye (CPC-big)
     ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
+
+    # Buckeye (CPC-big) HSMM
+    ./vq_phoneseg.py --algorithm dp_penalized_hsmm --downsample_factor 1 --dur_weight 1.0 --model_eos --dur_weight_func neg_log_gamma --output_tag=phoneseg_hsmm_tune cpc_big buckeye val
+
+    # Buckeye Felix split (CPC-big) HSMM
+    ./vq_phoneseg.py --algorithm dp_penalized_hsmm --downsample_factor 1 --dur_weight 1.0 --model_eos --dur_weight_func neg_log_gamma --output_tag=phoneseg_hsmm_tune cpc_big buckeye_felix test
 
     # Xitsonga (CPC-big)
     ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big xitsonga train
@@ -171,6 +232,9 @@ DP penalized segmentation:
 
     # Buckeye Felix split (VQ-VAE)
     ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized vqvae buckeye_felix test
+
+    # Buckeye Felix split (CPC-big)
+    ./vq_phoneseg.py  --downsample_factor 1 --dur_weight 2 --output_tag=phoneseg_dp_penalized_tune cpc_big buckeye_felix val
 
     # Buckeye Felix split (VQ-VAE) with Poisson duration prior
     ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized_poisson --dur_weight_func neg_log_poisson --dur_weight 2 vqvae buckeye_felix val
@@ -223,7 +287,7 @@ Adaptor grammar word segmentation:
 DPDP AE-RNN word segmentation:
 
     # Buckeye (GMM)
-    ./vq_wordseg.py --algorithm=dpdp_aernn gmm buckeye val phoneseg_dp_penalized
+    ./vq_wordseg.py --dur_weight=6 --algorithm=dpdp_aernn gmm buckeye val phoneseg_dp_penalized
 
     # Buckeye (CPC-big)
     ./vq_wordseg.py --algorithm=dpdp_aernn cpc_big buckeye val phoneseg_dp_penalized
@@ -292,3 +356,10 @@ segmentation algorithms).
 3. Move to `../seg_aernn/notebooks/` and perform word segmentation.
 4. Move back here and evaluate the segmentation using `eval_segmentation.py`.
 5. For ZeroSpeech systems, the evaluation is done in `../zerospeech2017_eval/`.
+
+
+## Disclaimer
+
+The code provided here is not pretty. But research should be reproducible. I
+provide no guarantees with the code, but please let me know if you have any
+problems, find bugs or have general comments.

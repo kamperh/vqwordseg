@@ -359,6 +359,16 @@ def main():
     segmentation_interval_dict = get_intervals_from_dir(seg_dir)
     utterances = segmentation_interval_dict.keys()
 
+    # Temp
+    tmp = {}
+    for utt_key in segmentation_interval_dict:
+        tmp[utt_key] = []
+        for start, end, label in segmentation_interval_dict[utt_key]:
+            if label == "x_":
+                label = "999_"
+            tmp[utt_key].append((start, end, label))
+    segmentation_interval_dict = tmp
+
     # # Temp
     # tmp = get_intervals_from_dir(
     #     Path("exp/cpc_big/buckeye/val/wordseg_dpdp_aernn_dp_penalized/intervals")

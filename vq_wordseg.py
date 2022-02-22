@@ -8,6 +8,7 @@ Contact: kamperh@gmail.com
 Date: 2021
 """
 
+from datetime import datetime
 from pathlib import Path
 from tqdm import tqdm
 import argparse
@@ -93,6 +94,7 @@ def main():
     # assert False
 
     # Segmentation
+    print(datetime.now())
     print("Segmenting:")
     prepared_text = []
     for utt_key in utterances:
@@ -107,6 +109,7 @@ def main():
         word_segmentation = segment_func(
             prepared_text
             )
+    print(datetime.now())
     # print(prepared_text[:10])
     # print(word_segmentation[:10])
     # assert False
@@ -120,6 +123,12 @@ def main():
         for (phone_start,
                 phone_end, phone_label) in phoneseg_interval_dict[utt_key]:
             word_label += phone_label + "_"
+            if i_word >= len(words_segmented):
+                wordseg_interval_dict[utt_key].append((
+                    word_start, phoneseg_interval_dict[utt_key][-1][1],
+                    "999_" #word_label
+                    ))
+                break
             if words_segmented[i_word] == word_label:
                 wordseg_interval_dict[utt_key].append((
                     word_start, phone_end, word_label

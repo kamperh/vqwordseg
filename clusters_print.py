@@ -33,7 +33,7 @@ def check_argv():
         )
     parser.add_argument(
         "model", help="input VQ representations",
-        choices=["vqvae", "vqcpc", "cpc_big"]
+        choices=["vqvae", "vqcpc", "cpc_big", "eskmeans"]
         )
     parser.add_argument("dataset", type=str, help="input dataset")
     parser.add_argument(
@@ -84,7 +84,8 @@ def main():
         )
 
     # Map e.g. "23_12_" to a unique integer ID e.g. 10
-    if ("_" in list(segmentation_interval_dict.values())[0][0][-1]):
+    # if ("_" in list(segmentation_interval_dict.values())[0][0][-1]):
+    if True:
         segmentation_interval_dict, str_to_id, id_to_str = str_to_id_labels(
             segmentation_interval_dict
             )

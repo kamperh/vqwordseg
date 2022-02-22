@@ -213,6 +213,66 @@ def dp_penalized(embedding, z, n_min_frames=0, n_max_frames=15,
     return boundaries, segmented_codes
 
 
+def dp_penalized_hsmm(embedding, z, n_min_frames=0, n_max_frames=15,
+        dur_weight=20**2, dur_weight_func=neg_log_gamma, model_eos=False):
+    """Segmentation using a hidden semi-Markov model (HSMM)."""
+
+    # Hyperparameters
+    # count_weight = 0
+    sigma = 1.0/dur_weight
+    D = z.shape[1]
+       
+    # Distances between each z and each embedding (squared Euclidean)
+    embedding_distances = distance.cdist(z, embedding, metric="sqeuclidean")
+    # print("embedding_distances shape: {}".format(embedding_distances.shape))
+    
+    # Costs for segment intervals
+    segment_intervals = get_segment_intervals(z.shape[0], n_max_frames)
+    costs = np.inf*np.ones(len(segment_intervals))
+    i_eos = segment_intervals[-1][-1]
+    for i_seg, interval in enumerate(segment_intervals):
+        if interval is None:
+            continue
+        i_start, i_end = interval
+        dur = i_end - i_start
+        if dur < n_min_frames:
+            continue
+
+        cost = (
+            1/(2*sigma**2)*np.min(
+            np.sum(embedding_distances[i_start:i_end, :], axis=0)
+            )
+            + 0.5*dur*D*np.log(2*np.pi) + 0.5*dur*D*np.log(sigma**2)
+            + dur_weight_func(dur)  # + count_weight
+            )
+
+        # End-of-sequence
+        if model_eos:
+            alpha = 0.1  # 0.1
+            K = 50
+            if i_end == i_eos:
+                cost += -np.log(alpha)
+            else:
+                cost += -np.log((1 - alpha)/K)
+
+        costs[i_seg] = cost
+    
+    # Viterbi segmentation
+    summed_cost, boundaries = custom_viterbi(costs, z.shape[0])
+    
+    # Code assignments
+    segmented_codes = []
+    j_prev = 0
+    for j in np.where(boundaries)[0]:
+        i_start = j_prev
+        i_end = j + 1
+        code = np.argmin(np.sum(embedding_distances[i_start:i_end, :], axis=0))
+        segmented_codes.append((i_start, i_end, code))
+        j_prev = j + 1
+    
+    return boundaries, segmented_codes
+
+
 #-----------------------------------------------------------------------------#
 #        N-SEG. CONSTRAINED DYNAMIC PROGRAMMING PENALIZED SEGMENTATION        #
 #-----------------------------------------------------------------------------#
@@ -336,6 +396,14 @@ def dp_penalized_n_seg(embedding, z, n_min_frames=0, n_max_frames=15,
 
 def ag(utterance_list, nruns=4, njobs=3, args="-n 100"):
     from wordseg.algos import ag
+    
+    n_max_symbols = 50  # 100
+    for i_utt in range(len(utterance_list)):
+        utterance = utterance_list[i_utt]
+        utterance_list[i_utt] = (
+            "_ ".join(utterance[:-1].split("_ ")[:n_max_symbols]) + "_"
+            )
+
     return list(ag.segment(
         utterance_list, nruns=nruns, njobs=njobs, args=args
         ))

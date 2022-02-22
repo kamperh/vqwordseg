@@ -1,8 +1,12 @@
 Phone and Word Segmentation Results
 ===================================
 
-Buckeye
--------
+## Overview
+
+For final results that made it into the paper, search for *final*.
+
+
+## Buckeye phone segmentation
 
 VQ-VAE DP penalized val:
 
@@ -23,7 +27,7 @@ VQ-VAE DP penalized val:
     R-value: -194.47%
     ---------------------------------------------------------------------------
 
-DPDP GMM val, MFCCs, 50 components:
+Merged GMM val, MFCCs, 50 components:
 
     # ./eval_segmentation.py gmm buckeye val phoneseg_dp_penalized
     ---------------------------------------------------------------------------
@@ -39,6 +43,23 @@ DPDP GMM val, MFCCs, 50 components:
     Homogeneity: 19.66%
     Completeness: 17.87%
     V-measure: 18.72%
+    ---------------------------------------------------------------------------
+
+DPDP (dur_weight=6), GMM val, MFCCs, 50 components:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 52.96%
+    Recall: 83.28%
+    F-score: 64.74%
+    OS: 57.26%
+    R-value: 44.02%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 23.04%
+    Homogeneity: 21.63%
+    Completeness: 24.04%
+    V-measure: 22.77%
     ---------------------------------------------------------------------------
 
 VQ-VAE DP penalized val, dur_weight=4:
@@ -443,6 +464,9 @@ ResDAVENet-VQ clustered codebook DP penalized val, dur_weight=50:
     OS: 353.26%
     ---------------------------------------------------------------------------
 
+
+## Buckeye word segmentation
+
 TP word segmentation on VQ-VAE DP penalized val:
 
     # ./eval_segmentation.py vqvae buckeye val wordseg_tp_dp_penalized
@@ -514,6 +538,122 @@ AG word segmentation on VQ-VAE DP penalized val:
     Precision: 3.63%
     Recall: 9.92%
     F-score: 5.31%
+    ---------------------------------------------------------------------------
+
+AG word segmentation on MFCC val, *final*:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 56.14%
+    Recall: 58.49%
+    F-score: 57.29%
+    OS: 4.18%
+    R-value: 62.98%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 29.48%
+    Homogeneity: 35.36%
+    Completeness: 16.81%
+    V-measure: 22.79%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 16.69%
+    Recall: 57.85%
+    F-score: 25.90%
+    OS: 246.70%
+    R-value: -127.26%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 3.10%
+    Recall: 9.96%
+    F-score: 4.73%
+    OS: 221.49%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 7593
+    uWER many: 291.89%
+    Purity: 11.43%
+    Homogeneity: 40.40%
+    Completeness: 36.01%
+    V-measure: 38.08%
+    ---------------------------------------------------------------------------
+
+AG word segmentation on MFCC+GMM test, *final*:
+    
+    ./eval_segmentation.py gmm buckeye test wordseg_ag_merge
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 54.10%
+    Recall: 57.55%
+    F-score: 55.77%
+    OS: 6.38%
+    R-value: 61.27%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 29.49%
+    Homogeneity: 35.06%
+    Completeness: 16.69%
+    V-measure: 22.61%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 15.95%
+    Recall: 57.67%
+    F-score: 24.99%
+    OS: 261.53%
+    R-value: -139.89%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 2.83%
+    Recall: 9.40%
+    F-score: 4.35%
+    OS: 231.96%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 8261
+    uWER many: 302.12%
+    Purity: 11.29%
+    Homogeneity: 39.04%
+    Completeness: 35.01%
+    V-measure: 36.91%
+    ---------------------------------------------------------------------------
+
+AG word segmentation on DPDP CPC-big val, *final*:
+
+    ./eval_segmentation.py cpc_big buckeye val wordseg_ag_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.41%
+    Recall: 52.91%
+    F-score: 62.86%
+    OS: -31.65%
+    R-value: 66.17%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 49.27%
+    Homogeneity: 51.99%
+    Completeness: 29.83%
+    V-measure: 37.91%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 21.72%
+    Recall: 56.61%
+    F-score: 31.39%
+    OS: 160.66%
+    R-value: -55.35%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 6.36%
+    Recall: 13.61%
+    F-score: 8.67%
+    OS: 114.08%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 2558
+    uWER many: 184.73%
+    Purity: 15.43%
+    Homogeneity: 39.31%
+    Completeness: 42.58%
+    V-measure: 40.88%
     ---------------------------------------------------------------------------
 
 AG word segmentation on VQ-VAE DP penalized val, Gamma prior, dur_weight=15:
@@ -1070,42 +1210,43 @@ DPDP AE-RNN (dur_weight=3), DPDP GMM val, MFCCs, 50 components:
     V-measure: 71.20%
     ---------------------------------------------------------------------------
 
-DPDP AE-RNN (dur_weight=6), DPDP GMM val, MFCCs, 50 components, *select*:
+DPDP AE-RNN (dur_weight=6), DPDP GMM val, MFCCs, 50 components, *final*:
 
+    ./eval_segmentation.py gmm buckeye val wordseg_dpdp_aernn_dp_penalized
     ---------------------------------------------------------------------------
     Phone boundaries:
-    Precision: 67.39%
-    Recall: 21.46%
-    F-score: 32.55%
-    OS: -68.15%
-    R-value: 44.34%
+    Precision: 67.76%
+    Recall: 20.62%
+    F-score: 31.62%
+    OS: -69.58%
+    R-value: 43.75%
     ---------------------------------------------------------------------------
     Phone clusters:
-    Purity: 96.51%
-    Homogeneity: 98.20%
-    Completeness: 30.78%
-    V-measure: 46.87%
+    Purity: 97.15%
+    Homogeneity: 98.54%
+    Completeness: 30.56%
+    V-measure: 46.65%
     ---------------------------------------------------------------------------
     Word boundaries:
-    Precision: 24.39%
-    Recall: 25.81%
-    F-score: 25.08%
-    OS: 5.85%
-    R-value: 34.50%
+    Precision: 26.45%
+    Recall: 26.74%
+    F-score: 26.60%
+    OS: 1.11%
+    R-value: 37.07%
     ---------------------------------------------------------------------------
     Word token boundaries:
-    Precision: 14.09%
-    Recall: 16.68%
-    F-score: 15.27%
-    OS: 18.38%
+    Precision: 16.15%
+    Recall: 18.48%
+    F-score: 17.24%
+    OS: 14.39%
     ---------------------------------------------------------------------------
     Word clusters:
-    No. clusters: 63111
-    uWER many: 47.93%
-    Purity: 95.55%
-    Homogeneity: 98.78%
-    Completeness: 59.84%
-    V-measure: 74.53%
+    No. clusters: 61639
+    uWER many: 43.75%
+    Purity: 96.45%
+    Homogeneity: 99.05%
+    Completeness: 59.89%
+    V-measure: 74.64%
     ---------------------------------------------------------------------------
 
 DPDP AE-RNN (dur_weight=3), DPDP GMM val, MFCCs, 25 components:
@@ -1186,8 +1327,7 @@ DPDP AE-RNN (dur_weight=6), DPDP GMM val, MFCCs, 25 components:
     ---------------------------------------------------------------------------
 
 
-Xitsonga
---------
+## Xitsonga
 
 SegAE-RNN Chorowski (dur_weight=3) word segmentation on CPC-big DP penalized
 val (dur_weight=2):
@@ -1216,8 +1356,7 @@ val (dur_weight=2):
     ---------------------------------------------------------------------------
 
 
-Buckeye Felix split
--------------------
+## Buckeye Felix split
 
 VQ-VAE DP penalized val, dur_weight=3:
 
@@ -1301,9 +1440,96 @@ VQ-VAE DP penalized N-seg. test:
     R-value: 56.03%
     ---------------------------------------------------------------------------
 
+DPDP VQ-CPC val, dur_weight=700:
 
-ZeroSpeech'17 Mandarin
-----------------------
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 70.55%
+    Recall: 69.92%
+    F-score: 70.23%
+    OS: -0.89%
+    R-value: 74.64%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 38.48%
+    Homogeneity: 46.17%
+    Completeness: 27.05%
+    V-measure: 34.12%
+    ---------------------------------------------------------------------------
+
+DPDP VQ-CPC val, dur_weight=800:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 71.93%
+    Recall: 65.58%
+    F-score: 68.61%
+    OS: -8.83%
+    R-value: 73.18%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 38.70%
+    Homogeneity: 46.61%
+    Completeness: 27.34%
+    V-measure: 34.46%
+    ---------------------------------------------------------------------------
+
+DPDP VQ-CPC test, dur_weight=700, *final*:
+    
+    ./eval_segmentation.py --phone_tolerance 3 vqcpc buckeye_felix test phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 69.64%
+    Recall: 73.41%
+    F-score: 71.48%
+    OS: 5.42%
+    R-value: 75.12%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 38.83%
+    Homogeneity: 45.94%
+    Completeness: 27.01%
+    V-measure: 34.02%
+    ---------------------------------------------------------------------------
+
+DPDP CPC-big val, dur_weight=10:
+
+    ./eval_segmentation.py cpc_big buckeye_felix val phoneseg_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 65.46%
+    Recall: 65.78%
+    F-score: 65.62%
+    OS: 0.48%
+    R-value: 70.62%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 44.36%
+    Homogeneity: 47.30%
+    Completeness: 44.13%
+    V-measure: 45.66%
+    ---------------------------------------------------------------------------
+
+DPDP CPC-big test, dur_weight=10, *final*:
+
+    ./eval_segmentation.py --phone_tolerance 3 cpc_big buckeye_felix test phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 73.15%
+    Recall: 77.68%
+    F-score: 75.35%
+    OS: 6.19%
+    R-value: 78.34%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 45.55%
+    Homogeneity: 48.81%
+    Completeness: 45.62%
+    V-measure: 47.16%
+    ---------------------------------------------------------------------------
+
+
+## ZeroSpeech'17 Mandarin
 
 DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3),
 *final*:
@@ -1419,8 +1645,7 @@ DP penalized XLSR (dur_weight=500), DP penalized AE-RNN (dur_weight=3):
     pairs: 17344
 
 
-ZeroSpeech'17 French
-----------------------
+## ZeroSpeech'17 French
 
 DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3),
 segment length<=50:
@@ -1505,8 +1730,7 @@ DP penalized XLSR (dur_weight=1500), DP penalized AE-RNN (dur_weight=1):
     pairs: 10054784
 
 
-ZeroSpeech'17 English
----------------------
+## ZeroSpeech'17 English
 
 DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3),
 *final*:
