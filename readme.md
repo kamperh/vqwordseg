@@ -138,7 +138,7 @@ VQ-CPC and CPC+K-means models can be used to obtain codes for the Buckeye
 dataset. In the subsequent section DPDP segmentation is described.
 
 
-## Example encodings: CPC+K-means features on Buckeye
+## Example encodings: CPC-big features on Buckeye
 
 Install the ZeroSpeech 2021 baseline system from [my
 fork](https://github.com/kamperh/zerospeech2021_baseline) by following the
