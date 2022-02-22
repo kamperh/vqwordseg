@@ -14,7 +14,7 @@ experiments are described in:
 
 - H. Kamper, "Dynamic programming on self-supervised features for word
   segmentation on discovered phone units," *arXiv preprint arXiv:2202.???*,
-  2022. [[arXiv](https://arxiv.org/????)]
+  2022. [[arXiv](https://arxiv.org/???? to-do)]
 - H. Kamper and B. van Niekerk, "Towards unsupervised phone and word
   segmentation using self-supervised vector-quantized neural networks," in
   *Proc. Interspeech*, 2021. [[arXiv](http://arxiv.org/abs/2012.07551)]
@@ -45,14 +45,24 @@ results on Buckeye given in [the paper](*to-do*). To apply the approach on
 other datasets you will need to carefully work through the subsequent sections,
 but I hope that this current section helps you get going.
 
-1. Obtain the ground truth alignments for Buckeye provided as part of [this
-   release](*to-do*). These should be extracted so that you have a
-   `data/buckeye/` directory in which the alignments are given.
+1.  Obtain the ground truth alignments for Buckeye provided as part of [this
+    release](*to-do*). These should be extracted so that you have a
+    `data/buckeye/` directory in which the alignments are given.
 
-2. Extract CPC+K-means features for Buckeye. Do this by following the steps in
-   [this subsection](*to-do*).
+2.  Extract CPC+K-means features for Buckeye. Do this by following the steps in
+    [this subsection](*to-do*) below.
 
-3. 
+3.  Perform acoustic unit discovery using DPDP CPC+K-means:
+
+        ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
+
+4.  Perform word segmentation on the discovered units using the DPDP AE-RNN:
+
+        ./vq_wordseg.py --algorithm=dpdp_aernn cpc_big buckeye val phoneseg_dp_penalized
+
+5.  Evaluate the segmentation:
+
+        ./eval_segmentation.py cpc_big buckeye val wordseg_dpdp_aernn_dp_penalized
 
 
 ## Dataset format and directory structure
@@ -132,10 +142,12 @@ dataset. In the subsequent section DPDP segmentation is described.
 
 Install the ZeroSpeech 2021 baseline system from [my
 fork](https://github.com/kamperh/zerospeech2021_baseline) by following the
-steps in the [installation section of the readme](to-do). Make sure that
-`vqwordseg/` (this repository) and `zerospeech2021_baseline/` are in the same
-directory, i.e. after cloning you should have a `../zerospeech2021_baseline/`
-directory relative to the root that you are currently in.
+steps in the [installation section of the
+readme](https://github.com/kamperh/zerospeech2021_baseline#Installation). Make
+sure that `vqwordseg/` (this repository) and `zerospeech2021_baseline/` are in
+the same directory, i.e. after cloning you should have a
+`../zerospeech2021_baseline/` directory relative to the root that you are
+currently in.
 
 Move to the ZeroSpeech 2021 directory:
 
