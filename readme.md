@@ -50,7 +50,8 @@ but I hope that this current section helps you get going.
     `data/buckeye/` directory in which the alignments are given.
 
 2.  Extract CPC+K-means features for Buckeye. Do this by following the steps in
-    [this subsection](#example-encodings-cpc-big-features-on-buckeye) below.
+    [the CPC-big subsection](#example-encodings-cpc-big-features-on-buckeye)
+    below.
 
 3.  Perform acoustic unit discovery using DPDP CPC+K-means:
 
