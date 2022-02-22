@@ -34,7 +34,7 @@ be installed in its own environment according to the documentation.
 
 Install the [DPDP AE-RNN](https://github.com/kamperh/dpdp_aernn/) package:
 
-    git clone https://github.com/kamperh/dpdp_aernn.git ../
+    git clone https://github.com/kamperh/dpdp_aernn.git ../dpdp_aernn
 
 
 ## Minimal usage example: DPDP AE-RNN with DPDP CPC+K-means on Buckeye
