@@ -68,7 +68,8 @@ but I hope that this current section helps you to get going.
         ./eval_segmentation.py cpc_big buckeye val \
             wordseg_dpdp_aernn_dp_penalized
 
-The result should correspond approximately to the following:
+The result should correspond approximately to the following on the Buckeye
+validation data:
 
     ---------------------------------------------------------------------------
     Word boundaries:
@@ -422,7 +423,7 @@ codebook (but an indices file isn't necessary for running many of the phone
 segmentation algorithms).
 
 
-## Old work-flow
+## Old work-flow (deprecated)
 
 1. Extract CPC+K-means features in `../zerospeech2021_baseline/`.
 2. Perform phone segmentation here using `vq_phoneseg.py`.
