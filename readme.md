@@ -30,7 +30,7 @@ Dependencies can be installed in a conda environment:
     conda activate dpdp
 
 This does not include [wordseg](https://wordseg.readthedocs.io/), which should
-be installed in its own environment according to the documentation.
+be installed in its own environment according to its documentation.
 
 Install the [DPDP AE-RNN](https://github.com/kamperh/dpdp_aernn/) package:
 
@@ -43,11 +43,11 @@ In the sections that follow I give more complete details. In this section I
 briefly outline the sequence of steps that should reproduce the DPDP system
 results on Buckeye given in [the paper](*to-do*). To apply the approach on
 other datasets you will need to carefully work through the subsequent sections,
-but I hope that this current section helps you get going.
+but I hope that this current section helps you to get going.
 
-1.  Obtain the ground truth alignments for Buckeye provided as part of [this
-    release](*to-do*). These should be extracted so that you have a
-    `data/buckeye/` directory in which the alignments are given.
+1.  Obtain the ground truth alignments for Buckeye provided in `buckeye.zip` as
+    part of [this release](*to-do*). These should be extracted so that you have
+    a `data/buckeye/` directory with the alignments.
 
 2.  Extract CPC+K-means features for Buckeye. Do this by following the steps in
     [the CPC-big subsection](#example-encodings-cpc-big-features-on-buckeye)
@@ -55,24 +55,72 @@ but I hope that this current section helps you get going.
 
 3.  Perform acoustic unit discovery using DPDP CPC+K-means:
 
-        ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
+        ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 \
+            --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
 
 4.  Perform word segmentation on the discovered units using the DPDP AE-RNN:
 
-        ./vq_wordseg.py --algorithm=dpdp_aernn cpc_big buckeye val phoneseg_dp_penalized
+        ./vq_wordseg.py --algorithm=dpdp_aernn \
+            cpc_big buckeye val phoneseg_dp_penalized
 
 5.  Evaluate the segmentation:
 
-        ./eval_segmentation.py cpc_big buckeye val wordseg_dpdp_aernn_dp_penalized
+        ./eval_segmentation.py cpc_big buckeye val \
+            wordseg_dpdp_aernn_dp_penalized
+
+The result should correspond approximately to the following:
+
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 35.80%
+    Recall: 36.30%
+    F-score: 36.05%
+    OS: 1.40%
+    R-value: 45.13%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 23.93%
+    Recall: 24.23%
+    F-score: 24.08%
+    OS: 1.24%
+    ---------------------------------------------------------------------------
+
+
+## Example encodings: CPC-big features on Buckeye
+
+Install the ZeroSpeech 2021 baseline system from [my
+fork](https://github.com/kamperh/zerospeech2021_baseline) by following the
+steps in the [installation section of the
+readme](https://github.com/kamperh/zerospeech2021_baseline#Installation). Make
+sure that `vqwordseg/` (this repository) and `zerospeech2021_baseline/` are in
+the same directory.
+
+From the `vqwordseg/` directory, move to the ZeroSpeech 2021 directory:
+
+    cd ../zerospeech2021_baseline/
+
+Extract individual Buckeye wav files:
+
+    ./get_buckeye_wavs.py ../datasets/buckeye/
+
+The argument should point to your local copy of Buckeye.
+
+Encode the Buckeye data:
+
+    conda activate zerospeech2021_baseline
+    ./encode.py wav/buckeye/val/ exp/buckeye/val/
+    ./encode.py wav/buckeye/test/ exp/buckeye/test/
+
+Move back and deactivate the environment:
+
+    cd ../vqwordseg/
+    conda deactivate
 
 
 ## Dataset format and directory structure
 
 This code should be usable with any dataset given that alignments and VQ
 encodings are provided.
-
-The data files for the Buckeye corpus described below can be downloaded as part
-of a release at [this link](**To-do.**)
 
 For evaluation you need the ground truth phone and (optionally) word
 boundaries. These should be stored in the directories
@@ -134,40 +182,10 @@ three lines of `indices/s01_01a_003222-003256.txt` could be:
     119
     ...
 
-Any VQ model can be used. In the section below I give an example of how VQ-VAE,
-VQ-CPC and CPC+K-means models can be used to obtain codes for the Buckeye
-dataset. In the subsequent section DPDP segmentation is described.
-
-
-## Example encodings: CPC-big features on Buckeye
-
-Install the ZeroSpeech 2021 baseline system from [my
-fork](https://github.com/kamperh/zerospeech2021_baseline) by following the
-steps in the [installation section of the
-readme](https://github.com/kamperh/zerospeech2021_baseline#Installation). Make
-sure that `vqwordseg/` (this repository) and `zerospeech2021_baseline/` are in
-the same directory, i.e. after cloning you should have a
-`../zerospeech2021_baseline/` directory relative to the root that you are
-currently in.
-
-Move to the ZeroSpeech 2021 directory:
-
-    cd ../zerospeech2021_baseline/
-
-Extract individual Buckeye wav files:
-
-    ./get_buckeye_wavs.py ~/endgame/datasets/buckeye/
-
-Encode the Buckeye dataset:
-
-    conda activate zerospeech2021_baseline
-    ./encode.py wav/buckeye/val/ exp/buckeye/val/
-    ./encode.py wav/buckeye/test/ exp/buckeye/test/
-
-Move back and deactivate the environment:
-
-    cd ../vqwordseg/
-    conda deactivate
+Any VQ model can be used. In the preceding section section I gave an example of
+using CPC-big with K-means; in the section below I give an example of how
+VQ-VAE and VQ-CPC can be used to obtain codes for the Buckeye dataset. In the
+subsequent section DPDP segmentation is described.
 
 
 ## Example encodings: VQ-VAE and VQ-CPC on Buckeye
@@ -191,7 +209,13 @@ steps there. Pre-process audio and extract log-Mel spectrograms:
 Encode the data and write it to the `vqwordseg/exp/` directory. This should be
 performed for all splits (`train`, `val` and `test`):
 
-    ./encode.py checkpoint=checkpoints/cpc/english2019/model.ckpt-22000.pt split=val save_indices=True save_auxiliary=True save_embedding=../vqwordseg/exp/vqcpc/buckeye/embedding.npy out_dir=../vqwordseg/exp/vqcpc/buckeye/val/ dataset=buckeye
+    ./encode.py checkpoint=checkpoints/cpc/english2019/model.ckpt-22000.pt \
+        split=val \
+        save_indices=True \
+        save_auxiliary=True \
+        save_embedding=../vqwordseg/exp/vqcpc/buckeye/embedding.npy \
+        out_dir=../vqwordseg/exp/vqcpc/buckeye/val/ \
+        dataset=buckeye
 
 Change directory to `../VectorQuantizedVAE` and then run the following there.
 The audio can be pre-processed again (as above), or alternatively you can
@@ -203,7 +227,13 @@ Encode the data and write it to the `vqwordseg/exp/` directory. This should
 be performed for all splits (`train`, `val` and `test`):
 
     # Buckeye
-    ./encode.py checkpoint=checkpoints/2019english/model.ckpt-500000.pt split=train save_indices=True save_auxiliary=True save_embedding=../vqwordseg/exp/vqvae/buckeye/embedding.npy out_dir=../vqwordseg/exp/vqvae/buckeye/train/ dataset=buckeye
+    ./encode.py checkpoint=checkpoints/2019english/model.ckpt-500000.pt \
+        split=train \
+        save_indices=True \
+        save_auxiliary=True \
+        save_embedding=../vqwordseg/exp/vqvae/buckeye/embedding.npy \
+        out_dir=../vqwordseg/exp/vqvae/buckeye/train/ \
+        dataset=buckeye
 
 You can delete all the created `auxiliary_embedding1/` and `codes/` directories
 since these are not used for segmentation.
@@ -214,66 +244,90 @@ since these are not used for segmentation.
 DP penalized segmentation:
 
     # Buckeye (GMM)
-    ./vq_phoneseg.py --downsample_factor 1 --input_format=npy --algorithm=dp_penalized --dur_weight 0.001 gmm buckeye val --output_tag phoneseg_merge
+    ./vq_phoneseg.py --downsample_factor 1 --input_format=npy \
+        --algorithm=dp_penalized --dur_weight 0.001 \
+        gmm buckeye val --output_tag phoneseg_merge
 
     # Buckeye (VQ-CPC)
-    ./vq_phoneseg.py --input_format=txt --algorithm=dp_penalized vqcpc buckeye val
+    ./vq_phoneseg.py --input_format=txt --algorithm=dp_penalized \
+        vqcpc buckeye val
 
     # Buckeye (VQ-VAE)
     ./vq_phoneseg.py vqvae buckeye val
 
     # Buckeye (CPC-big)
-    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big buckeye val
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt \
+        --algorithm=dp_penalized cpc_big buckeye val
 
     # Buckeye (CPC-big) HSMM
-    ./vq_phoneseg.py --algorithm dp_penalized_hsmm --downsample_factor 1 --dur_weight 1.0 --model_eos --dur_weight_func neg_log_gamma --output_tag=phoneseg_hsmm_tune cpc_big buckeye val
+    ./vq_phoneseg.py --algorithm dp_penalized_hsmm --downsample_factor 1 \
+        --dur_weight 1.0 --model_eos --dur_weight_func neg_log_gamma \
+        --output_tag=phoneseg_hsmm_tune cpc_big buckeye val
 
     # Buckeye Felix split (CPC-big) HSMM
-    ./vq_phoneseg.py --algorithm dp_penalized_hsmm --downsample_factor 1 --dur_weight 1.0 --model_eos --dur_weight_func neg_log_gamma --output_tag=phoneseg_hsmm_tune cpc_big buckeye_felix test
+    ./vq_phoneseg.py --algorithm dp_penalized_hsmm --downsample_factor 1 \
+        --dur_weight 1.0 --model_eos --dur_weight_func neg_log_gamma \
+        --output_tag=phoneseg_hsmm_tune cpc_big buckeye_felix test
 
     # Xitsonga (CPC-big)
-    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big xitsonga train
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt \
+        --algorithm=dp_penalized cpc_big xitsonga train
 
     # Buckeye (XLSR)
-    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2500 --input_format=npy --algorithm=dp_penalized xlsr buckeye val
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2500 \
+        --input_format=npy --algorithm=dp_penalized xlsr buckeye val
 
     # Buckeye (ResDAVEnet-VQ)
-    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=txt --algorithm=dp_penalized resdavenet_vq buckeye val
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=txt \
+        --algorithm=dp_penalized resdavenet_vq buckeye val
 
     # Buckeye (ResDAVEnet-VQ3)
-    ./vq_phoneseg.py --downsample_factor 4 --dur_weight 0.001 --input_format=txt --algorithm=dp_penalized resdavenet_vq_quant3 buckeye val --output_tag=phoneseg_merge
+    ./vq_phoneseg.py --downsample_factor 4 --dur_weight 0.001 \
+        --input_format=txt --algorithm=dp_penalized resdavenet_vq_quant3 \
+        buckeye val --output_tag=phoneseg_merge
 
     # Buckeye Felix split (VQ-VAE)
-    ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized vqvae buckeye_felix test
+    ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized \
+        vqvae buckeye_felix test
 
     # Buckeye Felix split (CPC-big)
-    ./vq_phoneseg.py  --downsample_factor 1 --dur_weight 2 --output_tag=phoneseg_dp_penalized_tune cpc_big buckeye_felix val
+    ./vq_phoneseg.py  --downsample_factor 1 --dur_weight 2 \
+        --output_tag=phoneseg_dp_penalized_tune cpc_big buckeye_felix val
 
     # Buckeye Felix split (VQ-VAE) with Poisson duration prior
-    ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized_poisson --dur_weight_func neg_log_poisson --dur_weight 2 vqvae buckeye_felix val
+    ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized_poisson \
+        --dur_weight_func neg_log_poisson --dur_weight 2 \
+        vqvae buckeye_felix val
 
     # Buckeye (VQ-VAE) with Gamma duration prior
-    ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized_gamma --dur_weight_func neg_log_gamma --dur_weight 15 vqvae buckeye val
+    ./vq_phoneseg.py --output_tag=phoneseg_dp_penalized_gamma \
+        --dur_weight_func neg_log_gamma --dur_weight 15 vqvae buckeye val
 
     # ZeroSpeech'17 English (CPC-big)
-    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big zs2017_en train
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt \
+        --algorithm=dp_penalized cpc_big zs2017_en train
 
     # ZeroSpeech'17 French (CPC-big)
-    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big zs2017_fr train
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt \
+        --algorithm=dp_penalized cpc_big zs2017_fr train
 
     # ZeroSpeech'17 Mandarin (CPC-big)
-    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt --algorithm=dp_penalized cpc_big zs2017_zh train
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt \
+        --algorithm=dp_penalized cpc_big zs2017_zh train
 
     # ZeroSpeech'17 French (XLSR)
-    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 1500 --input_format=npy --algorithm=dp_penalized xlsr zs2017_fr train
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 1500 \
+        --input_format=npy --algorithm=dp_penalized xlsr zs2017_fr train
 
     # ZeroSpeech'17 Mandarin (XLSR)
-    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2500 --input_format=npy --algorithm=dp_penalized xlsr zs2017_zh train
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2500 \
+        --input_format=npy --algorithm=dp_penalized xlsr zs2017_zh train
 
 DP penalized N-seg. segmentation:
 
     # Buckeye Felix split (VQ-VAE)
-    ./vq_phoneseg.py --algorithm=dp_penalized_n_seg --n_frames_per_segment=3 --n_min_segments=3 vqvae buckeye_felix test
+    ./vq_phoneseg.py --algorithm=dp_penalized_n_seg \
+        --n_frames_per_segment=3 --n_min_segments=3 vqvae buckeye_felix test
 
 Evaluate segmentation:
 
@@ -300,10 +354,12 @@ Adaptor grammar word segmentation:
 DPDP AE-RNN word segmentation:
 
     # Buckeye (GMM)
-    ./vq_wordseg.py --dur_weight=6 --algorithm=dpdp_aernn gmm buckeye val phoneseg_dp_penalized
+    ./vq_wordseg.py --dur_weight=6 --algorithm=dpdp_aernn \
+        gmm buckeye val phoneseg_dp_penalized
 
     # Buckeye (CPC-big)
-    ./vq_wordseg.py --algorithm=dpdp_aernn cpc_big buckeye val phoneseg_dp_penalized
+    ./vq_wordseg.py --algorithm=dpdp_aernn \
+        cpc_big buckeye val phoneseg_dp_penalized
 
 Evaluate the segmentation:
 
@@ -317,7 +373,9 @@ Evaluate the segmentation with the ZeroSpeech tools:
 
     ./intervals_to_zs.py cpc_big zs2017_zh train wordseg_segaernn_dp_penalized
     cd ../zerospeech2017_eval/
-    ln -s /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_zh/train/wordseg_segaernn_dp_penalized/clusters.txt 2017/track2/mandarin.txt
+    ln -s \
+        /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_zh/train/ \
+        wordseg_segaernn_dp_penalized/clusters.txt 2017/track2/mandarin.txt
     conda activate zerospeech2020_updated
     zerospeech2020-evaluate 2017-track2 . -l mandarin -o mandarin.json
 
@@ -339,9 +397,11 @@ This requires `sox` and that you change the path at the beginning of
 
 Synthesize an utterance:
 
-    ./indices_to_txt.py vqvae buckeye val phoneseg_dp_penalized s18_03a_025476-025541
+    ./indices_to_txt.py vqvae buckeye val phoneseg_dp_penalized \
+        s18_03a_025476-025541
     cd ../VectorQuantizedVAE
-    ./synthesize_codes.py checkpoints/2019english/model.ckpt-500000.pt ../vqwordseg/s18_03a_025476-025541.txt
+    ./synthesize_codes.py checkpoints/2019english/model.ckpt-500000.pt \
+        ../vqwordseg/s18_03a_025476-025541.txt
     cd -
 
 

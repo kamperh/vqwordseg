@@ -14,7 +14,7 @@ from tqdm import tqdm
 import numpy as np
 import sys
 
-sys.path.append(str(Path(__file__).parent/"../../seg_aernn"))
+sys.path.append(str(Path(__file__).parent/"../../dpdp_aernn"))
 
 
 #-----------------------------------------------------------------------------#
@@ -495,7 +495,7 @@ def rasanen15(utterance_list, n_max=9, words_count_fn="words.tmp"):
 
 def dpdp_aernn(utterance_list, dur_weight=3.0):
 
-    from seg_aernn import datasets, models, viterbi
+    from dpdp_aernn import datasets, models, viterbi
     from torch.utils.data import DataLoader
     import torch
     import torch.nn as nn
