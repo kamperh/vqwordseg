@@ -4,17 +4,14 @@ Unsupervised Phone and Word Segmentation using Vector-Quantized Neural Networks
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](license.md)
 
 
-**GO THROUGH ALL to-do'S!!!**
-
-
 ## Overview
 
 Unsupervised phone and word segmentation on speech data is performed. The
 experiments are described in:
 
-- H. Kamper, "Dynamic programming on self-supervised features for word
-  segmentation on discovered phone units," *arXiv preprint arXiv:2202.???*,
-  2022. [[arXiv](https://arxiv.org/???? to-do)]
+- H. Kamper, "Word segmentation on discovered phone units with dynamic
+  programming and self-supervised scoring," *arXiv preprint arXiv:2202.11929*,
+  2022. [[arXiv](https://arxiv.org/abs/2202.11929)]
 - H. Kamper and B. van Niekerk, "Towards unsupervised phone and word
   segmentation using self-supervised vector-quantized neural networks," in
   *Proc. Interspeech*, 2021. [[arXiv](http://arxiv.org/abs/2012.07551)]
@@ -41,13 +38,17 @@ Install the [DPDP AE-RNN](https://github.com/kamperh/dpdp_aernn/) package:
 
 In the sections that follow I give more complete details. In this section I
 briefly outline the sequence of steps that should reproduce the DPDP system
-results on Buckeye given in [the paper](*to-do*). To apply the approach on
-other datasets you will need to carefully work through the subsequent sections,
-but I hope that this current section helps you to get going.
+results on Buckeye given in [the paper](https://arxiv.org/abs/2202.11929). To
+apply the approach on other datasets you will need to carefully work through
+the subsequent sections, but I hope that this current section helps you to get
+going.
 
-1.  Obtain the ground truth alignments for Buckeye provided in `buckeye.zip` as
-    part of [this release](*to-do*). These should be extracted so that you have
-    a `data/buckeye/` directory with the alignments.
+1.  Obtain the ground truth alignments for Buckeye provided in
+    [buckeye.zip](https://github.com/kamperh/vqwordseg/releases/download/v1.0/buckeye.zip)
+    as part of [this
+    release](https://github.com/kamperh/vqwordseg/releases/tag/v1.0). Extract
+    it into `data/`. There should now be a `data/buckeye/` directory with the
+    alignments.
 
 2.  Extract CPC+K-means features for Buckeye. Do this by following the steps in
     [the CPC-big subsection](#example-encodings-cpc-big-features-on-buckeye)
