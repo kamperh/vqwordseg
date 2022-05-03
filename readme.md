@@ -325,6 +325,10 @@ DP penalized segmentation:
     ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2500 \
         --input_format=npy --algorithm=dp_penalized xlsr zs2017_zh train
 
+    # ZeroSpeech'17 Lang2 (CPC-big)
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt \
+        --algorithm=dp_penalized cpc_big zs2017_lang2 train
+
 DP penalized N-seg. segmentation:
 
     # Buckeye Felix split (VQ-VAE)
@@ -376,8 +380,8 @@ Evaluate the segmentation with the ZeroSpeech tools:
     ./intervals_to_zs.py cpc_big zs2017_zh train wordseg_segaernn_dp_penalized
     cd ../zerospeech2017_eval/
     ln -s \
-        /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_zh/train/ \
-        wordseg_segaernn_dp_penalized/clusters.txt 2017/track2/mandarin.txt
+        /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_zh/train/wordseg_dpdp_aernn_dp_penalized/clusters.txt \
+        2017/track2/mandarin.txt
     conda activate zerospeech2020_updated
     zerospeech2020-evaluate 2017-track2 . -l mandarin -o mandarin.json
 
@@ -405,6 +409,88 @@ Synthesize an utterance:
     ./synthesize_codes.py checkpoints/2019english/model.ckpt-500000.pt \
         ../vqwordseg/s18_03a_025476-025541.txt
     cd -
+
+
+## Complete example on ZeroSpeech data
+
+An example of phone and word segmentation on the surprise language.
+
+Encode data:
+
+    cd ../zerospeech2021_baseline
+    conda activate pytorch
+    ./get_wavs.py path_to_data/datasets/zerospeech2020/2020/2017/ \
+        zs2017_lang1 train
+
+    conda activate zerospeech2021_baseline
+    ./encode.py wav/zs2017_lang1/train/ exp/zs2017_lang1/train/
+
+Phone segmentation:
+
+    cd ../vqwordseg
+    conda activate pytorch
+    # Create links in exp/cpc_big/
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt \
+        --algorithm=dp_penalized cpc_big zs2017_lang1 train
+    ./cluster_wav_zs2017.py cpc_big zs2017_lang1 train phoneseg_dp_penalized 3
+
+Word segmentation:
+
+    ./vq_wordseg.py --algorithm=dpdp_aernn cpc_big zs2017_lang1 train \
+        phoneseg_dp_penalized
+    ./cluster_wav_zs2017.py cpc_big zs2017_lang1 train \
+        wordseg_dpdp_aernn_dp_penalized 33_10_11_14_1_34_
+
+Convert to ZeroSpeech format:
+
+    ./intervals_to_zs.py cpc_big zs2017_lang1 train \
+        wordseg_dpdp_aernn_dp_penalized
+        
+
+### About the Buckeye data splits
+
+The particular split of Buckeye that I use in this repository is a legacy split
+with a somewhat complicated history. But in short the test set is exactly the
+same one used in the [ZeroSpeech 2015 challenge](https://zerospeech.com/2015).
+The remaining speakers were then used for a validation set and an additional
+held-out test set. This additional test set has the same number of speakers as
+the validation set, but most papers just report results on the ZeroSpeech 2105
+test set.
+
+The result is the following split of Buckeye, according to speaker:
+
+- Train (English1 in [my thesis](https://arxiv.org/abs/1701.00851), devpart1 in
+  other repos): s02, s03, s04, s05, s06, s08, s10, s11, s12, s13, s16, s38.
+- Validation (devpart2 in other repos): s17, s18, s19, s22, s34, s37, s39, s40.
+- Test (English2 in [my thesis](https://arxiv.org/abs/1701.00851), ZS in other
+  repos): s01, s20, s23, s24, s25, s26, s27, s29, s30, s31, s32, s33.
+- Additional test: s07, s09, s14, s15, s21, s28, s35, s36.
+
+I fist used this in ([Kamper et al., 2017](http://arxiv.org/abs/1606.06950))
+and since then in a number of follow-up papers. Others have also used this
+split, e.g. ([Drexler and Glass,
+2017](https://groups.csail.mit.edu/sls/publications/2017/GLU17_Drexler.pdf)),
+([Bhati et al., 2021](https://arxiv.org/abs/2106.02170)), and ([Peng and
+Harwath, 2022]https://arxiv.org/abs/2203.15081)).
+
+**Sets used in this repo.** In this repo I only make use of the validation and
+test sets above, although features are extracted for the training set. See the
+experimental setup section of [the paper](https://arxiv.org/abs/2202.11929).
+
+**The Kreuk split.** Note that [Kreuk et al.
+(2020)](https://arxiv.org/abs/2007.13465) uses a different split which is also
+used by others. So in the section in [the
+paper](https://arxiv.org/abs/2202.11929) where I compare to their approach, I
+use their split:
+
+- Train: All Buckeye speakers not below.
+- Validation: s25, s36, s39, s40.
+- Test: s03, s07, s31, s34.
+
+This split is not included in this repository---it made things too cluttered.
+And note that in the [the paper](https://arxiv.org/abs/2202.11929) I again
+don't use the Kreuk training set: I only report results on the test data when
+comparing to their models.
 
 
 ## Reducing a codebook using clustering

@@ -25,7 +25,9 @@ audio_dir = Path(
 code_to_language = {
     "en": "english",
     "fr": "french",
-    "zh": "mandarin"
+    "zh": "mandarin",
+    "lang1": "LANG1",
+    "lang2": "LANG2"
     }
 
 #-----------------------------------------------------------------------------#
@@ -38,7 +40,7 @@ def main():
     assert audio_dir.is_dir(), f"missing directory: {f}"
 
     # Language
-    language_code = args.dataset[-2:]
+    language_code = args.dataset.split("_")[-1]
     language = code_to_language[language_code]
 
     # Read segmentation
