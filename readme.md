@@ -10,8 +10,9 @@ Unsupervised phone and word segmentation on speech data is performed. The
 experiments are described in:
 
 - H. Kamper, "Word segmentation on discovered phone units with dynamic
-  programming and self-supervised scoring," *arXiv preprint arXiv:2202.11929*,
-  2022. [[arXiv](https://arxiv.org/abs/2202.11929)]
+  programming and self-supervised scoring," *IEEE/ACM Transactions on Audio,
+  Speech and Language Processing*, vol. 31, pp. 684-694, 2023.
+  [[arXiv](https://arxiv.org/abs/2202.11929)]
 - H. Kamper and B. van Niekerk, "Towards unsupervised phone and word
   segmentation using self-supervised vector-quantized neural networks," in
   *Proc. Interspeech*, 2021. [[arXiv](http://arxiv.org/abs/2012.07551)]
