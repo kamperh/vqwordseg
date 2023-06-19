@@ -293,7 +293,7 @@ DP penalized segmentation:
         vqvae buckeye_felix test
 
     # Buckeye Felix split (CPC-big)
-    ./vq_phoneseg.py  --downsample_factor 1 --dur_weight 2 \
+    ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 \
         --output_tag=phoneseg_dp_penalized_tune cpc_big buckeye_felix val
 
     # Buckeye Felix split (VQ-VAE) with Poisson duration prior

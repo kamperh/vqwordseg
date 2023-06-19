@@ -1,5 +1,9 @@
-2021-11-29
-----------
+## 2022-10-04
+
+    ./eval_segmentation.py eskmeans buckeye test eskmeans
+
+
+## 2021-11-29
 
     ./vq_wordseg.py --algorithm=tp cpc_big buckeye val phoneseg_merge
     ./eval_segmentation.py cpc_big buckeye val wordseg_tp_merge
@@ -382,8 +386,7 @@
     ---------------------------------------------------------------------------
 
 
-2021-02-02
-----------
+## 2021-02-02
 
 ./vq_wordseg.py --algorithm=tp --output_tag wordseg_tp_dp_penalized_gamma vqvae buckeye val phoneseg_dp_penalized_gamma
 ./eval_segmentation.py vqvae buckeye val wordseg_tp_dp_penalized_gamma
@@ -457,8 +460,7 @@
     OS: -11.57%
     ---------------------------------------------------------------------------
 
-2021-02-01
-----------
+## 2021-02-01
 
 **Geometric**
 
