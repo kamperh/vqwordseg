@@ -114,10 +114,14 @@ Encode the Buckeye data:
     ./encode.py wav/buckeye/val/ exp/buckeye/val/
     ./encode.py wav/buckeye/test/ exp/buckeye/test/
 
+    conda activate dpdp
+    ./encode_hubert.py wav/buckeye/val/ exp/buckeye/hubert/val/
+    ./encode_hubert.py wav/buckeye/test/ exp/buckeye/hubert/test/
+
 Move back and deactivate the environment:
 
     cd ../vqwordseg/
-    conda deactivate
+    conda activate dpdp
 
 
 ## Dataset format and directory structure
@@ -226,8 +230,8 @@ simply link to the audio from `VectorQuantizedCPC/`:
 
     ln -s ../VectorQuantizedCPC/datasets/ .
 
-Encode the data and write it to the `vqwordseg/exp/` directory. This should
-be performed for all splits (`train`, `val` and `test`):
+Encode the data and write it to the `vqwordseg/exp/` directory. This should be
+performed for all splits (`train`, `val` and `test`):
 
     # Buckeye
     ./encode.py checkpoint=checkpoints/2019english/model.ckpt-500000.pt \
@@ -368,6 +372,13 @@ DPDP AE-RNN word segmentation:
     ./vq_wordseg.py --algorithm=dpdp_aernn \
         cpc_big buckeye val phoneseg_dp_penalized
 
+DPDP AE-RNN word segmentation followed by K-means clustering on the AE-RNN
+embeddings:
+
+    # Buckeye (CPC-big)
+    ./vq_wordseg.py --kmeans 14000 --algorithm=dpdp_aernn \
+        cpc_big buckeye val phoneseg_dp_penalized
+
 Evaluate the segmentation:
 
     # Buckeye (VQ-VAE)
@@ -381,7 +392,7 @@ Evaluate the segmentation with the ZeroSpeech tools:
     ./intervals_to_zs.py cpc_big zs2017_zh train wordseg_segaernn_dp_penalized
     cd ../zerospeech2017_eval/
     ln -s \
-        /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_zh/train/wordseg_dpdp_aernn_dp_penalized/clusters.txt \
+        ~/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_zh/train/wordseg_dpdp_aernn_dp_penalized/clusters.txt \
         2017/track2/mandarin.txt
     conda activate zerospeech2020_updated
     zerospeech2020-evaluate 2017-track2 . -l mandarin -o mandarin.json
@@ -446,7 +457,17 @@ Convert to ZeroSpeech format:
 
     ./intervals_to_zs.py cpc_big zs2017_lang1 train \
         wordseg_dpdp_aernn_dp_penalized
-        
+
+Evaluate the segmentation with the ZeroSpeech tools:
+
+    ./intervals_to_zs.py cpc_big zs2017_zh train \
+        wordseg_dpdp_aernn_dp_penalized
+    cd ../zerospeech2017_eval/
+    conda activate zerospeech2020
+    ln -s \
+        ~/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_zh/train/wordseg_dpdp_aernn_dp_penalized/clusters.txt \
+        2017/track2/mandarin.txt
+    zerospeech2020-evaluate 2017-track2 . -l mandarin -o mandarin.json
 
 ### About the Buckeye data splits
 

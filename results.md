@@ -1049,6 +1049,7 @@ test (dur_weight=2), *final*:
     ---------------------------------------------------------------------------
     Word clusters:
     No. clusters: 38981
+    uWER: 105.00%
     uWER many: 54.13%
     Purity: 67.10%
     Homogeneity: 86.92%
@@ -1364,6 +1365,48 @@ DPDP AE-RNN (dur_weight=6), DPDP GMM val, MFCCs, 25 components:
     Homogeneity: 98.05%
     Completeness: 60.43%
     V-measure: 74.77%
+    ---------------------------------------------------------------------------
+
+
+## Buckeye lexicon building
+
+K-means clustering on the AE-RNN embeddings:
+
+    ./eval_segmentation.py cpc_big buckeye val wordseg_dpdp_aernn_dp_penalized_kmeans14000    
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.53%
+    Recall: 20.24%
+    F-score: 32.19%
+    OS: -74.22%
+    R-value: 43.57%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 54.81%
+    Homogeneity: 70.66%
+    Completeness: 26.04%
+    V-measure: 38.05%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 36.31%
+    Recall: 35.67%
+    F-score: 35.99%
+    OS: -1.78%
+    R-value: 45.70%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 24.09%
+    Recall: 23.84%
+    F-score: 23.97%
+    OS: -1.01%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 14000
+    uWER many: 72.18%
+    Purity: 42.74%
+    Homogeneity: 79.72%
+    Completeness: 57.32%
+    V-measure: 66.69%
     ---------------------------------------------------------------------------
 
 

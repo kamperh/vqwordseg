@@ -3,9 +3,10 @@ VQ phone and word segmentation algorithms.
 
 Author: Herman Kamper
 Contact: kamperh@gmail.com
-Date: 2021
+Date: 2021, 2023
 """
 
+from datetime import datetime
 from pathlib import Path
 from scipy.spatial import distance
 from scipy.special import factorial
@@ -493,7 +494,16 @@ def rasanen15(utterance_list, n_max=9, words_count_fn="words.tmp"):
     return utterance_list
 
 
-def dpdp_aernn(utterance_list, dur_weight=3.0):
+def dpdp_aernn(utterance_list, dur_weight=3.0, kmeans=None):
+    """
+    Uses an AE-RNN as the scoring function for DPDP.
+
+    Parameters
+    ----------
+    kmeans: int
+        If provided, K-means is performed on the resulting AE-RNN embeddings
+        using this many clusters.
+    """
 
     from dpdp_aernn import datasets, models, viterbi
     from torch.utils.data import DataLoader
@@ -536,12 +546,16 @@ def dpdp_aernn(utterance_list, dur_weight=3.0):
         symbol_ids = []
         for word in text.split(" "):
             for code in word.split("_"):
+                if code == "":
+                    continue
                 symbol_ids.append(symbol_to_id[code])
             symbol_ids.append(symbol_to_id[BOUNDARY_SYMBOL])
         symbol_ids = symbol_ids[:-1]  # remove last space
 
         if add_sos_eos:
-            return [symbol_to_id[SOS_SYMBOL]] + symbol_ids + [symbol_to_id[EOS_SYMBOL]]
+            return [
+                symbol_to_id[SOS_SYMBOL]] + symbol_ids + [symbol_to_id[EOS_SYMBOL]
+                ]
         else:
             return symbol_ids
 
@@ -618,8 +632,7 @@ def dpdp_aernn(utterance_list, dur_weight=3.0):
         collate_fn=datasets.pad_collate
         )
 
-    # # Validation data
-    # val_dataset = datasets.WordDataset(cur_val_sentences, text_to_id)
+    # # Validation data    # val_dataset = datasets.WordDataset(cur_val_sentences, text_to_id)
     # val_loader = DataLoader(
     #     val_dataset, batch_size=batch_size, shuffle=True,
     #     collate_fn=datasets.pad_collate
@@ -831,7 +844,92 @@ def dpdp_aernn(utterance_list, dur_weight=3.0):
         
     print(f"NLL: {np.sum(losses):.4f}")
 
-    return cur_segmented_sentences
+    # # Temp
+    print(cur_segmented_sentences[0])
+    # # assert False
 
-    # # print(utterance_list[:10])
-    # assert False
+    if kmeans is None:
+        return cur_segmented_sentences
+
+
+    # K-MEANS CLUSTERING
+
+    print("K-means clustering:")
+    clustering_sentences = cur_segmented_sentences
+    K = kmeans
+
+    # Data
+    train_dataset = datasets.WordDataset(
+        clustering_sentences, text_to_id, n_symbols_max=n_symbols_max
+        )
+    train_loader = DataLoader(
+        train_dataset, 
+        batch_size=batch_size, 
+        shuffle=False, 
+        collate_fn=datasets.pad_collate,
+        drop_last=False
+        )
+
+    # Apply model to data
+    print("Embedding segments:")
+    model.eval()
+    encoder_embeddings = []
+    with torch.no_grad():
+        for i_batch, (data, data_lengths) in enumerate(tqdm(train_loader)):
+            data = data.to(device)
+            encoder_embedding, decoder_output = model(
+                data, data_lengths, data, data_lengths
+                )
+            encoder_embeddings.append(encoder_embedding.cpu().numpy())
+    X = np.vstack(encoder_embeddings)
+    print("X shape:", X.shape)
+
+    print("Normalizing embeddings")
+    norm = np.linalg.norm(X, axis=1, keepdims=True)
+    X = X/norm
+
+    # Cluster (scikit-learn)
+    """
+    from sklearn import cluster
+    print(datetime.now())
+    print(f"Clustering: K = {K}")
+    kmeans_model = cluster.KMeans(n_clusters=K, max_iter=10)
+    kmeans_model.fit(X)
+    print("Inertia: {:.4f}".format(kmeans_model.inertia_))
+    clusters = kmeans_model.predict(X)
+    print(datetime.now())
+    """
+
+    # Cluster (FAISS)
+    import faiss
+    print(datetime.now())
+    print(f"Clustering: K = {K}")
+    D = X.shape[1]
+    kmeans = faiss.Kmeans(D, K, niter=20, nredo=20, verbose=True, gpu=True)
+    kmeans.train(X)
+    _, clusters = kmeans.index.search(X, 1)
+    clusters = clusters.flatten()
+    print(datetime.now())
+
+    # Cluster labels for current segmentation
+    i_embedding = 0
+    clustered_sentences = []
+    for i_utt in tqdm(range(len(clustering_sentences))):
+        n_embeddings = len(clustering_sentences[i_utt].split(" "))
+        cur_clusters = []
+        for i_cur_embedding in range(n_embeddings):
+            cur_clusters.append(clusters[i_embedding + i_cur_embedding])
+        clustered_sentences.append(cur_clusters)
+        i_embedding += n_embeddings
+
+    # print(clustered_sentences[0])
+    # print(len(clustering_sentences))
+    # print(len(clustered_sentences))
+
+    # clustered_sentences_str = []
+    # for i_utt in tqdm(range(len(clustered_sentences))):
+    #     clustered_sentences_str.append(
+    #         " ".join([f"{i}_" for i in clustered_sentences[i_utt]])
+    #         )
+
+    return cur_segmented_sentences, clustered_sentences

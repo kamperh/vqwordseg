@@ -16,5 +16,6 @@ dependencies:
   - scikit-learn
   - scipy
   - tqdm
+  - faiss
   - pytorch
   - cudatoolkit=10.2

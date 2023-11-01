@@ -5,9 +5,10 @@ Evaluate segmentation output.
 
 Author: Herman Kamper
 Contact: kamperh@gmail.com
-Date: 2020
+Date: 2020, 2023
 """
 
+from datetime import datetime
 from pathlib import Path
 from sklearn import metrics
 from tqdm import tqdm
@@ -45,6 +46,10 @@ def check_argv():
         "--word_tolerance", type=int,
         help="number of frames within which a word boundary prediction is "
         "still considered correct (default: %(default)s)", default=2)
+    parser.add_argument(
+        "--score_one_to_one", action="store_true",
+        help="include one-to-one mapping evaluation, but this is very slow"
+        )
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -317,7 +322,7 @@ def get_rvalue(precision, recall):
     return rvalue
 
 
-def score_clusters(ref_interval_dict, pred_interval_dict):
+def score_clusters(ref_interval_dict, pred_interval_dict, one_to_one=False):
     ref_labels = []
     pred_labels = []
     for utt in ref_interval_dict:
@@ -326,8 +331,13 @@ def score_clusters(ref_interval_dict, pred_interval_dict):
         pred = pred_interval_dict[utt]
         ref_labels.extend(intervals_to_max_overlap(ref, pred))
         pred_labels.extend([int(i[2]) for i in pred])
-    
+
     pur = cluster_analysis.purity(ref_labels, pred_labels)
+
+    if one_to_one:
+        one_to_one, cluster_to_label_map = cluster_analysis.one_to_one_mapping(
+            ref_labels, pred_labels
+            )
     cluster_to_label_map_many = cluster_analysis.many_to_one_mapping(
         ref_labels, pred_labels
         )
@@ -335,7 +345,10 @@ def score_clusters(ref_interval_dict, pred_interval_dict):
     h, c, V = metrics.homogeneity_completeness_v_measure(
         ref_labels, pred_labels)
     
-    return pur, h, c, V, cluster_to_label_map_many
+    if one_to_one:
+        return pur, h, c, V, cluster_to_label_map, cluster_to_label_map_many
+    else:
+        return pur, h, c, V, cluster_to_label_map_many
 
 
 #-----------------------------------------------------------------------------#
@@ -359,15 +372,15 @@ def main():
     segmentation_interval_dict = get_intervals_from_dir(seg_dir)
     utterances = segmentation_interval_dict.keys()
 
-    # Temp
-    tmp = {}
-    for utt_key in segmentation_interval_dict:
-        tmp[utt_key] = []
-        for start, end, label in segmentation_interval_dict[utt_key]:
-            if label == "x_":
-                label = "999_"
-            tmp[utt_key].append((start, end, label))
-    segmentation_interval_dict = tmp
+    # # Temp
+    # tmp = {}
+    # for utt_key in segmentation_interval_dict:
+    #     tmp[utt_key] = []
+    #     for start, end, label in segmentation_interval_dict[utt_key]:
+    #         if label == "x_":
+    #             label = "999_"
+    #         tmp[utt_key].append((start, end, label))
+    # segmentation_interval_dict = tmp
 
     # # Temp
     # tmp = get_intervals_from_dir(
@@ -393,6 +406,12 @@ def main():
         word_ref_interval_dict = get_intervals_from_dir(
             word_ref_dir, utterances
             )
+
+    # word_types = set()
+    # for utt_key in utterances:
+    #     for start, end, label in word_ref_interval_dict[utt_key]:
+    #         word_types.add(label)
+    # print(len(word_types))
 
     # Convert intervals to boundaries
     print("Converting intervals to boundaries:")
@@ -421,6 +440,9 @@ def main():
         segmentation_interval_dict
         )
 
+    print(datetime.now())
+    print()
+
     print("-"*(79 - 4))
 
     # Phone-level evaluation
@@ -439,9 +461,15 @@ def main():
         # Evaluate clustering
         # if not "word" in args.seg_tag:
         # print("Scoring clusters (phone):")
-        purity, h, c, V, cluster_to_label_map_many = score_clusters(
-            phone_ref_interval_dict, segmentation_interval_dict
-            )
+        if args.score_one_to_one:
+            (purity, h, c, V, cluster_to_label_map,
+            cluster_to_label_map_many) = score_clusters(
+                phone_ref_interval_dict, segmentation_interval_dict, True
+                )
+        else:
+            (purity, h, c, V, cluster_to_label_map_many) = score_clusters(
+                phone_ref_interval_dict, segmentation_interval_dict, False
+                )
 
         print("Phone boundaries:")
         print("Precision: {:.2f}%".format(p*100))
@@ -474,14 +502,40 @@ def main():
 
         # Evaluate clustering
         # print("Scoring clusters (word):")
-        purity, h, c, V, cluster_to_label_map_many = score_clusters(
-            word_ref_interval_dict, segmentation_interval_dict
-            )
+        if args.score_one_to_one:
+            (purity, h, c, V, cluster_to_label_map,
+            cluster_to_label_map_many) = score_clusters(
+                word_ref_interval_dict, segmentation_interval_dict, True
+                )
+        else:
+            (purity, h, c, V, cluster_to_label_map_many) = score_clusters(
+                word_ref_interval_dict, segmentation_interval_dict, False
+                )
 
+        # uWER and uWER many
+        dp_error = dp_align.DPError()
         dp_error_many = dp_align.DPError()
         for utt_key in word_ref_boundaries_dict:
             ref = [i[2] for i in word_ref_interval_dict[utt_key]]
-            many_mapped = [
+            
+            # One-to-one
+            if args.score_one_to_one:
+                mapped = [
+                    cluster_to_label_map[i[2]] if i[2] in cluster_to_label_map
+                    else "unk" for i in segmentation_interval_dict[utt_key]
+                    ]
+                # print(utt_key)
+                # print(ref)
+                # print([i[2] for i in segmentation_interval_dict[utt_key]])
+                # print(
+                #     [id_to_str[i[2]] for i in segmentation_interval_dict[utt_key]]
+                #     )
+                # print(mapped)
+                cur_dp_error = dp_align.dp_align(ref, mapped)
+                dp_error = dp_error + cur_dp_error
+
+            # Many-to-one
+            mapped_many = [
                 cluster_to_label_map_many[i[2]] for i in
                 segmentation_interval_dict[utt_key]
                 ]
@@ -491,10 +545,13 @@ def main():
             # print(
             #     [id_to_str[i[2]] for i in segmentation_interval_dict[utt_key]]
             #     )
-            # print(many_mapped)
-            cur_dp_error_many = dp_align.dp_align(ref, many_mapped)
+            # print(mapped_many)
+            cur_dp_error_many = dp_align.dp_align(ref, mapped_many)
             dp_error_many = dp_error_many + cur_dp_error_many
-        wer = dp_error_many.get_wer()
+
+        if args.score_one_to_one:
+            wer = dp_error.get_wer()
+        wer_many = dp_error_many.get_wer()
 
         print("Word boundaries:")
         print("Precision: {:.2f}%".format(p*100))
@@ -519,13 +576,17 @@ def main():
         # if not "word" in args.seg_tag:
         print("Word clusters:")
         print("No. clusters: {}".format(len(cluster_to_label_map_many)))
-        print("uWER many: {:.2f}%".format(wer*100))
+        if args.score_one_to_one:
+            print("uWER: {:.2f}%".format(wer*100))
+        print("uWER many: {:.2f}%".format(wer_many*100))
         print("Purity: {:.2f}%".format(purity*100))
         print("Homogeneity: {:.2f}%".format(h*100))
         print("Completeness: {:.2f}%".format(c*100))
         print("V-measure: {:.2f}%".format(V*100))
         print("-"*(79 - 4))
 
+        print()
+        print(datetime.now())
 
 if __name__ == "__main__":
     main()

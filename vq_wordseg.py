@@ -53,6 +53,12 @@ def check_argv():
         help="the duration penalty weight",
         default=None
         )
+    parser.add_argument(
+        "--kmeans", type=int,
+        help="if provided, K-means is performed on the latent embeddings "
+        "using this many clusters",
+        default=None
+        )
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -69,10 +75,17 @@ def main():
     # Command-line arguments
     segment_func = getattr(algorithms, args.algorithm)
     if args.output_tag is None:
-        args.output_tag = "wordseg_{}_{}".format(
-            args.algorithm,
-            args.phoneseg_tag.replace("phoneseg_", "")
-            )
+        if args.kmeans is None:
+            args.output_tag = "wordseg_{}_{}".format(
+                args.algorithm,
+                args.phoneseg_tag.replace("phoneseg_", "")
+                )
+        else:
+            args.output_tag = "wordseg_{}_{}_kmeans{}".format(
+                args.algorithm,
+                args.phoneseg_tag.replace("phoneseg_", ""),
+                args.kmeans
+                )
     if args.dur_weight is not None:
         print(f"Duration weight: {args.dur_weight:.4f}")
 
@@ -102,17 +115,29 @@ def main():
             " ".join([i[2] + "_" for i in phoneseg_interval_dict[utt_key]])
             )
     if args.dur_weight is not None:
-        word_segmentation = segment_func(
-            prepared_text, dur_weight=args.dur_weight
-            )
+        if args.kmeans is not None:
+            word_segmentation, kmeans_clusters = segment_func(
+                prepared_text, dur_weight=args.dur_weight, kmeans=args.kmeans
+                )
+        else:
+            word_segmentation = segment_func(
+                prepared_text, dur_weight=args.dur_weight
+                )
     else:
-        word_segmentation = segment_func(
-            prepared_text
-            )
+        if args.kmeans is not None:
+            word_segmentation, kmeans_clusters = segment_func(
+                prepared_text, kmeans=args.kmeans
+                )
+        else:
+            word_segmentation = segment_func(
+                prepared_text
+                )
     print(datetime.now())
+
     # print(prepared_text[:10])
     # print(word_segmentation[:10])
     # assert False
+    
     wordseg_interval_dict = {}
     for i_utt, utt_key in tqdm(enumerate(utterances)):
         words_segmented = word_segmentation[i_utt].split(" ")
@@ -144,10 +169,18 @@ def main():
         )
     output_dir.mkdir(exist_ok=True, parents=True)
     print("Writing to: {}".format(output_dir))
-    for utt_key in tqdm(wordseg_interval_dict):
-        with open((output_dir/utt_key).with_suffix(".txt"), "w") as f:
-            for start, end, label in wordseg_interval_dict[utt_key]:
-                f.write("{:d} {:d} {}\n".format(start, end, label))
+    if args.kmeans is None:
+        for utt_key in tqdm(wordseg_interval_dict):
+            with open((output_dir/utt_key).with_suffix(".txt"), "w") as f:
+                for start, end, label in wordseg_interval_dict[utt_key]:
+                    f.write("{:d} {:d} {}\n".format(start, end, label))
+    else:
+        for i_utt, utt_key in tqdm(enumerate(utterances)):
+            with open((output_dir/utt_key).with_suffix(".txt"), "w") as f:
+                for (i_segment, (start, end, label)) in enumerate(
+                        wordseg_interval_dict[utt_key]):
+                    label = kmeans_clusters[i_utt][i_segment]
+                    f.write("{:d} {:d} {}_\n".format(start, end, label))
 
 
 if __name__ == "__main__":
