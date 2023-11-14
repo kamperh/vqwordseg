@@ -230,6 +230,7 @@ CPC-big DP penalized val, dur_weight=3:
     ---------------------------------------------------------------------------
 
 CPC-big DP penalized val, dur_weight=5:
+
     ---------------------------------------------------------------------------
     Phone boundaries:
     Precision: 60.18%
@@ -312,6 +313,190 @@ CPC-big DP penalized val, dur_weight=50:
     Recall: 11.86%
     F-score: 8.71%
     OS: 72.54%
+    ---------------------------------------------------------------------------
+
+HuBERT DP penalizes val, dur_weight=2:
+
+    ./eval_segmentation.py hubert buckeye val phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 45.52%
+    Recall: 93.01%
+    F-score: 61.13%
+    OS: 104.31%
+    R-value: 8.37%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 43.16%
+    Homogeneity: 41.14%
+    Completeness: 33.75%
+    V-measure: 37.08%
+    ---------------------------------------------------------------------------
+
+HuBERT DP penalizes val, dur_weight=3:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 47.15%
+    Recall: 92.15%
+    F-score: 62.39%
+    OS: 95.42%
+    R-value: 15.62%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 43.77%
+    Homogeneity: 41.80%
+    Completeness: 34.31%
+    V-measure: 37.69%
+    ---------------------------------------------------------------------------
+
+HuBERT DP penalizes val, dur_weight=5, **select**:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 49.95%
+    Recall: 90.27%
+    F-score: 64.32%
+    OS: 80.72%
+    R-value: 27.37%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 44.81%
+    Homogeneity: 42.92%
+    Completeness: 35.22%
+    V-measure: 38.69%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 13.48%
+    Recall: 92.56%
+    F-score: 23.53%
+    OS: 586.82%
+    R-value: -403.54%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 1.87%
+    Recall: 9.65%
+    F-score: 3.14%
+    OS: 414.70%
+    ---------------------------------------------------------------------------
+
+HuBERT DP penalizes val, dur_weight=12:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 56.97%
+    Recall: 82.94%
+    F-score: 67.55%
+    OS: 45.58%
+    R-value: 53.52%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 47.00%
+    Homogeneity: 45.46%
+    Completeness: 37.24%
+    V-measure: 40.94%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 15.78%
+    Recall: 87.29%
+    F-score: 26.73%
+    OS: 453.01%
+    R-value: -291.25%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 2.64%
+    Recall: 11.11%
+    F-score: 4.27%
+    OS: 320.15%
+    ---------------------------------------------------------------------------
+
+HuBERT DP penalizes val, dur_weight=20:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 61.79%
+    Recall: 73.81%
+    F-score: 67.26%
+    OS: 19.45%
+    R-value: 67.55%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 48.65%
+    Homogeneity: 47.02%
+    Completeness: 38.42%
+    V-measure: 42.29%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 17.69%
+    Recall: 80.25%
+    F-score: 28.99%
+    OS: 353.65%
+    R-value: -209.12%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 3.56%
+    Recall: 12.46%
+    F-score: 5.54%
+    OS: 249.94%
+    ---------------------------------------------------------------------------
+
+HuBERT DP penalizes val, dur_weight=25:
+
+    Phone boundaries:
+    Precision: 63.96%
+    Recall: 68.02%
+    F-score: 65.93%
+    OS: 6.34%
+    R-value: 70.15%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 49.38%
+    Homogeneity: 47.73%
+    Completeness: 38.92%
+    V-measure: 42.87%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 18.64%
+    Recall: 75.27%
+    F-score: 29.88%
+    OS: 303.84%
+    R-value: -168.59%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 4.14%
+    Recall: 13.04%
+    F-score: 6.29%
+    OS: 214.75%
+    ---------------------------------------------------------------------------
+
+HuBERT DP penalizes val, dur_weight=30:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 65.78%
+    Recall: 62.40%
+    F-score: 64.04%
+    OS: -5.13%
+    R-value: 69.55%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 49.87%
+    Homogeneity: 48.12%
+    Completeness: 39.19%
+    V-measure: 43.20%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 19.35%
+    Recall: 69.71%
+    F-score: 30.29%
+    OS: 260.25%
+    R-value: -133.73%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 4.67%
+    Recall: 13.25%
+    F-score: 6.90%
+    OS: 183.95%
     ---------------------------------------------------------------------------
 
 XLSR DP penalized val, dur_weight=2500, *select*:
@@ -1135,6 +1320,243 @@ val (dur_weight=0.1):
     V-measure: 73.83%
     ---------------------------------------------------------------------------
 
+DPDP AE-RNN (`dur_weight=5`) word segmentation on HuBERT DPDP val
+(`dur_weight=2`) *best*:
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.04%
+    Recall: 17.63%
+    F-score: 28.69%
+    OS: -77.12%
+    R-value: 41.72%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 89.89%
+    Homogeneity: 93.06%
+    Completeness: 30.28%
+    V-measure: 45.70%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 41.61%
+    Recall: 36.15%
+    F-score: 38.69%
+    OS: -13.13%
+    R-value: 49.47%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.32%
+    Recall: 24.81%
+    F-score: 26.00%
+    OS: -9.22%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 40927
+    uWER many: 40.17%
+    Purity: 86.88%
+    Homogeneity: 94.71%
+    Completeness: 60.41%
+    V-measure: 73.77%
+    ---------------------------------------------------------------------------
+
+DPDP AE-RNN (`dur_weight=6`) word segmentation on HuBERT DPDP val
+(`dur_weight=2`):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.26%
+    Recall: 16.38%
+    F-score: 27.03%
+    OS: -78.80%
+    R-value: 40.84%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 92.04%
+    Homogeneity: 94.62%
+    Completeness: 30.61%
+    V-measure: 46.25%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 42.27%
+    Recall: 34.03%
+    F-score: 37.71%
+    OS: -19.51%
+    R-value: 49.17%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.46%
+    Recall: 23.69%
+    F-score: 25.44%
+    OS: -13.72%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 41320
+    uWER many: 38.65%
+    Purity: 90.15%
+    Homogeneity: 96.03%
+    Completeness: 60.81%
+    V-measure: 74.47%
+    ---------------------------------------------------------------------------
+
+DPDP AE-RNN (`dur_weight=6`) word segmentation on HuBERT DPDP val
+(`dur_weight=3`) *final*:
+
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.62%
+    Recall: 15.85%
+    F-score: 26.33%
+    OS: -79.58%
+    R-value: 40.47%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 92.43%
+    Homogeneity: 94.99%
+    Completeness: 30.59%
+    V-measure: 46.28%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.00%
+    Recall: 33.34%
+    F-score: 37.56%
+    OS: -22.47%
+    R-value: 49.20%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.90%
+    Recall: 23.49%
+    F-score: 25.51%
+    OS: -15.82%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 40213
+    uWER many: 38.61%
+    Purity: 90.58%
+    Homogeneity: 96.44%
+    Completeness: 61.11%
+    V-measure: 74.81%
+    ---------------------------------------------------------------------------
+
+DPDP AE-RNN (`dur_weight=6`) word segmentation on HuBERT DPDP val
+(`dur_weight=5`):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.23%
+    Recall: 15.79%
+    F-score: 26.27%
+    OS: -79.82%
+    R-value: 40.43%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 90.98%
+    Homogeneity: 93.88%
+    Completeness: 30.57%
+    V-measure: 46.12%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 42.50%
+    Recall: 32.57%
+    F-score: 36.88%
+    OS: -23.38%
+    R-value: 48.74%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.61%
+    Recall: 23.07%
+    F-score: 25.14%
+    OS: -16.46%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 38695
+    uWER many: 39.76%
+    Purity: 88.82%
+    Homogeneity: 95.57%
+    Completeness: 61.13%
+    V-measure: 74.57%
+    ---------------------------------------------------------------------------
+
+DPDP AE-RNN (`dur_weight=7`) word segmentation on HuBERT DPDP val
+(`dur_weight=3`):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.82%
+    Recall: 14.39%
+    F-score: 24.28%
+    OS: -81.51%
+    R-value: 39.44%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 94.23%
+    Homogeneity: 96.33%
+    Completeness: 30.85%
+    V-measure: 46.73%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.79%
+    Recall: 30.73%
+    F-score: 36.12%
+    OS: -29.82%
+    R-value: 48.35%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.99%
+    Recall: 22.11%
+    F-score: 24.70%
+    OS: -21.01%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 39301
+    uWER many: 38.48%
+    Purity: 93.01%
+    Homogeneity: 97.53%
+    Completeness: 61.68%
+    V-measure: 75.57%
+    ---------------------------------------------------------------------------
+
+DPDP AE-RNN (`dur_weight=6`) word segmentation on HuBERT DPDP test
+(`dur_weight=3`) *final*:
+    
+    # ./eval_segmentation.py hubert buckeye test wordseg_dpdp_aernn_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.93%
+    Recall: 15.52%
+    F-score: 25.88%
+    OS: -80.09%
+    R-value: 40.24%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 92.21%
+    Homogeneity: 94.75%
+    Completeness: 30.12%
+    V-measure: 45.71%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.81%
+    Recall: 34.11%
+    F-score: 38.36%
+    OS: -22.15%
+    R-value: 49.78%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 29.55%
+    Recall: 25.04%
+    F-score: 27.11%
+    OS: -15.25%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 49728
+    uWER many: 37.78%
+    Purity: 90.54%
+    Homogeneity: 96.40%
+    Completeness: 60.27%
+    V-measure: 74.17%
+    ---------------------------------------------------------------------------
+
+
 SegAE-RNN Chorowski (dur_weight=3) word segmentation on XLSR DPDP val
 (dur_weight=2500):
 
@@ -1370,7 +1792,7 @@ DPDP AE-RNN (dur_weight=6), DPDP GMM val, MFCCs, 25 components:
 
 ## Buckeye lexicon building
 
-K-means clustering on the AE-RNN embeddings:
+K-means clustering on the CPC-big AE-RNN embeddings:
 
     ./eval_segmentation.py cpc_big buckeye val wordseg_dpdp_aernn_dp_penalized_kmeans14000    
     ---------------------------------------------------------------------------
@@ -1407,6 +1829,45 @@ K-means clustering on the AE-RNN embeddings:
     Homogeneity: 79.72%
     Completeness: 57.32%
     V-measure: 66.69%
+    ---------------------------------------------------------------------------
+
+K-means clustering on the HuBERT AE-RNN embeddings (`dur_weight=6`):
+
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_kmeans14000
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.62%
+    Recall: 15.85%
+    F-score: 26.33%
+    OS: -79.58%
+    R-value: 40.47%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 55.06%
+    Homogeneity: 71.91%
+    Completeness: 26.08%
+    V-measure: 38.28%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.00%
+    Recall: 33.34%
+    F-score: 37.56%
+    OS: -22.47%
+    R-value: 49.20%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.90%
+    Recall: 23.49%
+    F-score: 25.51%
+    OS: -15.82%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 13381
+    uWER many: 69.05%
+    Purity: 45.19%
+    Homogeneity: 82.10%
+    Completeness: 58.59%
+    V-measure: 68.38%
     ---------------------------------------------------------------------------
 
 

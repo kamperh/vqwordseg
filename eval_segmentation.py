@@ -79,7 +79,11 @@ def get_intervals_from_dir(directory, filenames=None):
         filenames = [
             (Path(directory)/i).with_suffix(".txt") for i in filenames
             ]
+    n_missing = 0
     for fn in tqdm(filenames):
+        if not Path(fn).exists():
+            n_missing += 1
+            continue
         interval_dict[fn.stem] = []
         for i in fn.read_text().strip().split("\n"):
             if len(i) == 0:
@@ -89,6 +93,8 @@ def get_intervals_from_dir(directory, filenames=None):
             start = int(start)
             end = int(end)
             interval_dict[fn.stem].append((start, end, label))
+    if n_missing > 0:
+        print(f"Warning: {n_missing} files missing")
     return interval_dict
 
 

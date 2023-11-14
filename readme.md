@@ -266,6 +266,9 @@ DP penalized segmentation:
     ./vq_phoneseg.py --downsample_factor 1 --dur_weight 2 --input_format=txt \
         --algorithm=dp_penalized cpc_big buckeye val
 
+    # Buckeye (HuBERT)
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 1 --input_format=npy --algorithm=dp_penalized hubert buckeye val
+
     # Buckeye (CPC-big) HSMM
     ./vq_phoneseg.py --algorithm dp_penalized_hsmm --downsample_factor 1 \
         --dur_weight 1.0 --model_eos --dur_weight_func neg_log_gamma \

@@ -1,3 +1,631 @@
+## 2023-11-03
+
+    ./vq_wordseg.py --dur_weight 10 --kmeans 14000 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_kmeans14000
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.16%
+    Recall: 11.23%
+    F-score: 19.63%
+    OS: -85.63%
+    R-value: 37.22%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 56.32%
+    Homogeneity: 74.50%
+    Completeness: 26.64%
+    V-measure: 39.24%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 45.55%
+    Recall: 24.84%
+    F-score: 32.15%
+    OS: -45.47%
+    R-value: 45.58%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.59%
+    Recall: 18.74%
+    F-score: 22.32%
+    OS: -32.06%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 13240
+    uWER many: 69.02%
+    Purity: 48.67%
+    Homogeneity: 84.94%
+    Completeness: 60.65%
+    V-measure: 70.77%
+    ---------------------------------------------------------------------------
+
+    ./vq_wordseg.py --dur_weight 7 --kmeans 14000 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_kmeans14000
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.82%
+    Recall: 14.39%
+    F-score: 24.28%
+    OS: -81.51%
+    R-value: 39.44%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 55.32%
+    Homogeneity: 72.76%
+    Completeness: 26.25%
+    V-measure: 38.58%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.79%
+    Recall: 30.73%
+    F-score: 36.12%
+    OS: -29.82%
+    R-value: 48.35%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.99%
+    Recall: 22.11%
+    F-score: 24.70%
+    OS: -21.01%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 13370
+    uWER many: 68.64%
+    Purity: 46.17%
+    Homogeneity: 83.11%
+    Completeness: 59.22%
+    V-measure: 69.16%
+    ---------------------------------------------------------------------------
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized
+    ./vq_wordseg.py --dur_weight 6 --kmeans 14000 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_kmeans14000
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.62%
+    Recall: 15.85%
+    F-score: 26.33%
+    OS: -79.58%
+    R-value: 40.47%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 55.06%
+    Homogeneity: 71.91%
+    Completeness: 26.08%
+    V-measure: 38.28%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.00%
+    Recall: 33.34%
+    F-score: 37.56%
+    OS: -22.47%
+    R-value: 49.20%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.90%
+    Recall: 23.49%
+    F-score: 25.51%
+    OS: -15.82%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 13381
+    uWER many: 69.05%
+    Purity: 45.19%
+    Homogeneity: 82.10%
+    Completeness: 58.59%
+    V-measure: 68.38%
+    ---------------------------------------------------------------------------
+
+## 2023-11-02
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized
+    ./vq_wordseg.py --dur_weight 6 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=npy --algorithm=dp_penalized hubert buckeye test --output_tag phoneseg_dp_penalized
+    ./vq_wordseg.py --dur_weight 6 --algorithm=dpdp_aernn hubert buckeye test phoneseg_dp_penalized
+    ./eval_segmentation.py hubert buckeye test wordseg_dpdp_aernn_dp_penalized
+
+
+
+## 2023-11-01
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune
+    ./vq_wordseg.py --dur_weight 4 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 76.37%
+    Recall: 20.27%
+    F-score: 32.03%
+    OS: -73.46%
+    R-value: 43.57%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 86.46%
+    Homogeneity: 90.50%
+    Completeness: 29.95%
+    V-measure: 45.00%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 39.80%
+    Recall: 40.11%
+    F-score: 39.96%
+    OS: 0.77%
+    R-value: 48.61%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 26.35%
+    Recall: 26.51%
+    F-score: 26.43%
+    OS: 0.61%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 42384
+    uWER many: 42.89%
+    Purity: 82.30%
+    Homogeneity: 92.32%
+    Completeness: 59.25%
+    V-measure: 72.18%
+    ---------------------------------------------------------------------------
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune
+    ./vq_wordseg.py --dur_weight 6 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.26%
+    Recall: 16.38%
+    F-score: 27.03%
+    OS: -78.80%
+    R-value: 40.84%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 92.04%
+    Homogeneity: 94.62%
+    Completeness: 30.61%
+    V-measure: 46.25%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 42.27%
+    Recall: 34.03%
+    F-score: 37.71%
+    OS: -19.51%
+    R-value: 49.17%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.46%
+    Recall: 23.69%
+    F-score: 25.44%
+    OS: -13.72%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 41320
+    uWER many: 38.65%
+    Purity: 90.15%
+    Homogeneity: 96.03%
+    Completeness: 60.81%
+    V-measure: 74.47%
+    ---------------------------------------------------------------------------
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune
+    ./vq_wordseg.py --dur_weight 5 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 76.85%
+    Recall: 18.16%
+    F-score: 29.38%
+    OS: -76.36%
+    R-value: 42.10%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 89.48%
+    Homogeneity: 92.79%
+    Completeness: 30.29%
+    V-measure: 45.67%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 41.21%
+    Recall: 36.99%
+    F-score: 38.99%
+    OS: -10.24%
+    R-value: 49.43%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.11%
+    Recall: 25.17%
+    F-score: 26.10%
+    OS: -7.17%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 42088
+    uWER many: 39.97%
+    Purity: 86.68%
+    Homogeneity: 94.44%
+    Completeness: 60.09%
+    V-measure: 73.45%
+    ---------------------------------------------------------------------------
+
+    # Phone segmentation followed by word segmentation
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 5 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune    
+    ./vq_wordseg.py --dur_weight 3 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 76.71%
+    Recall: 22.18%
+    F-score: 34.41%
+    OS: -71.09%
+    R-value: 44.92%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 81.17%
+    Homogeneity: 86.10%
+    Completeness: 29.46%
+    V-measure: 43.90%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 38.02%
+    Recall: 41.74%
+    F-score: 39.80%
+    OS: 9.78%
+    R-value: 46.41%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 25.18%
+    Recall: 26.94%
+    F-score: 26.03%
+    OS: 6.97%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 38182
+    uWER many: 49.05%
+    Purity: 73.98%
+    Homogeneity: 88.12%
+    Completeness: 58.56%
+    V-measure: 70.36%
+    ---------------------------------------------------------------------------
+
+    # Phone segmentation followed by word segmentation
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 5 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune    
+    ./vq_wordseg.py --dur_weight 4 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.27%
+    Recall: 19.67%
+    F-score: 31.36%
+    OS: -74.54%
+    R-value: 43.16%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 84.94%
+    Homogeneity: 89.25%
+    Completeness: 29.86%
+    V-measure: 44.75%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 39.54%
+    Recall: 38.22%
+    F-score: 38.87%
+    OS: -3.33%
+    R-value: 48.40%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 26.28%
+    Recall: 25.68%
+    F-score: 25.98%
+    OS: -2.29%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 39040
+    uWER many: 44.08%
+    Purity: 80.06%
+    Homogeneity: 91.30%
+    Completeness: 59.58%
+    V-measure: 72.11%
+    ---------------------------------------------------------------------------
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 2 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune
+    ./vq_wordseg.py --dur_weight 6 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.26%
+    Recall: 16.38%
+    F-score: 27.03%
+    OS: -78.80%
+    R-value: 40.84%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 92.04%
+    Homogeneity: 94.62%
+    Completeness: 30.61%
+    V-measure: 46.25%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 42.27%
+    Recall: 34.03%
+    F-score: 37.71%
+    OS: -19.51%
+    R-value: 49.17%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.46%
+    Recall: 23.69%
+    F-score: 25.44%
+    OS: -13.72%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 41320
+    uWER many: 38.65%
+    Purity: 90.15%
+    Homogeneity: 96.03%
+    Completeness: 60.81%
+    V-measure: 74.47%
+    ---------------------------------------------------------------------------
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune
+    ./vq_wordseg.py --dur_weight 6 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.62%
+    Recall: 15.85%
+    F-score: 26.33%
+    OS: -79.58%
+    R-value: 40.47%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 92.43%
+    Homogeneity: 94.99%
+    Completeness: 30.59%
+    V-measure: 46.28%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.00%
+    Recall: 33.34%
+    F-score: 37.56%
+    OS: -22.47%
+    R-value: 49.20%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.90%
+    Recall: 23.49%
+    F-score: 25.51%
+    OS: -15.82%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 40213
+    uWER many: 38.61%
+    Purity: 90.58%
+    Homogeneity: 96.44%
+    Completeness: 61.11%
+    V-measure: 74.81%
+    --------------------------------------------------------------------------- 
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune
+    ./vq_wordseg.py --dur_weight 7 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.82%
+    Recall: 14.39%
+    F-score: 24.28%
+    OS: -81.51%
+    R-value: 39.44%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 94.23%
+    Homogeneity: 96.33%
+    Completeness: 30.85%
+    V-measure: 46.73%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.79%
+    Recall: 30.73%
+    F-score: 36.12%
+    OS: -29.82%
+    R-value: 48.35%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.99%
+    Recall: 22.11%
+    F-score: 24.70%
+    OS: -21.01%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 39301
+    uWER many: 38.48%
+    Purity: 93.01%
+    Homogeneity: 97.53%
+    Completeness: 61.68%
+    V-measure: 75.57%
+    ---------------------------------------------------------------------------
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 5 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune    
+    ./vq_wordseg.py --dur_weight 6 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.23%
+    Recall: 15.79%
+    F-score: 26.27%
+    OS: -79.82%
+    R-value: 40.43%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 90.98%
+    Homogeneity: 93.88%
+    Completeness: 30.57%
+    V-measure: 46.12%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 42.50%
+    Recall: 32.57%
+    F-score: 36.88%
+    OS: -23.38%
+    R-value: 48.74%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.61%
+    Recall: 23.07%
+    F-score: 25.14%
+    OS: -16.46%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 38695
+    uWER many: 39.76%
+    Purity: 88.82%
+    Homogeneity: 95.57%
+    Completeness: 61.13%
+    V-measure: 74.57%
+    ---------------------------------------------------------------------------
+
+    ./vq_wordseg.py --dur_weight 7 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 78.61%
+    Recall: 14.26%
+    F-score: 24.14%
+    OS: -81.87%
+    R-value: 39.35%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 93.00%
+    Homogeneity: 95.38%
+    Completeness: 30.82%
+    V-measure: 46.59%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.61%
+    Recall: 30.02%
+    F-score: 35.56%
+    OS: -31.16%
+    R-value: 47.97%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.71%
+    Recall: 21.63%
+    F-score: 24.29%
+    OS: -21.95%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 37878
+    uWER many: 39.52%
+    Purity: 91.67%
+    Homogeneity: 96.85%
+    Completeness: 61.73%
+    V-measure: 75.40%
+    ---------------------------------------------------------------------------
+
+
+
+    ./vq_wordseg.py --dur_weight 5 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.85%
+    Recall: 17.57%
+    F-score: 28.67%
+    OS: -77.43%
+    R-value: 41.69%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 88.28%
+    Homogeneity: 91.85%
+    Completeness: 30.24%
+    V-measure: 45.50%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 41.16%
+    Recall: 35.26%
+    F-score: 37.98%
+    OS: -14.32%
+    R-value: 49.03%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.15%
+    Recall: 24.42%
+    F-score: 25.72%
+    OS: -10.06%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 39117
+    uWER many: 41.17%
+    Purity: 85.09%
+    Homogeneity: 93.77%
+    Completeness: 60.41%
+    V-measure: 73.48%
+    ---------------------------------------------------------------------------
+
+./vq_wordseg.py --dur_weight 7 --algorithm=dpdp_aernn hubert buckeye val phoneseg_dp_penalized_tune
+
+    # Phone segmentation on HuBERT
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 1 --input_format=npy --algorithm=dp_penalized hubert buckeye val --output_tag phoneseg_dp_penalized_tune
+    ./eval_segmentation.py hubert buckeye val phoneseg_dp_penalized_tune
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 43.65%
+    Recall: 93.84%
+    F-score: 59.58%
+    OS: 115.01%
+    R-value: -0.43%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 42.30%
+    Homogeneity: 40.31%
+    Completeness: 33.06%
+    V-measure: 36.33%
+    ---------------------------------------------------------------------------
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 4 --input_format=npy --algorithm=dp_penalized hubert buckeye val
+    ./eval_segmentation.py hubert buckeye val phoneseg_dp_penalized
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 48.61%
+    Recall: 91.26%
+    F-score: 63.43%
+    OS: 87.72%
+    R-value: 21.82%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 44.32%
+    Homogeneity: 42.41%
+    Completeness: 34.81%
+    V-measure: 38.23%
+    ---------------------------------------------------------------------------
+
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 8 --input_format=npy --algorithm=dp_penalized hubert buckeye val
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 53.36%
+    Recall: 87.25%
+    F-score: 66.22%
+    OS: 63.51%
+    R-value: 40.65%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 45.81%
+    Homogeneity: 44.23%
+    Completeness: 36.28%
+    V-measure: 39.86%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 14.55%
+    Recall: 90.37%
+    F-score: 25.06%
+    OS: 521.26%
+    R-value: -348.37%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 2.21%
+    Recall: 10.34%
+    F-score: 3.64%
+    OS: 368.37%
+    ---------------------------------------------------------------------------
+
+
 ## 2023-08-31
 
     # Fewer clusters (no. of true word types in the validation set: 4057)
