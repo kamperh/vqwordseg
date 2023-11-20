@@ -267,7 +267,8 @@ DP penalized segmentation:
         --algorithm=dp_penalized cpc_big buckeye val
 
     # Buckeye (HuBERT)
-    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 1 --input_format=npy --algorithm=dp_penalized hubert buckeye val
+    ./vq_phoneseg.py --downsample_factor 2 --dur_weight 3 --input_format=npy \
+        --algorithm=dp_penalized hubert buckeye val
 
     # Buckeye (CPC-big) HSMM
     ./vq_phoneseg.py --algorithm dp_penalized_hsmm --downsample_factor 1 \
@@ -375,12 +376,21 @@ DPDP AE-RNN word segmentation:
     ./vq_wordseg.py --algorithm=dpdp_aernn \
         cpc_big buckeye val phoneseg_dp_penalized
 
+    # Buckeye (HuBERT)
+    ./vq_wordseg.py --dur_weight 6 --algorithm=dpdp_aernn \
+        hubert buckeye val phoneseg_dp_penalized
+
 DPDP AE-RNN word segmentation followed by K-means clustering on the AE-RNN
 embeddings:
 
     # Buckeye (CPC-big)
     ./vq_wordseg.py --kmeans 14000 --algorithm=dpdp_aernn \
         cpc_big buckeye val phoneseg_dp_penalized
+
+Perform K-means clustering on top of averaged features:
+
+    # Buckeye (HuBERT)
+    ./vq_lexicon_avgembed.py --kmeans 14000 hubert buckeye val wordseg_dpdp_aernn_dp_penalized
 
 Evaluate the segmentation:
 
@@ -389,6 +399,12 @@ Evaluate the segmentation:
 
     # Buckeye (CPC-big)
     ./eval_segmentation.py cpc_big buckeye val wordseg_ag_dp_penalized
+
+    # Buckeye (HuBERT)
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized
+
+    # Buckeye (HuBERT) with averaged embeddings
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_avgembed_kmeans14000
 
 Evaluate the segmentation with the ZeroSpeech tools:
 
@@ -472,7 +488,8 @@ Evaluate the segmentation with the ZeroSpeech tools:
         2017/track2/mandarin.txt
     zerospeech2020-evaluate 2017-track2 . -l mandarin -o mandarin.json
 
-### About the Buckeye data splits
+
+## About the Buckeye data splits
 
 The particular split of Buckeye that I use in this repository is a legacy split
 with a somewhat complicated history. But in short the test set is exactly the

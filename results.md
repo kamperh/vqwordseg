@@ -1794,7 +1794,7 @@ DPDP AE-RNN (dur_weight=6), DPDP GMM val, MFCCs, 25 components:
 
 K-means clustering on the CPC-big AE-RNN embeddings:
 
-    ./eval_segmentation.py cpc_big buckeye val wordseg_dpdp_aernn_dp_penalized_kmeans14000    
+    ./eval_segmentation.py cpc_big buckeye val wordseg_dpdp_aernn_dp_penalized_kmeans14000
     ---------------------------------------------------------------------------
     Phone boundaries:
     Precision: 78.53%
@@ -1870,6 +1870,45 @@ K-means clustering on the HuBERT AE-RNN embeddings (`dur_weight=6`):
     V-measure: 68.38%
     ---------------------------------------------------------------------------
 
+K-means clustering on the HuBERT averaged embeddings (`dur_weight=6`):
+
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_avgembed_kmeans14000
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 77.62%
+    Recall: 15.85%
+    F-score: 26.33%
+    OS: -79.58%
+    R-value: 40.47%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 63.72%
+    Homogeneity: 77.16%
+    Completeness: 27.82%
+    V-measure: 40.90%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 43.00%
+    Recall: 33.34%
+    F-score: 37.56%
+    OS: -22.47%
+    R-value: 49.20%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.90%
+    Recall: 23.49%
+    F-score: 25.51%
+    OS: -15.82%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 14000
+    uWER many: 55.21%
+    Purity: 63.52%
+    Homogeneity: 88.01%
+    Completeness: 62.43%
+    V-measure: 73.04%
+    ---------------------------------------------------------------------------
+    
 
 ## Xitsonga
 
