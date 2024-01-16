@@ -1831,7 +1831,47 @@ K-means clustering on the CPC-big AE-RNN embeddings:
     V-measure: 66.69%
     ---------------------------------------------------------------------------
 
-K-means clustering on the HuBERT AE-RNN embeddings (`dur_weight=6`):
+K-means clustering on the HuBERT AE-RNN embeddings (`dur_weight=2`,
+`dur_weight=5`):
+
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 76.85%
+    Recall: 18.16%
+    F-score: 29.38%
+    OS: -76.36%
+    R-value: 42.10%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 62.84%
+    Homogeneity: 76.23%
+    Completeness: 27.69%
+    V-measure: 40.63%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 41.21%
+    Recall: 36.99%
+    F-score: 38.99%
+    OS: -10.24%
+    R-value: 49.43%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.11%
+    Recall: 25.17%
+    F-score: 26.10%
+    OS: -7.17%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 14000
+    uWER many: 56.58%
+    Purity: 61.89%
+    Homogeneity: 87.05%
+    Completeness: 61.62%
+    V-measure: 72.16%
+    ---------------------------------------------------------------------------
+
+K-means clustering on the HuBERT AE-RNN embeddings (`dur_weight=3`,
+`dur_weight=6`):
 
     ./eval_segmentation.py hubert buckeye val wordseg_dpdp_aernn_dp_penalized_kmeans14000
     ---------------------------------------------------------------------------
@@ -2245,6 +2285,63 @@ DP penalized XLSR (dur_weight=500), DP penalized AE-RNN (dur_weight=3):
     ned: 0.8283892604551045
     pairs: 17344
 
+HuBERT (`dur_weight=2`, `dur_weight=5`):
+
+    "boundary": {
+        "precision": 0.6191301982386345,
+        "recall": 0.732863755282753,
+        "fscore": 0.6712131824381613
+    },
+    "token": {
+        "precision": 0.2345940959409594,
+        "recall": 0.2569205900181855,
+        "fscore": 0.24525026521361748
+    },
+    "type": {
+        "precision": 0.24242646519474803,
+        "recall": 0.3725622815917033,
+        "fscore": 0.2937255599004621
+    },
+    "nlp": {
+        "nwords": [
+            13633
+        ],
+        "ned": 0.8597740461054841,
+        "coverage": 0.9998160665838967,
+        "npairs": 130513
+    }
+
+ES-KMeans:
+
+    "boundary": {
+        "precision": 0.4258554271470655,
+        "recall": 0.7564097403904206,
+        "fscore": 0.5449220732149329
+    },
+    "token": {
+        "precision": 0.07011532368004127,
+        "recall": 0.09613053142048898,
+        "fscore": 0.08108741504569955
+    },
+    "type": {
+        "precision": 0.06787171191447461,
+        "recall": 0.10878142261300867,
+        "fscore": 0.08358958811555287
+    },
+    "nlp": {
+        "nwords": [
+            14218
+        ],
+        "ned": 0.880712846099123,
+        "coverage": 1.0,
+        "npairs": 357082
+    },
+    "grouping": {
+        "precision": 0.20240808264965252,
+        "recall": 0.31482247297217775,
+        "fscore": 0.24639926020113523
+    }
+
 
 ## ZeroSpeech'17 French
 
@@ -2330,6 +2427,58 @@ DP penalized XLSR (dur_weight=1500), DP penalized AE-RNN (dur_weight=1):
     ned: 0.5986752611793141
     pairs: 10054784
 
+HuBERT (`dur_weight=2`, `dur_weight=5`):
+
+    ned: 0.6601367208337441
+    coverage: 0.9990766893983136
+    boundary_precision: 0.5387142623267998
+    boundary_recall: 0.5259645668576245
+    boundary_fscore: 0.5322630747937205
+    grouping_precision: 0.2817639695874773
+    grouping_recall: 0.4437490853685101
+    grouping_fscore: 0.34467333961848207
+    token_precision: 0.126271164125655
+    type_precision: 0.05858942927190832
+    token_recall: 0.10729308369728646
+    type_recall: 0.23641466893664012
+    token_fscore: 0.11601109936447188
+    type_fscore: 0.09390649559527726
+    words: 87695
+    coverage: 0.9990766893983136
+    ned: 0.6601367208337441
+    pairs: 99903
+
+ES-KMeans:
+
+    "boundary": {
+        "precision": 0.3702359159468867,
+        "recall": 0.5216380472175502,
+        "fscore": 0.4330861717705002
+    },
+    "token": {
+        "precision": 0.05693321581812708,
+        "recall": 0.07024146201761294,
+        "fscore": 0.06289101548336175
+    },
+    "type": {
+        "precision": 0.03963933940605791,
+        "recall": 0.0985137808862099,
+        "fscore": 0.05653178427618984
+    },
+    "nlp": {
+        "nwords": [
+            54012
+        ],
+        "ned": 0.6878864516115213,
+        "coverage": 0.9996553840712016,
+        "npairs": 4354797
+    },
+    "grouping": {
+        "precision": null,
+        "recall": null,
+        "fscore": null
+    }
+
 
 ## ZeroSpeech'17 English
 
@@ -2350,10 +2499,73 @@ DP penalized CPC-big (dur_weight=2), DP penalized AE-RNN (dur_weight=3),
     ned: 0.5709890053444755
     pairs: 10327401
 
+HuBERT (`dur_weight=2`, `dur_weight=5`):
+
+    "boundary": {
+        "precision": 0.5627599139360644,
+        "recall": 0.5977993536278821,
+        "fscore": 0.5797506809019994
+    },
+    "token": {
+        "precision": 0.2015219949697274,
+        "recall": 0.1901620639615389,
+        "fscore": 0.19567729461165043
+    },
+    "type": {
+        "precision": 0.06525181851530416,
+        "recall": 0.34675732217573224,
+        "fscore": 0.10983516442141884
+    },
+    "nlp": {
+        "nwords": [
+            111767
+        ],
+        "ned": 0.41745488130523395,
+        "coverage": 0.9978178340211217,
+        "npairs": 1983038
+    },
+    "grouping": {
+        "precision": null,
+        "recall": null,
+        "fscore": null
+    }
+
+ES-KMeans:
+
+    "matching": null,
+    "boundary": {
+        "precision": 0.49339736696212083,
+        "recall": 0.6673125870919804,
+        "fscore": 0.5673256652307774
+    },
+    "token": {
+        "precision": 0.18109334650322245,
+        "recall": 0.20411141758886933,
+        "fscore": 0.19191465483458126
+    },
+    "type": {
+        "precision": 0.0629473805544349,
+        "recall": 0.25965195891974135,
+        "fscore": 0.10132947386976165
+    },
+    "nlp": {
+        "nwords": [
+            86755
+        ],
+        "ned": 0.7320613625212131,
+        "coverage": 0.9997616438128843,
+        "npairs": 6932727
+    },
+    "grouping": {
+        "precision": null,
+        "recall": null,
+        "fscore": null
+    }
+
 
 ## ZeroSpeech'17 LANG1 (German)
 
-These were generated by Robin and can be found in
+CPC-big results. These were generated by Robin and can be found in
 `vqseg/zerospeech2017_eval/kamper_submission.zip`. 
 
     metric: boundary
@@ -2370,19 +2582,194 @@ These were generated by Robin and can be found in
     recall: 0.19390501428512277
     fscore: 0.08956765389360137
 
+CPC-big results. The above is probably incorrect and the correct ones are
+produced by me below:
+
+    "matching": null,
+    "boundary": {
+        "precision": 0.41052507315537556,
+        "recall": 0.5678158985878697,
+        "fscore": 0.4765264259376142
+    },
+    "token": {
+        "precision": 0.10913348725882524,
+        "recall": 0.12087688870138596,
+        "fscore": 0.11470540264028034
+    },
+    "type": {
+        "precision": 0.045847944490039545,
+        "recall": 0.15266448594261106,
+        "fscore": 0.07051803115646128
+    },
+    "nlp": {
+        "nwords": [
+            80418
+        ],
+        "ned": 0.5638102970665835,
+        "coverage": 0.9990113192179535,
+        "npairs": 1191592
+    },
+    "grouping": {
+        "precision": null,
+        "recall": null,
+        "fscore": null
+    }
+
+HuBERT DPDP:
+
+    "boundary": {
+        "precision": 0.4466614587141488,
+        "recall": 0.5742976457898331,
+        "fscore": 0.5025012717413657
+    },
+    "token": {
+        "precision": 0.12448098408523768,
+        "recall": 0.12523112340296985,
+        "fscore": 0.12485492702861994
+    },
+    "type": {
+        "precision": 0.052714934882984295,
+        "recall": 0.17916442383338163,
+        "fscore": 0.08146167893518082
+    },
+    "nlp": {
+        "nwords": [
+            82083
+        ],
+        "ned": 0.568326971960231,
+        "coverage": 0.9987253079917187,
+        "npairs": 970429
+    },
+    "grouping": {
+        "precision": null,
+        "recall": null,
+        "fscore": null
+    }
+
+ES-KMeans:
+
+    "boundary": {
+        "precision": 0.3542984991771128,
+        "recall": 0.6252560537539706,
+        "fscore": 0.4523020811522307
+    },
+    "token": {
+        "precision": 0.09935391241923905,
+        "recall": 0.13696047334072928,
+        "fscore": 0.11516487944169385
+    },
+    "type": {
+        "precision": 0.03425854584406066,
+        "recall": 0.07548341683574179,
+        "fscore": 0.04712786308877514
+    },
+    "nlp": {
+        "nwords": [
+            53213
+        ],
+        "ned": 0.6621976350816241,
+        "coverage": 0.9991572673333985,
+        "npairs": 4222872
+    },
+    "grouping": {
+        "precision": null,
+        "recall": null,
+        "fscore": null
+    }
+
 
 ## ZeroSpeech'17 LANG2 (Wolof)
 
-    metric: boundary
-    precision: 0.631188814763694
-    recall: 0.5646536940068141
-    fscore: 0.5960702906246983
+CPC-big results:
 
-    metric: token
-    precision: 0.17489360154232295
-    recall: 0.1308940433409561
-    fscore: 0.14972829048783146
-    metric: type
-    precision: 0.08042438928548039
-    recall: 0.4967637540453074
-    fscore: 0.1384363902823967
+    "matching": null,
+    "boundary": {
+        "precision": 0.631188814763694,
+        "recall": 0.5646536940068141,
+        "fscore": 0.5960702906246983
+    },
+    "token": {
+        "precision": 0.17489360154232295,
+        "recall": 0.1308940433409561,
+        "fscore": 0.14972829048783146
+    },
+    "type": {
+        "precision": 0.08042438928548039,
+        "recall": 0.4967637540453074,
+        "fscore": 0.1384363902823967
+    },
+    "nlp": {
+        "nwords": [
+            15269
+        ],
+        "ned": 0.6211650318898436,
+        "coverage": 0.9993713741760512,
+        "npairs": 18322
+    },
+    "grouping": {
+        "precision": 0.3711656441717786,
+        "recall": 0.15307277448565174,
+        "fscore": 0.2167538773393675
+    }
+
+HuBERT DPDP:
+
+    "boundary": {
+        "precision": 0.6909318395086302,
+        "recall": 0.5555987469416688,
+        "fscore": 0.6159188846641318
+    },
+    "token": {
+        "precision": 0.16766949152542374,
+        "recall": 0.10772623325710552,
+        "fscore": 0.13117416959490816
+    },
+    "type": {
+        "precision": 0.0752817525642649,
+        "recall": 0.4809870550161812,
+        "fscore": 0.13018723311069744
+    },
+    "nlp": {
+        "nwords": [
+            15794
+        ],
+        "ned": 0.7218721640620105,
+        "coverage": 0.9991289042153851,
+        "npairs": 123858
+    },
+    "grouping": {
+        "precision": 0.14945111937073183,
+        "recall": 0.3396189353761568,
+        "fscore": 0.20756302521008427
+    }
+
+ES-KMeans:
+
+    "boundary": {
+        "precision": 0.5079948461229749,
+        "recall": 0.5499279720119818,
+        "fscore": 0.5281303526724933
+    },
+    "token": {
+        "precision": 0.11520667194253363,
+        "recall": 0.10304366764673854,
+        "fscore": 0.10878625010778031
+    },
+    "type": {
+        "precision": 0.08214285714285714,
+        "recall": 0.4186893203883495,
+        "fscore": 0.13734076433121017
+    },
+    "nlp": {
+        "nwords": [
+            12600
+        ],
+        "ned": 0.7241772624947278,
+        "coverage": 0.9994162760206189,
+        "npairs": 439503
+    },
+    "grouping": {
+        "precision": null,
+        "recall": null,
+        "fscore": null
+    }

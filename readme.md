@@ -406,7 +406,8 @@ Evaluate the segmentation:
     # Buckeye (HuBERT) with averaged embeddings
     ./eval_segmentation.py hubert buckeye val wordseg_dpdp_avgembed_kmeans14000
 
-Evaluate the segmentation with the ZeroSpeech tools:
+Evaluate the segmentation with the ZeroSpeech tools (deprecated, new version
+below):
 
     ./intervals_to_zs.py cpc_big zs2017_zh train wordseg_segaernn_dp_penalized
     cd ../zerospeech2017_eval/
@@ -416,6 +417,26 @@ Evaluate the segmentation with the ZeroSpeech tools:
     conda activate zerospeech2020_updated
     zerospeech2020-evaluate 2017-track2 . -l mandarin -o mandarin.json
 
+Evaluate the segemntation with the updated ZeroSpeech tools:
+
+    cd ../zerospeech2017_eval/
+    ln -s \
+        /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/hubert/zs2017_en/train/wordseg_dpdp_avgembed_kmeans43000/clusters.txt \
+        2017_hubert/english.txt
+    ln -s \
+        /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/hubert/zs2017_fr/train/wordseg_dpdp_avgembed_kmeans29000/clusters.txt \
+        2017_hubert/french.txt
+    ln -s \
+        /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/hubert/zs2017_zh/train/wordseg_dpdp_avgembed_kmeans3000/clusters.txt \
+        2017_hubert/mandarin.txt
+    ln -s \
+        /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_lang1/train/wordseg_dpdp_aernn_dp_penalized/clusters.txt \
+        2017_hubert/german.txt
+    ln -s \
+        /media/kamperh/endgame/projects/stellenbosch/vqseg/vqwordseg/exp/cpc_big/zs2017_lang2/train/wordseg_dpdp_aernn_dp_penalized/clusters.txt \
+        2017_hubert/wolof.txt    
+    conda activate zrc-toolkit
+    zrc benchmarks:run tde17 2017_hubert
 
 ## Analysis
 
@@ -479,8 +500,6 @@ Convert to ZeroSpeech format:
 
 Evaluate the segmentation with the ZeroSpeech tools:
 
-    ./intervals_to_zs.py cpc_big zs2017_zh train \
-        wordseg_dpdp_aernn_dp_penalized
     cd ../zerospeech2017_eval/
     conda activate zerospeech2020
     ln -s \
@@ -550,6 +569,33 @@ are linked to the original version in `exp/resdavenet_vq/`. The indices from
 the original model shouldn't be linked, since these doesn't match the new
 codebook (but an indices file isn't necessary for running many of the phone
 segmentation algorithms).
+
+
+## Number of clusters
+
+For Buckeye experiments, we use 14000 classes, based on:
+
+    phd/buckeye_tsonga/bucktsong_ksegment/kmodels/zs/mfcc.n_10.unsup_syl/sd_70d31083a7/classes.txt
+    phd/buckeye_tsonga/bucktsong_ksegment/models/zs/mfcc.n_10.unsup_syl/sd_5a2322c038/classes.txt
+
+This is roughly the same number of clusters if you combine all the individual
+speaker-dependent clusters from the systems used in the Buckeye experiments in
+[(Kamper et al., 2017)](https://arxiv.org/abs/1703.08135).
+
+For the ZeroSpeech experiments, we use the following number of clusters:
+
+- English: 43000 (42567)
+- French: 29000 (28919)
+- Mandarin: 3000 (2986)
+- Lang1 (German): 29000 (28954)
+- Lang2 (Wolof):  3500 (3592)
+
+This is based on:
+
+    edinburgh/zs2017/submission/track2/
+
+which matches the ZeroSpeech experiments from
+[(Kamper et al., 2017)](https://arxiv.org/abs/1703.08135).
 
 
 ## Old work-flow (deprecated)

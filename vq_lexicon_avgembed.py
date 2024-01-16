@@ -90,8 +90,8 @@ def main():
     # Read features(prequantisation layer)
     features_dir = (
         Path(
-            "../zerospeech2021_baseline/exp/buckeye/"
-        )/args.model/args.split/args.layer_tag
+            "../zerospeech2021_baseline/exp/"
+        )/args.dataset/args.model/args.split/args.layer_tag
     )
     features_dict = {}
     print("Reading from:", features_dir)
