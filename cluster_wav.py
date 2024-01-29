@@ -32,7 +32,7 @@ def check_argv():
         )
     parser.add_argument(
         "model", help="input VQ representations",
-        choices=["vqvae", "vqcpc", "cpc_big"]
+        choices=["vqvae", "vqcpc", "cpc_big", "hubert"]
         )
     parser.add_argument("dataset", type=str, help="input dataset")
     parser.add_argument(

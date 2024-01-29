@@ -1831,45 +1831,6 @@ K-means clustering on the CPC-big AE-RNN embeddings:
     V-measure: 66.69%
     ---------------------------------------------------------------------------
 
-K-means clustering on the HuBERT AE-RNN embeddings (`dur_weight=2`,
-`dur_weight=5`):
-
-    ---------------------------------------------------------------------------
-    Phone boundaries:
-    Precision: 76.85%
-    Recall: 18.16%
-    F-score: 29.38%
-    OS: -76.36%
-    R-value: 42.10%
-    ---------------------------------------------------------------------------
-    Phone clusters:
-    Purity: 62.84%
-    Homogeneity: 76.23%
-    Completeness: 27.69%
-    V-measure: 40.63%
-    ---------------------------------------------------------------------------
-    Word boundaries:
-    Precision: 41.21%
-    Recall: 36.99%
-    F-score: 38.99%
-    OS: -10.24%
-    R-value: 49.43%
-    ---------------------------------------------------------------------------
-    Word token boundaries:
-    Precision: 27.11%
-    Recall: 25.17%
-    F-score: 26.10%
-    OS: -7.17%
-    ---------------------------------------------------------------------------
-    Word clusters:
-    No. clusters: 14000
-    uWER many: 56.58%
-    Purity: 61.89%
-    Homogeneity: 87.05%
-    Completeness: 61.62%
-    V-measure: 72.16%
-    ---------------------------------------------------------------------------
-
 K-means clustering on the HuBERT AE-RNN embeddings (`dur_weight=3`,
 `dur_weight=6`):
 
@@ -1908,6 +1869,46 @@ K-means clustering on the HuBERT AE-RNN embeddings (`dur_weight=3`,
     Homogeneity: 82.10%
     Completeness: 58.59%
     V-measure: 68.38%
+    ---------------------------------------------------------------------------
+
+K-means clustering on the HuBERT averaged embeddings (`dur_weight=2`,
+`dur_weight=5`):
+
+    ./eval_segmentation.py hubert buckeye val wordseg_dpdp_avgembed_kmeans14000
+    ---------------------------------------------------------------------------
+    Phone boundaries:
+    Precision: 76.85%
+    Recall: 18.16%
+    F-score: 29.38%
+    OS: -76.36%
+    R-value: 42.10%
+    ---------------------------------------------------------------------------
+    Phone clusters:
+    Purity: 62.84%
+    Homogeneity: 76.23%
+    Completeness: 27.69%
+    V-measure: 40.63%
+    ---------------------------------------------------------------------------
+    Word boundaries:
+    Precision: 41.21%
+    Recall: 36.99%
+    F-score: 38.99%
+    OS: -10.24%
+    R-value: 49.43%
+    ---------------------------------------------------------------------------
+    Word token boundaries:
+    Precision: 27.11%
+    Recall: 25.17%
+    F-score: 26.10%
+    OS: -7.17%
+    ---------------------------------------------------------------------------
+    Word clusters:
+    No. clusters: 14000
+    uWER many: 56.58%
+    Purity: 61.89%
+    Homogeneity: 87.05%
+    Completeness: 61.62%
+    V-measure: 72.16%
     ---------------------------------------------------------------------------
 
 K-means clustering on the HuBERT averaged embeddings (`dur_weight=6`):
