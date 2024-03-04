@@ -14,6 +14,7 @@ from sklearn import metrics
 from tqdm import tqdm
 import argparse
 import numpy as np
+import random
 import sys
 
 # from . import cluster_analysis
@@ -157,6 +158,7 @@ def str_to_id_labels(d):
             new_dict[key].append((start, end, str_to_id[label]))
 
     return new_dict, str_to_id, id_to_str
+
 
 
 #-----------------------------------------------------------------------------#
@@ -590,6 +592,36 @@ def main():
         print("Completeness: {:.2f}%".format(c*100))
         print("V-measure: {:.2f}%".format(V*100))
         print("-"*(79 - 4))
+
+        def eval_with_bootstrap(true, pred, eval_func, num_repeats=10):
+            def eval1(idxs):
+                p, r, f = eval_func(
+                    [true[i] for i in idxs], [pred[i] for i in idxs],
+                    tolerance=args.word_tolerance
+                    )
+                return f
+
+            idxs = list(range(len(true)))
+            results = [
+                eval1(random.choices(idxs, k=len(idxs))) for _ in
+                range(num_repeats)
+                ]
+            return np.mean(results), np.std(results)
+
+        print("Bootstrap confidence intervals:")
+        f_mean, f_std = eval_with_bootstrap(
+            reference_list, segmentation_list, score_boundaries
+            )
+        print(
+            f"Word boundary F-score: {(f_mean*100):.2f}% +- {(f_std*100):.2f}"
+            )
+        f_mean, f_std = eval_with_bootstrap(
+            reference_list, segmentation_list, score_word_token_boundaries
+            )
+        print(
+            f"Word token F-score: {(f_mean*100):.2f}% +- {(f_std*100):.2f}"
+            )
+        print("-"*(79- 4))
 
         print()
         print(datetime.now())
