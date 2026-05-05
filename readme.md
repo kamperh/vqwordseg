@@ -515,7 +515,7 @@ with a somewhat complicated history. But in short the test set is exactly the
 same one used in the [ZeroSpeech 2015 challenge](https://zerospeech.com/2015).
 The remaining speakers were then used for a validation set and an additional
 held-out test set. This additional test set has the same number of speakers as
-the validation set, but most papers just report results on the ZeroSpeech 2105
+the validation set, but most papers just report results on the ZeroSpeech 2015
 test set.
 
 The result is the following split of Buckeye, according to speaker:
@@ -532,7 +532,7 @@ and since then in a number of follow-up papers. Others have also used this
 split, e.g. ([Drexler and Glass,
 2017](https://groups.csail.mit.edu/sls/publications/2017/GLU17_Drexler.pdf)),
 ([Bhati et al., 2021](https://arxiv.org/abs/2106.02170)), and ([Peng and
-Harwath, 2022]https://arxiv.org/abs/2203.15081)).
+Harwath, 2022](https://arxiv.org/abs/2203.15081)).
 
 **Sets used in this repo.** In this repo I only make use of the validation and
 test sets above, although features are extracted for the training set. See the
